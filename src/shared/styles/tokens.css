@@ -1,0 +1,55 @@
+/* Sistema de diseño · tomado de la lámina "Color, tipografía y estructura de página" */
+:root {
+  --primary: #2c5f4a;
+  --primary-dark: #1e4534;
+  --primary-soft: #e4efe9;
+  --accent: #b08948;
+  --bg: #f1f0ea;
+  --surface: #ffffff;
+  --surface-subtle: #f8f8f4;
+  --border: #e1e3dc;
+  --text: #1a211d;
+  --muted: #66716b;
+  --success: #1e7f4d;
+  --warning: #b7791f;
+  --warning-text: #8a5a12;
+  --warning-soft: #fdf3e3;
+  --danger: #b4322b;
+  --danger-soft: #fbeae8;
+  --info: #3b6fa8;
+  --info-soft: #e7eef7;
+  --rol-publico: #5b4b8a;
+  --rol-publico-soft: #ece8f5;
+
+  --font-display: 'Lora', Georgia, 'Times New Roman', serif;
+  --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Escala tipográfica (tamaño / interlineado) */
+  --fs-screen: 30px;   --lh-screen: 36px;
+  --fs-section: 22px;  --lh-section: 30px;
+  --fs-subtitle: 17px; --lh-subtitle: 24px;
+  --fs-body: 16px;     --lh-body: 24px;
+  --fs-aux: 13px;      --lh-aux: 18px;
+  --fs-label: 12px;    --lh-label: 16px;
+
+  /* Estructura de página */
+  --header-h: 72px;
+  --nav-h: 56px;
+  --footer-h: 84px;
+  --content-pad: 48px;
+  --content-max: 1440px;
+
+  --radius-sm: 4px;
+  --radius: 6px;
+  --shadow-card: 0 1px 2px rgba(26, 33, 29, 0.06);
+  --shadow-modal: 0 16px 40px rgba(26, 33, 29, 0.18);
+  --focus-ring: 0 0 0 3px rgba(44, 95, 74, 0.28);
+}
+
+@media (max-width: 900px) {
+  :root {
+    --content-pad: 20px;
+    --fs-screen: 26px;
+    --lh-screen: 32px;
+  }
+}
