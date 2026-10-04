@@ -1,0 +1,30 @@
+.registro-trabajo-page {
+  min-height: 100vh;
+  background: #f1f0ea;
+  padding: 48px;
+}
+
+.registro-contenedor {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.registro-principal {
+  background: white;
+  border: 1px solid #e1e3dc;
+  padding: 32px;
+}
+
+.ruta {
+  font-size: 13px;
+  color: #66716b;
+}
+
+.registro-principal h1 {
+  color: #1e4534;
+  font-size: 30px;
+}
+
+.descripcion {
+  color: #66716b;
+}
