@@ -1,0 +1,33 @@
+
+:root{ 
+    --primary-color: #2C5F4A;
+    --primary-dark: #1E4534;
+    --primary-soft: #E4EFE9;
+    --accent-color: #B08948;
+    --background-color: #F1F0EA;
+    --surface: #FFFFFF;
+    --border: #E1E3Dc;
+    --text-color: #1A211d;
+    --text-color: #1A211d;
+    --muted-text-color: #66716b;
+
+    --success-color: #1E7F4D;
+   ---warning-color: #B7791F;
+    --danger-color: #b4322b;
+}
+
+.hu7-contenedor {
+    background-color: var(--background-color);
+    min-height: calc(100vh - 72px - 56px - 84);
+    padding: 48px;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-color);
+}
+
+.h7-titulo-pantalla{
+    font-family: 'Lora', serif;
+    font-size: 30px;
+    line-height: 36px;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+}
