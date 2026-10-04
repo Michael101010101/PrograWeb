@@ -1,0 +1,234 @@
+.h5-revision {
+  width: 100%;
+}
+
+/* ===== ENCABEZADO ===== */
+
+.h5-revision__encabezado {
+  margin-bottom: 22px;
+}
+
+.h5-revision__ruta {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #6b746f;
+}
+
+.h5-revision__encabezado h1 {
+  margin: 0;
+  color: #0f4938;
+  font-size: 30px;
+}
+
+
+/* ===== TARJETA PRINCIPAL ===== */
+
+.h5-revision__card {
+  background-color: #ffffff;
+  border: 1px solid #d9dedb;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.h5-revision__datos {
+  padding: 22px 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.h5-revision__datos h2 {
+  margin: 5px 0 5px;
+  font-size: 19px;
+  color: #173f34;
+}
+
+.h5-revision__datos p {
+  margin: 0;
+}
+
+.h5-revision__label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #52635d;
+}
+
+.h5-revision__meta {
+  display: flex;
+  gap: 45px;
+  flex-shrink: 0;
+}
+
+.h5-revision__meta p {
+  font-size: 14px;
+}
+
+
+/* ===== DOCUMENTO ===== */
+
+.h5-revision__documento {
+  border-top: 1px solid #e1e5e2;
+  padding: 18px 24px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: #fafbf9;
+}
+
+.h5-revision__archivo {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.h5-revision__btn-documento {
+  padding: 9px 16px;
+  background-color: #ffffff;
+  color: #175640;
+  border: 1px solid #175640;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+
+/* ===== SECCIONES ===== */
+
+.h5-revision__seccion {
+  background-color: #ffffff;
+  border: 1px solid #d9dedb;
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin-bottom: 18px;
+}
+
+.h5-revision__seccion h2 {
+  margin: 0 0 16px;
+  color: #173f34;
+  font-size: 20px;
+}
+
+
+/* ===== HISTORIAL ===== */
+
+.h5-revision__historial {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.h5-revision__historial p {
+  margin: 0;
+}
+
+.h5-revision__btn-secundario {
+  padding: 8px 14px;
+  background-color: #ffffff;
+  border: 1px solid #175640;
+  color: #175640;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+/* ===== COMENTARIOS ===== */
+
+.h5-revision__comentarios {
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: #f6f7f5;
+  border: 1px solid #e1e4e2;
+  border-radius: 4px;
+}
+
+.h5-revision__sin-comentarios {
+  margin: 0;
+  color: #65716c;
+  font-size: 14px;
+}
+
+.h5-revision__textarea {
+  display: block;
+  width: 100%;
+  min-height: 110px;
+  box-sizing: border-box;
+
+  padding: 12px;
+  border: 1px solid #cdd4d0;
+  border-radius: 4px;
+
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.h5-revision__textarea:focus {
+  outline: 2px solid #b8d1c7;
+  border-color: #175640;
+}
+
+
+/* ===== BOTONES FINALES ===== */
+
+.h5-revision__acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 22px 0 10px;
+}
+
+.h5-revision__btn-observar,
+.h5-revision__btn-aprobar {
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.h5-revision__btn-observar {
+  background-color: #ffffff;
+  color: #175640;
+  border: 1px solid #175640;
+}
+
+.h5-revision__btn-aprobar {
+  background-color: #175640;
+  color: #ffffff;
+  border: 1px solid #175640;
+}
+
+/* RESPONSIVE PARA MOVILES Y ASI LE METI 768 PORQUE CREO QUE ES LA MEDIDA QUE DIJO ANDERSON
+  AVISEN QUE MEDIDA USAREMOS SINO PARA CAMBIARLA O USTEDES LA CAMBIAN  */
+
+@media (max-width: 768px) {
+  .h5-revision__datos {
+    flex-direction: column;
+  }
+
+  .h5-revision__meta {
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .h5-revision__documento,
+  .h5-revision__historial {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .h5-revision__acciones {
+    flex-direction: column;
+  }
+
+  .h5-revision__btn-observar,
+  .h5-revision__btn-aprobar {
+    width: 100%;
+  }
+}

@@ -3,6 +3,11 @@ import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 
+// H5 · Revisión y retroalimentación
+import BandejaRevisionPage from '../h5-revision-retroalimentacion/pages/BandejaRevisionPage.jsx';
+import RevisionAvancePage from '../h5-revision-retroalimentacion/pages/RevisionAvancePage.jsx';
+import RevisionLayout from '../h5-revision-retroalimentacion/components/RevisionLayout.jsx';
+
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
 import LoginPage from '../hu1-cuenta/pages/LoginPage.jsx';
@@ -55,8 +60,12 @@ export default function AppRouter() {
       <Route path="/asesor" element={<RutaProtegida roles={['asesor']} />}>
         <Route path="asesorados" element={<EnConstruccion titulo="Mis asesorados" historia="HU-3" />} />
         <Route path="solicitudes" element={<EnConstruccion titulo="Solicitudes recibidas" historia="HU-3" />} />
-        <Route path="revision" element={<EnConstruccion titulo="Bandeja de revisión" historia="HU-5" />} />
+
         <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
+        <Route path="revision" element={<RevisionLayout />}>
+        <Route index element={<BandejaRevisionPage />} />
+        <Route path=":id" element={<RevisionAvancePage />} />
+        </Route>
       </Route>
 
       {/* Administrador · coordinación */}

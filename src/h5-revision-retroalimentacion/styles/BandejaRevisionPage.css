@@ -1,0 +1,106 @@
+.h5-bandeja {
+  width: 100%;
+}
+
+.h5-bandeja__encabezado {
+  margin-bottom: 24px;
+}
+
+.h5-bandeja__etiqueta {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #b8873b;
+}
+
+.h5-bandeja h1 {
+  margin: 0;
+  font-size: 32px;
+  color: #123f32;
+}
+
+.h5-bandeja__resumen {
+  margin: 8px 0 0;
+  color: #66736e;
+}
+
+.h5-bandeja__tabla-contenedor {
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #d9dedb;
+  border-radius: 6px;
+}
+
+.h5-bandeja__tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.h5-bandeja__tabla th,
+.h5-bandeja__tabla td {
+  padding: 16px;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #e3e7e5;
+}
+
+.h5-bandeja__tabla th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #596762;
+  background: #f7f7f4;
+}
+
+.h5-bandeja__tabla tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.h5-bandeja__estudiante,
+.h5-bandeja__antiguedad {
+  display: block;
+  margin-top: 5px;
+  font-size: 13px;
+  color: #6b7773;
+}
+
+.h5-bandeja__version {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 4px;
+  background: #e8f1ed;
+  color: #245b49;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.h5-bandeja__boton {
+  padding: 8px 16px;
+  border: 1px solid #245b49;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #245b49;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.h5-bandeja__boton:hover {
+  background: #245b49;
+  color: #ffffff;
+}
+
+.btn-revisar {
+  background-color: #1f684f;
+  color: white;
+  border: 1px solid #1f684f;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-revisar:hover {
+  background-color: #174f3c;
+}
