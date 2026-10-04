@@ -16,6 +16,13 @@ import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
 import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
 
+// HU-3 · Asesores y asignación
+import DirectorioAsesoresPage from '../hu3-asesores/pages/DirectorioAsesoresPage.jsx';
+import SolicitudesRecibidasPage from '../hu3-asesores/pages/SolicitudesRecibidasPage.jsx';
+import MisAsesoradosPage from '../hu3-asesores/pages/MisAsesoradosPage.jsx';
+import DetalleAsesoradoPage from '../hu3-asesores/pages/DetalleAsesoradoPage.jsx';
+import MiFichaPage from '../hu3-asesores/pages/MiFichaPage.jsx';
+
 // Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
 export default function AppRouter() {
   return (
@@ -24,7 +31,7 @@ export default function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/proceso" element={<EnConstruccion titulo="El proceso" historia="HU-1 (contenido informativo)" />} />
       <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
-      <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
+      <Route path="/asesores" element={<DirectorioAsesoresPage />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
 
       {/* Solo sin sesión */}
@@ -47,16 +54,17 @@ export default function AppRouter() {
         <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
         <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
         <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
-        <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
+        <Route path="asesores" element={<DirectorioAsesoresPage />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
       </Route>
 
       {/* Asesor */}
       <Route path="/asesor" element={<RutaProtegida roles={['asesor']} />}>
-        <Route path="asesorados" element={<EnConstruccion titulo="Mis asesorados" historia="HU-3" />} />
-        <Route path="solicitudes" element={<EnConstruccion titulo="Solicitudes recibidas" historia="HU-3" />} />
+        <Route path="asesorados" element={<MisAsesoradosPage />} />
+        <Route path="asesorados/:codigo" element={<DetalleAsesoradoPage />} />
+        <Route path="solicitudes" element={<SolicitudesRecibidasPage />} />
         <Route path="revision" element={<EnConstruccion titulo="Bandeja de revisión" historia="HU-5" />} />
-        <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
+        <Route path="ficha" element={<MiFichaPage />} />
       </Route>
 
       {/* Administrador · coordinación */}

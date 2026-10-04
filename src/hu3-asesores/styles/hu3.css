@@ -1,0 +1,159 @@
+/* Estilos de la HU-3 · Asesores y asignación.
+   Usan las variables del sistema de diseño (shared/styles/tokens.css).
+   Todas las clases empiezan con hu3- para no chocar con las de otras historias. */
+
+/* ───────────── Cabecera: dato del centro ───────────── */
+.hu3-slot {
+  display: flex; align-items: center; gap: 12px; padding: 8px 8px 8px 16px; max-width: 420px;
+  background: var(--surface-subtle); border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 13px; color: var(--muted);
+}
+.hu3-slot__texto { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hu3-slot--cupo { background: var(--primary-soft); border-color: var(--primary-soft); color: var(--primary-dark); padding: 8px 16px; }
+.hu3-slot--cupo strong { color: var(--success); margin-left: 8px; }
+
+/* ───────────── Chips de líneas y filtros ───────────── */
+.hu3-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.hu3-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: var(--radius-sm);
+  background: var(--primary-soft); color: var(--primary-dark); font-size: 12px; line-height: 20px; font-weight: 500;
+}
+.hu3-chip--gris { background: var(--bg); color: var(--muted); }
+.hu3-chip__quitar { background: none; border: 0; padding: 0; cursor: pointer; color: inherit; font-size: 14px; line-height: 1; }
+
+/* ───────────── Directorio (3.2) ───────────── */
+.hu3-orden { display: flex; flex-direction: column; gap: 6px; min-width: 220px; }
+.hu3-filtros {
+  display: grid; grid-template-columns: minmax(0, 1fr) 260px 220px auto; gap: 16px; align-items: end;
+  margin-bottom: 16px;
+}
+.hu3-filtros .checkbox { min-height: 46px; align-items: center; white-space: nowrap; }
+.hu3-filtros-activos { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+
+.hu3-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.card.hu3-asesor { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.hu3-grid .card + .card { margin-top: 0; }
+.hu3-asesor__head { display: flex; gap: 12px; align-items: center; }
+.hu3-asesor__nombre { font-weight: 600; font-size: 16px; line-height: 22px; }
+.hu3-asesor__depto { font-size: 13px; color: var(--muted); line-height: 18px; }
+.hu3-asesor__desc { font-size: 14px; color: var(--muted); }
+.hu3-asesor__pie {
+  margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px;
+}
+.hu3-cupo strong { color: var(--success); }
+.hu3-asesor--sin-cupo { background: var(--surface-subtle); }
+.hu3-asesor--sin-cupo .hu3-asesor__nombre { color: var(--muted); }
+.hu3-aviso-cupo {
+  padding: 8px 12px; border: 1px solid var(--warning); border-radius: var(--radius-sm);
+  background: var(--warning-soft); color: var(--warning-text); font-size: 13px;
+}
+
+.hu3-paginacion { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 14px; color: var(--muted); }
+.hu3-paginacion__botones { display: flex; gap: 8px; }
+.hu3-paginacion__btn {
+  min-width: 36px; height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--text); font-size: 14px; cursor: pointer;
+}
+.hu3-paginacion__btn:disabled { cursor: not-allowed; color: var(--muted); }
+.hu3-paginacion__btn--activo { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+
+/* ───────────── Solicitudes (3.4) ───────────── */
+.hu3-pestanas { display: flex; gap: 8px; }
+.hu3-pestana {
+  padding: 6px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface);
+  font-size: 13px; color: var(--text); cursor: pointer;
+}
+.hu3-pestana--activa { background: var(--primary-soft); border-color: var(--primary-soft); color: var(--primary-dark); font-weight: 600; }
+
+.hu3-solicitud { display: grid; gap: 10px; }
+.hu3-lista { display: grid; gap: 16px; }
+.hu3-lista .card + .card { margin-top: 0; }
+.hu3-solicitud__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.hu3-solicitud__titulo { font-size: 22px; line-height: 30px; font-weight: 500; }
+.hu3-solicitud__meta { font-size: 13px; color: var(--muted); }
+.hu3-solicitud__equipo { font-size: 15px; color: var(--muted); }
+.hu3-cita {
+  margin: 4px 0; padding: 14px 18px; border-left: 3px solid var(--border); background: var(--surface-subtle);
+  font-size: 15px;
+}
+.hu3-solicitud__pie {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding-top: 14px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted);
+}
+.hu3-solicitud__acciones { display: flex; gap: 12px; }
+.hu3-nota {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 16px;
+  padding: 14px 20px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-subtle);
+  font-size: 13px; color: var(--muted);
+}
+
+/* ───────────── Mis asesorados (3.5) ───────────── */
+.hu3-asesorados { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+.hu3-asesorado { display: flex; flex-direction: column; gap: 12px; }
+.hu3-asesorados .card + .card { margin-top: 0; }
+.hu3-asesorado__badges { display: flex; justify-content: space-between; gap: 8px; }
+.hu3-asesorado__titulo { font-size: 19px; line-height: 26px; font-weight: 500; }
+.hu3-asesorado__equipo { font-size: 14px; color: var(--muted); }
+.hu3-asesorado__nota { font-size: 13px; }
+.hu3-asesorado__acciones { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border); display: flex; gap: 12px; flex-wrap: wrap; }
+.hu3-tono--danger { color: var(--danger); }
+.hu3-tono--warning { color: var(--warning-text); }
+.hu3-tono--muted { color: var(--muted); }
+
+.hu3-progreso { display: flex; align-items: center; gap: 12px; }
+.hu3-progreso__barra { flex: 1; height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; }
+.hu3-progreso__relleno { height: 100%; background: var(--primary); }
+.hu3-progreso__relleno--completo { background: var(--success); }
+.hu3-progreso__valor { font-weight: 600; font-size: 15px; min-width: 44px; text-align: right; }
+.hu3-progreso__valor--completo { color: var(--success); }
+
+.card.hu3-tabla-card { padding: 0; overflow: hidden; }
+.hu3-tabla-card__head { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; background: var(--surface-subtle); border-bottom: 1px solid var(--border); }
+.hu3-tabla { width: 100%; border-collapse: collapse; font-size: 15px; }
+.hu3-tabla td { padding: 14px 24px; border-bottom: 1px solid var(--border); }
+.hu3-tabla tr:last-child td { border-bottom: 0; }
+.hu3-tabla td:nth-child(2), .hu3-tabla td:nth-child(4) { color: var(--muted); }
+
+/* ───────────── Mi ficha (3.1) ───────────── */
+.hu3-ficha { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 20px; align-items: start; }
+.hu3-ficha__principal, .hu3-ficha__lateral { display: grid; gap: 20px; }
+.hu3-ficha__principal .card + .card, .hu3-ficha__lateral .card + .card { margin-top: 0; }
+.hu3-ficha__perfil { display: flex; gap: 20px; align-items: center; }
+.avatar.hu3-ficha__avatar { width: 84px; height: 84px; font-size: 26px; }
+.hu3-ficha__meta { color: var(--muted); margin: 6px 0 10px; }
+.hu3-cifras { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+.hu3-cifra__valor { font-size: 26px; line-height: 32px; font-weight: 700; color: var(--primary-dark); }
+.hu3-cupo-grande { display: flex; align-items: baseline; gap: 8px; margin: 8px 0 12px; color: var(--muted); }
+.hu3-cupo-grande strong { font-size: 32px; line-height: 36px; color: var(--primary-dark); }
+.hu3-pendientes { list-style: none; margin: 12px 0 16px; padding: 0; display: grid; gap: 10px; font-size: 15px; }
+.hu3-pendientes li { display: flex; justify-content: space-between; }
+
+/* ───────────── Modales ───────────── */
+.hu3-subtitulo-modal { font-size: 13px; color: var(--muted); margin-top: -10px; }
+.hu3-caja { padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-subtle); }
+.hu3-caja__titulo { font-family: var(--font-display); font-size: 17px; line-height: 24px; color: var(--text); margin: 4px 0; }
+.hu3-fila-asesor { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); }
+.hu3-contador { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+.hu3-lineas-input { display: flex; flex-wrap: wrap; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); }
+.hu3-lineas-input select { border: 0; padding: 4px 0; background: transparent; flex: 1; min-width: 160px; }
+
+@media (max-width: 1200px) {
+  .hu3-filtros { grid-template-columns: 1fr 1fr; }
+  .hu3-grid, .hu3-asesorados { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hu3-ficha { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .hu3-filtros, .hu3-grid, .hu3-asesorados { grid-template-columns: 1fr; }
+  .hu3-cifras { grid-template-columns: 1fr 1fr; }
+}
+
+/* Botones secundarios de las tarjetas de asesorados */
+.btn.hu3-btn-neutro { background: var(--surface); border-color: var(--border); color: var(--text); }
+.btn.hu3-btn-neutro:hover { background: var(--surface-subtle); }
+.btn.hu3-btn-terminar { background: var(--surface); border-color: var(--border); color: var(--danger); }
+.btn.hu3-btn-terminar:hover { background: var(--danger-soft); }
+
+/* Barra simple del cupo ocupado (Mi ficha) */
+.hu3-barra-cupo { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin-bottom: 10px; }
+.hu3-barra-cupo div { height: 100%; background: var(--primary); }
