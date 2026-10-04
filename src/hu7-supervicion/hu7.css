@@ -31,3 +31,11 @@
     color: var(--primary-color);
     margin-bottom: 24px;
 }
+
+.h7-tarjeta-kpi {
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+}
+
