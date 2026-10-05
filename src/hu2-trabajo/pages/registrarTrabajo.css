@@ -28,3 +28,26 @@
 .descripcion {
   color: #66716b;
 }
+.campo {
+  display: flex;
+  flex-direction: column;
+  margin-top: 24px;
+}
+
+.campo label {
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.campo input {
+  padding: 12px;
+  border: 1px solid #e1e3dc;
+}
+.fila {
+  display: flex;
+  gap: 20px;
+}
+
+.fila .campo {
+  flex: 1;
+}
