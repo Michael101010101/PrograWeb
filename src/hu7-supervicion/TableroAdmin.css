@@ -18,7 +18,46 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  color: var(--muted-text-color); /* #66716B */
+  color: var(--muted-text-color); 
   text-transform: uppercase;
   margin-bottom: 12px;
+}
+
+.numero {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary-color); 
+  margin: 8px 0;
+}
+
+.hu7-tarjeta-kpi-RequiereAtencion-rojo {
+  background-color: #FDF2F2;
+  border-left: 4px solid var(--danger-color); 
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+ 
+
+
+.hu7-tarjeta-kpi-RequiereAtencion-amarillo1,
+.hu7-tarjeta-kpi-RequiereAtencion-amarillo2 {
+  background-color: #FEFCE8;
+  border-left: 4px solid var(--warning-color); 
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.hu7-tarjeta-kpi-CuentasBloqueadas {
+  background-color: #F8FAFC;
+  border-left: 4px solid var(--muted-text-color); 
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.descripcion {
+  font-size: 13px;
+  color: var(--muted-text-color);
+  margin-top: 4px;
 }
