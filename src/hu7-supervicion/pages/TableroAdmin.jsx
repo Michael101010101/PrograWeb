@@ -1,5 +1,5 @@
 import React from 'react';
-import './hu7.css';
+import '../hu7.css';
 
 export default function TableroAdmin() {
     const totalTrabajs = 12;
