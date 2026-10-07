@@ -1,0 +1,16 @@
+.hu7-contenedorSUP{
+    padding: 5px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+/*tablero por estados*/
+.hu7-tarjeta-kpi-TrabajoEstado{
+    padding: 5px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+
+}

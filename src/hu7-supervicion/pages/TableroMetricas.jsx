@@ -1,4 +1,4 @@
-import '../hu7.css'; 
+import '../TableroMetricas.css'; 
 
 export default function TableroAdmin() {
   return (
