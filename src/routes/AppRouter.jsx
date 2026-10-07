@@ -16,6 +16,12 @@ import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
 import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
 
+// HU-7 · Supervisión y métricas
+import TableroArmin from '../hu7-supervicion/pages/TableroAdmin.jsx';
+import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
+import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
+
+
 // Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
 export default function AppRouter() {
   return (
