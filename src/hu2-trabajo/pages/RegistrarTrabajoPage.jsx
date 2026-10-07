@@ -1,20 +1,18 @@
 import './registrarTrabajo.css';
+import PageLayout from '../../shared/components/PageLayout.jsx';
+import PageHead from '../../shared/components/PageHead.jsx';
 
 export default function RegistrarTrabajoPage() {
   return (
-    <main className="registro-trabajo-page">
+    <PageLayout>
       <div className="registro-contenedor">
         <section className="registro-principal">
 
-          <p className="ruta">
-            Mi trabajo / Nuevo registro
-          </p>
-
-          <h1>Registrar mi trabajo de fin de carrera</h1>
-
-          <p className="descripcion">
-            Completa la información inicial de tu trabajo.
-          </p>
+          <PageHead
+            migas="Mi trabajo / Nuevo registro"
+            titulo="Registrar mi trabajo de fin de carrera"
+            descripcion="Completa la información inicial de tu trabajo."
+          />
 
           <form>
 
@@ -75,6 +73,6 @@ export default function RegistrarTrabajoPage() {
 
         </section>
       </div>
-    </main>
+    </PageLayout>
   );
 }   

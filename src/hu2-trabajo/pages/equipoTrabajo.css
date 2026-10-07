@@ -1,0 +1,58 @@
+.equipo-contenedor {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  
+  .equipo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  
+  .buscar-estudiante,
+  .integrantes {
+    background: white;
+    border: 1px solid #e1e3dc;
+    padding: 24px;
+  }
+  
+  .buscar-estudiante h2,
+  .integrantes h2 {
+    margin-top: 0;
+    color: #1e4534;
+  }
+  
+  .resultado,
+  .integrante {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e1e3dc;
+  }
+  
+  .resultado p,
+  .integrante p {
+    margin: 4px 0 0;
+    color: #66716b;
+    font-size: 14px;
+  }
+  
+  .resultado button,
+  .integrante button {
+    padding: 8px 14px;
+    border: 1px solid #2c5f4a;
+    background: white;
+    color: #2c5f4a;
+    cursor: pointer;
+  }
+  
+  .integrantes-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .no-disponible {
+    opacity: 0.6;
+  }
