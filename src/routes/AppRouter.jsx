@@ -65,9 +65,14 @@ export default function AppRouter() {
         <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
       </Route>
 
-      {/* Administrador · coordinación (HU-7) */}
+      {/* Administrador | coordinación (HU-7) */}
       <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
-        <Route path="invitaciones" element={<InvitacionesPage />} />
+        /* temporal para prueba directa: */
+        <Route path="invitaciones" element={<TableroAdmin />} />
+        <Route path="invitaciones" element={<GestionUsuarios />} />
+        <Route path="invitaciones" element={<CargaAsesores />} />
+
+        
         
         {/* mis paginas*/
         
