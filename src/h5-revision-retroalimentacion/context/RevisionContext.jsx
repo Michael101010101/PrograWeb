@@ -16,11 +16,28 @@ export function RevisionProvider({ children }) {
     );
   };
 
+  const agregarComentario = (id, nuevoComentario) => {
+    setAvances((avancesActuales) =>
+      avancesActuales.map((avance) =>
+        avance.id === Number(id)
+          ? {
+              ...avance,
+              comentarios: [
+                ...(avance.comentarios || []),
+                nuevoComentario,
+              ],
+            }
+          : avance
+      )
+    );
+  };
+
   return (
     <RevisionContext.Provider
       value={{
         avances,
         cambiarEstadoAvance,
+        agregarComentario,
       }}
     >
       {children}

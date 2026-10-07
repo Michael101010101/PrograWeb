@@ -8,9 +8,8 @@ import { useRevision } from '../context/RevisionContext.jsx';
 export default function RevisionAvancePage() {
   const { id } = useParams();
   const { usuario } = useAuth();
-  const { avances, cambiarEstadoAvance } = useRevision();
+const {avances,cambiarEstadoAvance, agregarComentario,} = useRevision();
   const [comentario, setComentario] = useState('');
-  const [comentarios, setComentarios] = useState([]);
 
  const avance = avances.find(
   (item) => String(item.id) === id
@@ -30,13 +29,14 @@ const handleObservar = () => {
     return;
   }
 
-  const nuevoComentario = {
-    id: Date.now(),
-    autor: `${usuario.nombres} ${usuario.apellidos}`,
-    texto: comentario.trim(),
-  };
+ const nuevoComentario = {
+      id: Date.now(),
+      autor: `${usuario.nombres} ${usuario.apellidos}`,
+      rol: usuario.rol,
+      texto: comentario.trim(),
+};
 
-  setComentarios([...comentarios, nuevoComentario]);
+  agregarComentario(id, nuevoComentario);
   setComentario('');
   cambiarEstadoAvance(id, 'observado');
 
@@ -45,19 +45,20 @@ const handleObservar = () => {
 
 const handleAprobar = () => {
   if (comentario.trim() !== '') {
-    const nuevoComentario = {
+        const nuevoComentario = {
       id: Date.now(),
       autor: `${usuario.nombres} ${usuario.apellidos}`,
+      rol: usuario.rol,
       texto: comentario.trim(),
-    };
+};
 
-    setComentarios([...comentarios, nuevoComentario]);
+    agregarComentario(id, nuevoComentario);
     setComentario('');
   }
 
-   cambiarEstadoAvance(id, 'aprobado');
+  cambiarEstadoAvance(id, 'aprobado');
 
-   alert('Avance aprobado correctamente.');
+  alert('Avance aprobado correctamente.');
 };
 
   return (
@@ -143,20 +144,20 @@ const handleAprobar = () => {
         <div className="h5-revision__seccion">
           <h2>Comentarios y retroalimentación</h2>
 
-        <div className="h5-revision__comentarios">
-         {comentarios.length === 0 ? (
-         <p className="h5-revision__sin-comentarios">
-         Aún no hay comentarios para esta versión.
-          </p>
-           ) : (
-           comentarios.map((item) => (
-            <div key={item.id} className="h5-revision__comentario">
-              <strong>{item.autor}</strong>
-             <p>{item.texto}</p>
-             </div>
+              <div className="h5-revision__comentarios">
+          {(avance.comentarios || []).length === 0 ? (
+            <p className="h5-revision__sin-comentarios">
+              Aún no hay comentarios para esta versión.
+            </p>
+          ) : (
+            avance.comentarios.map((item) => (
+              <div key={item.id} className="h5-revision__comentario">
+                <strong>{item.autor}</strong>
+                <p>{item.texto}</p>
+              </div>
             ))
-              )}
-          </div>
+          )}
+        </div>
 
           <label
             className="h5-revision__label"

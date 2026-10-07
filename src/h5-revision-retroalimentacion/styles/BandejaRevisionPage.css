@@ -104,3 +104,27 @@
 .btn-revisar:hover {
   background-color: #174f3c;
 }
+
+.h5-bandeja__revision-resultado {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.h5-bandeja__estado {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.h5-bandeja__estado--aprobado {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.h5-bandeja__estado--observado {
+  background-color: #fff3e0;
+  color: #b45309;
+}
