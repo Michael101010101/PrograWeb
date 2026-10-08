@@ -1,0 +1,160 @@
+/* Estilos de la HU-6 · Sustentación.
+   Usan las variables del sistema de diseño (shared/styles/tokens.css).
+   Todas las clases empiezan con hu6- para no chocar con las de otras historias.
+   Este archivo se carga ANTES que los estilos compartidos, por eso cuando se
+   modifica una clase compartida (.card, .btn) se usa un selector más específico. */
+
+/* ───────────── Cabecera: dato del centro ───────────── */
+.hu6-slot {
+  display: flex; align-items: center; gap: 10px; padding: 8px 16px; max-width: 480px;
+  background: var(--surface-subtle); border: 1px solid var(--border); border-radius: var(--radius);
+  font-size: 13px; color: var(--muted);
+}
+.hu6-slot strong { color: var(--primary-dark); font-weight: 600; white-space: nowrap; }
+.hu6-slot--trabajo { background: var(--primary-soft); border-color: var(--primary-soft); color: var(--primary-dark); }
+.hu6-slot__texto { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hu6-slot__barra { width: 70px; height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; flex-shrink: 0; }
+.hu6-slot__barra div { height: 100%; background: var(--primary); }
+
+/* ───────────── Estructura de dos columnas ───────────── */
+.hu6-layout { display: grid; grid-template-columns: minmax(0, 1fr) 390px; gap: 24px; align-items: start; }
+.hu6-columna { display: grid; gap: 20px; }
+.hu6-layout .card + .card, .hu6-columna .card + .card { margin-top: 0; }
+.hu6-subtitulo-lora { font-family: var(--font-display); font-size: 17px; color: var(--muted); margin-top: 6px; }
+
+/* ───────────── Formularios ───────────── */
+.hu6-form { display: grid; gap: 18px; }
+.hu6-fila { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.card.hu6-form-card { padding: 28px; }
+.hu6-acciones { display: flex; justify-content: flex-end; align-items: center; gap: 16px; padding-top: 20px; border-top: 1px solid var(--border); }
+.hu6-caja-gris { padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-subtle); font-size: 14px; color: var(--muted); }
+
+/* Botones segmentados (Modalidad, Resultado) */
+.hu6-segmentado { display: grid; grid-auto-columns: 1fr; grid-auto-flow: column; gap: 10px; }
+.hu6-segmento {
+  min-height: 44px; padding: 0 12px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+  background: var(--surface); color: var(--muted); font-size: 14px; cursor: pointer;
+}
+.hu6-segmento:disabled { cursor: not-allowed; opacity: 0.6; }
+.hu6-segmento--activo { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-dark); font-weight: 600; }
+
+/* ───────────── Tarjetas laterales ───────────── */
+.hu6-bloques { display: grid; gap: 10px; margin-top: 12px; }
+.hu6-bloque {
+  display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; width: 100%;
+  border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); font-size: 15px; text-align: left;
+}
+button.hu6-bloque { cursor: pointer; }
+.hu6-bloque--ocupada { background: var(--surface-subtle); }
+.hu6-bloque--ocupada span:last-child { color: var(--danger); }
+.hu6-bloque--libre span:last-child { color: var(--success); }
+.hu6-bloque--seleccionada { background: var(--primary-soft); border-color: var(--primary); font-weight: 600; color: var(--primary-dark); }
+.hu6-lista-datos { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 10px; font-size: 15px; }
+.hu6-lista-datos li { display: flex; justify-content: space-between; gap: 12px; }
+.hu6-pie-enlace { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+
+/* ───────────── Listado de sustentaciones ───────────── */
+.card.hu6-tabla-card { padding: 0; overflow: hidden; margin-bottom: 20px; }
+.hu6-tabla-card__head { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; background: var(--surface-subtle); border-bottom: 1px solid var(--border); }
+.hu6-tabla { width: 100%; border-collapse: collapse; font-size: 14px; }
+.hu6-tabla th { text-align: left; padding: 10px 24px; font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+.hu6-tabla td { padding: 14px 24px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.hu6-tabla td:first-child { white-space: nowrap; }
+.hu6-tabla tr:last-child td { border-bottom: 0; }
+.hu6-tabla__acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn.hu6-btn-chico { min-height: 32px; padding: 0 12px; font-size: 13px; }
+
+/* ───────────── Jurado ───────────── */
+.card.hu6-docentes { padding: 0; overflow: hidden; }
+.hu6-docente { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 24px; border-bottom: 1px solid var(--border); }
+.hu6-docente__nombre { font-size: 16px; }
+.hu6-docente__meta { font-size: 13px; color: var(--muted); }
+.hu6-docente--conflicto { background: var(--warning-soft); }
+.hu6-docente--conflicto .hu6-docente__meta { color: var(--warning-text); }
+.hu6-docente--bloqueado { background: var(--surface-subtle); }
+.hu6-docente--bloqueado .hu6-docente__nombre { color: var(--muted); }
+.hu6-docente--bloqueado .hu6-docente__meta { color: var(--danger); }
+.btn.hu6-btn-gris { background: var(--surface-subtle); border-color: var(--border); color: var(--muted); }
+.btn.hu6-btn-aviso { background: var(--surface); border-color: var(--warning); color: var(--warning-text); }
+.hu6-nota-pie { padding: 14px 24px; background: var(--surface-subtle); font-size: 13px; color: var(--muted); }
+
+.hu6-miembro { padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius); display: grid; gap: 4px; }
+.hu6-miembro--presidente { background: var(--primary-soft); border-color: var(--primary); }
+.hu6-miembro__fila { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.hu6-miembro__nombre { font-weight: 500; }
+.hu6-miembro--presidente .hu6-miembro__nombre { color: var(--primary-dark); }
+.hu6-miembro .link-button { font-size: 13px; white-space: nowrap; }
+.link-button.hu6-link-peligro { color: var(--danger); }
+.hu6-contador { padding: 4px 10px; border-radius: var(--radius-sm); background: var(--primary-soft); color: var(--success); font-size: 13px; font-weight: 600; }
+
+/* ───────────── Acta ───────────── */
+.hu6-criterios { display: grid; grid-template-columns: minmax(0, 1fr) 140px 280px; align-items: center; gap: 10px 16px; }
+.hu6-criterios .text-label { margin-top: 6px; }
+.hu6-nota-input { text-align: center; font-weight: 600; }
+.hu6-nota-final {
+  display: flex; justify-content: space-between; align-items: center; padding: 14px 16px;
+  border: 1px solid var(--primary); border-radius: var(--radius-sm); background: var(--primary-soft);
+  font-weight: 600; color: var(--primary-dark);
+}
+.hu6-nota-final strong { font-size: 30px; line-height: 36px; }
+
+/* ───────────── Mi sustentación (estudiante) ───────────── */
+.hu6-destacado { padding: 24px 28px; border: 1px solid var(--primary); border-radius: var(--radius); background: var(--primary-soft); }
+.hu6-destacado__head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 16px; font-size: 13px; }
+.hu6-tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.hu6-grande { font-family: var(--font-display); font-size: 32px; line-height: 40px; font-weight: 600; color: var(--primary-dark); }
+.hu6-chip-blanco { background: var(--surface); }
+.hu6-requisitos { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
+.hu6-requisitos li { display: flex; gap: 12px; align-items: flex-start; }
+.hu6-check {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center;
+  font-size: 13px; font-weight: 700; margin-top: 1px;
+}
+.hu6-check--hecho { background: var(--success); color: #fff; }
+.hu6-check--pendiente { border: 2px dashed var(--muted); }
+.hu6-resultado { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.hu6-resultado__nota { font-size: 56px; line-height: 60px; font-weight: 700; color: var(--success); }
+.hu6-resultado__nota--mal { color: var(--danger); }
+.hu6-tabla-simple { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 12px; }
+.hu6-tabla-simple th { text-align: left; font-size: var(--fs-label); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; padding: 6px 0; }
+.hu6-tabla-simple td { padding: 8px 0; }
+.hu6-tabla-simple td:last-child { font-weight: 600; }
+.hu6-cita { margin: 8px 0 0; padding: 14px 18px; border-left: 3px solid var(--primary-dark); background: var(--surface-subtle); }
+.hu6-documentos { display: grid; gap: 12px; margin-top: 12px; }
+.btn.hu6-btn-neutro { background: var(--surface); border-color: var(--border); color: var(--text); }
+
+/* ───────────── Acta para imprimir (documento A4) ───────────── */
+.hu6-impresion { min-height: 100vh; background: var(--bg); padding: 24px 16px 48px; }
+.hu6-impresion__barra { max-width: 794px; margin: 0 auto 16px; display: flex; justify-content: space-between; gap: 12px; }
+.hu6-hoja {
+  position: relative; max-width: 794px; margin: 0 auto; padding: 56px 64px; background: #fff;
+  border: 1px solid var(--border); box-shadow: var(--shadow-card); font-size: 13px;
+}
+.hu6-hoja__encabezado { text-align: center; padding-bottom: 18px; border-bottom: 1px solid var(--border); margin-bottom: 22px; }
+.hu6-hoja__datos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 24px; margin: 12px 0 20px; }
+.hu6-hoja table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); }
+.hu6-hoja th, .hu6-hoja td { padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+.hu6-hoja th:not(:first-child), .hu6-hoja td:not(:first-child) { text-align: center; width: 90px; }
+.hu6-hoja tfoot td { background: var(--primary-soft); color: var(--primary-dark); font-weight: 600; }
+.hu6-firmas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 64px; }
+.hu6-firmas div { border-top: 1px solid var(--text); padding-top: 6px; }
+.hu6-marca-agua {
+  position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none;
+  font-size: 90px; font-weight: 700; color: rgba(180, 50, 43, 0.08); transform: rotate(-20deg);
+}
+
+@media print {
+  .hu6-no-imprimir { display: none !important; }
+  .hu6-impresion { padding: 0; background: #fff; }
+  .hu6-hoja { border: 0; box-shadow: none; max-width: none; }
+}
+
+@media (max-width: 1100px) {
+  .hu6-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .hu6-fila, .hu6-tres, .hu6-hoja__datos, .hu6-firmas { grid-template-columns: 1fr; }
+  .hu6-criterios { grid-template-columns: 1fr 70px 110px; }
+  .hu6-segmentado { grid-auto-flow: row; }
+  .hu6-tabla-card { overflow-x: auto; }
+}
