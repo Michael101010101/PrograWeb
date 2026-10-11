@@ -39,6 +39,13 @@ export default function RegistroEstudiantePage() {
     try {
       const r = await authService.registrarEstudiante(valores);
       setCreado(r);
+      if (!r.correoEnviado) {
+        mostrar({
+          tipo: 'aviso',
+          titulo: 'No se pudo enviar el correo',
+          mensaje: 'Tu cuenta se creó. Usa el enlace de verificación que aparece abajo.',
+        });
+      }
     } catch (err) {
       setErrorGeneral(err.message);
       form.setErrores(err.campos ?? {});
@@ -49,11 +56,15 @@ export default function RegistroEstudiantePage() {
 
   const reenviar = async () => {
     try {
-      const r = await authService.reenviarVerificacion(creado.usuario.id);
-      setCreado((prev) => ({ ...prev, enlaceDemo: r.enlaceDemo }));
+    const r = await authService.reenviarVerificacion(creado.usuario.id);
+    setCreado((prev) => ({ ...prev, enlaceDemo: r.enlaceDemo, correoEnviado: r.correoEnviado }));
+    if (r.correoEnviado) {
       mostrar({ tipo: 'exito', titulo: 'Correo reenviado', mensaje: `Enviamos un nuevo enlace a ${r.correo}.` });
+    } else {
+      mostrar({ tipo: 'aviso', titulo: 'No se pudo enviar el correo', mensaje: 'Usa el nuevo enlace de verificación que aparece abajo.' });
+      }
     } catch (err) {
-      mostrar({ tipo: 'error', titulo: 'No se pudo reenviar', mensaje: err.message });
+    mostrar({ tipo: 'error', titulo: 'No se pudo reenviar', mensaje: err.message });
     }
   };
 
@@ -64,6 +75,7 @@ export default function RegistroEstudiantePage() {
       navExtra={{ to: '/registro/estudiante', label: 'Crear cuenta' }}
       accionesPublicas={<Link to="/login" className="btn btn--outline">Iniciar sesión</Link>}
       footerDetalle="Universidad de Lima · Oficina de Trabajos de Fin de Carrera · Los datos se usan solo para el seguimiento académico"
+      footerPoliticaDatos
     >
       <PageHead
         migas="Inicio · Crear cuenta · Estudiante"
@@ -139,7 +151,7 @@ export default function RegistroEstudiantePage() {
         <p className="text-muted">
           Enviamos un enlace de verificación a {creado?.usuario.correo}. Tienes 24 horas para activarlo.
         </p>
-        <DemoLink to={creado?.enlaceDemo} texto="Abrir enlace de verificación" />
+        {!creado?.correoEnviado && <DemoLink to={creado?.enlaceDemo} texto="Abrir enlace de verificación" />}
         <div className="modal__actions">
           <button className="btn btn--primary" onClick={() => navigate('/login')}>Ir a iniciar sesión</button>
           <button className="link-button" onClick={reenviar}>Reenviar el correo</button>
