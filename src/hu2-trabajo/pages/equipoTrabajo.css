@@ -1,58 +1,351 @@
 .equipo-contenedor {
-    max-width: 1500px;
-    margin: 0 auto;
-  }
-  
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+/* BOTONES SUPERIORES */
+
+.equipo-acciones-superiores {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.btn-volver {
+  border: none;
+  background: transparent;
+  color: #245942;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 8px;
+}
+
+.btn-guardar-equipo {
+  border: 1px solid #2c654d;
+  background: #2c654d;
+  color: white;
+  border-radius: 5px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-guardar-equipo:hover {
+  background: #214c3b;
+}
+
+/* DOS COLUMNAS */
+
+.equipo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 22px;
+  align-items: stretch;
+}
+
+.equipo-panel {
+  background: white;
+  border: 1px solid #dedfd9;
+  border-radius: 5px;
+  min-height: 520px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04);
+}
+
+.buscar-panel {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.equipo-panel h2 {
+  margin: 0;
+  color: #214f3d;
+  font-size: 20px;
+}
+
+/* BÚSQUEDA */
+
+.campo-busqueda {
+  margin-top: 20px;
+}
+
+.campo-busqueda label {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  color: #68716c;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.campo-busqueda input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d5d9d5;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.campo-busqueda input:focus {
+  outline: none;
+  border-color: #2c654d;
+}
+
+/* RESULTADOS */
+
+.resultados-box {
+  border: 1px solid #dcded9;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 16px;
+}
+
+.resultados-titulo {
+  background: #f6f6f3;
+  border-bottom: 1px solid #dcded9;
+  padding: 11px 14px;
+  font-size: 10px;
+  color: #6a726e;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.resultado-estudiante {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 14px;
+  border-bottom: 1px solid #e1e2de;
+}
+
+.resultado-estudiante:last-child {
+  border-bottom: none;
+}
+
+.resultado-estudiante strong {
+  display: block;
+  font-size: 14px;
+  color: #202723;
+}
+
+.resultado-estudiante p {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: #68716c;
+}
+
+.resultado-estudiante .texto-no-disponible {
+  color: #b77a26;
+}
+
+/* BOTONES RESULTADOS */
+
+.btn-agregar {
+  background: white;
+  color: #275d46;
+  border: 1px solid #275d46;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-agregar:hover:not(:disabled) {
+  background: #eef5f1;
+}
+
+.btn-agregar:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.btn-no-disponible {
+  background: #f6f6f3;
+  color: #717873;
+  border: 1px solid #d8dbd7;
+  border-radius: 4px;
+  padding: 8px 13px;
+}
+
+.nota-estudiantes {
+  margin-top: auto;
+  padding-top: 25px;
+  font-size: 11px;
+  color: #6c746f;
+}
+
+/* PANEL INTEGRANTES */
+
+.integrantes-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.integrantes-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px;
+  border-bottom: 1px solid #e0e2dd;
+}
+
+.contador-integrantes {
+  background: #e5f0ea;
+  color: #245841;
+  border-radius: 3px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.integrante-fila {
+  min-height: 80px;
+  padding: 14px 22px;
+  border-bottom: 1px solid #e1e2df;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.integrante-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.integrante-info strong {
+  font-size: 14px;
+  color: #222925;
+}
+
+.integrante-info p {
+  margin: 4px 0 0;
+  color: #6b736e;
+  font-size: 11px;
+}
+
+/* AVATAR */
+
+.avatar-integrante {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e4efe9;
+  color: #397059;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* OPCIONES */
+
+.integrante-opciones {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  white-space: nowrap;
+}
+
+.badge-responsable {
+  background: #fff1d9;
+  color: #ad761b;
+  border-radius: 3px;
+  padding: 6px 10px;
+  font-size: 10px;
+}
+
+.texto-tu {
+  font-size: 12px;
+  color: #535b57;
+}
+
+.btn-responsable,
+.btn-retirar {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 12px;
+}
+
+.btn-responsable {
+  color: #265e46;
+  font-weight: 600;
+}
+
+.btn-retirar {
+  color: #a62d2d;
+}
+
+/* ESPACIO VACÍO */
+
+.espacio-disponible {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 22px;
+  color: #68716c;
+}
+
+.circulo-mas {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px dashed #b7beb9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
+  color: #89918c;
+  flex-shrink: 0;
+}
+
+.espacio-disponible strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.espacio-disponible p {
+  margin: 4px 0 0;
+  font-size: 11px;
+}
+
+/* NOTA INFERIOR */
+
+.nota-responsable {
+  margin-top: auto;
+  border-top: 1px solid #e0e2de;
+  padding: 16px 22px;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #6b736e;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
   .equipo-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr;
   }
-  
-  .buscar-estudiante,
-  .integrantes {
-    background: white;
-    border: 1px solid #e1e3dc;
-    padding: 24px;
+
+  .equipo-acciones-superiores {
+    margin-top: 15px;
   }
-  
-  .buscar-estudiante h2,
-  .integrantes h2 {
-    margin-top: 0;
-    color: #1e4534;
+
+  .integrante-fila {
+    align-items: flex-start;
+    flex-direction: column;
   }
-  
-  .resultado,
-  .integrante {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 0;
-    border-bottom: 1px solid #e1e3dc;
+
+  .integrante-opciones {
+    margin-left: 56px;
   }
-  
-  .resultado p,
-  .integrante p {
-    margin: 4px 0 0;
-    color: #66716b;
-    font-size: 14px;
-  }
-  
-  .resultado button,
-  .integrante button {
-    padding: 8px 14px;
-    border: 1px solid #2c5f4a;
-    background: white;
-    color: #2c5f4a;
-    cursor: pointer;
-  }
-  
-  .integrantes-titulo {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .no-disponible {
-    opacity: 0.6;
-  }
+}

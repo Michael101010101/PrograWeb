@@ -3,6 +3,7 @@ import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
+import FichaTrabajoPage from '../hu2-trabajo/pages/FichaTrabajoPage.jsx';
 
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
@@ -26,6 +27,7 @@ export default function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/andrea" element={<RegistrarTrabajoPage />} />
       <Route path="/andrea-equipo" element={<EquipoTrabajoPage />} />
+      <Route path="/andrea-ficha" element={<FichaTrabajoPage />} />
       <Route path="/proceso" element={<EnConstruccion titulo="El proceso" historia="HU-1 (contenido informativo)" />} />
       <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
       <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
@@ -55,6 +57,8 @@ export default function AppRouter() {
       <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
       <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
       <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
+      <Route path="mi-trabajo/ficha" element={<FichaTrabajoPage />}
+/>
       </Route>
 
       {/* Asesor */}
