@@ -18,8 +18,8 @@
 
 
 body, #root{
-    min-width: 1920px;    
-    width: 1920px;
+    max-width: 1920px;    
+    width: 100%;
     margin: 0 auto;
     background-color: var(--background-color); 
     color: var(--text-color);
@@ -33,17 +33,17 @@ body, #root{
 .hu7-contenedorINF {
   width: 100%;
   max-width: 1920px;
-  padding: 32px 48px;    
+  padding: 5px 48px;    
   box-sizing: border-box;
 }
 
 
 .h7-titulo-pantalla{
     font-family: 'Lora', serif;
-    font-size: 30px;
-    line-height: 36px;
+    font-size: 40px;
+    line-height: 40px;
     color: var(--primary-color);
-    margin-bottom: 24px;
+    margin-bottom: 10px;
 }
 
 .h7-tarjeta-kpi {

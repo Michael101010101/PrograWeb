@@ -1,8 +1,8 @@
 import React from 'react';
-import Header from '../../componentes/Header.jsx'; 
-import Footer from '../../componentes/Footer.jsx'; 
-import '../hu7.css';
-import '../TableroAdmin.css';
+import Header from '../../shared/components/Header.jsx';
+import Footer from '../../shared/components/Footer.jsx';
+import '../css/hu7.css';
+import '../css/TableroAdmin.css';
 
 
 export default function TableroAdmin() {
@@ -36,12 +36,31 @@ export default function TableroAdmin() {
 
             <main className="hu7-contenido-principal">
                 <div className="hu7-contenedorSUP">
-                    <h6 className="hu7-subtitulo-pantalla">Inicio · Tablero</h6>
-                    <h1 className="hu7-titulo-pantalla">Tablero del Periodo</h1>
-                    <h6 className="hu7-subtitulo-pantalla">
-                    {periodo} · datos al {new Date().toLocaleDateString()}
-                    </h6>
-                </div>
+                    <div className="hu7-titulo-seccion">
+                        <h6 className="hu7-subtitulo-pantalla">Inicio · Tablero</h6>
+                        <h1 className="hu7-titulo-pantalla">Tablero del Periodo</h1>
+                        <h6 className="hu7-subtitulo-pantalla2">
+                        Semestre {periodo} · datos al {new Date().toLocaleDateString()}
+                        </h6>
+                    </div>
+
+                    <div className="hu7-barra-controles">
+                        <div className="hu7-campo-periodo">
+                        <label htmlFor="select-periodo">PERIODO</label>
+                        <select id="select-periodo" className="hu7-select-periodo" defaultValue={periodo}>
+                            <option value="2026-2">2026-2</option>
+                            <option value="2026-1">2026-1</option>
+                            <option value="2025-2">2025-2</option>
+                        </select>
+                        </div>
+
+                        <button type="button" className="hu7-btn-exportar">
+                        Exportar reporte
+                        </button>
+                    </div>
+                    </div>
+
+                
 
                 <div className="hu7-contenedorINF">
 
@@ -219,6 +238,6 @@ export default function TableroAdmin() {
         
         <Footer detalle="12 trabajos del periodo" />
         </div>
-        
+
     );
     }
