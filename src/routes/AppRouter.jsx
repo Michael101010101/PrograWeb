@@ -20,6 +20,8 @@ import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
 import TableroAdmin from '../hu7-supervicion/pages/TableroAdmin.jsx';
 import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
+import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
+
   
 
 
