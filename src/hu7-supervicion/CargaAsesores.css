@@ -1,0 +1,76 @@
+
+.hu7-pantalla-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.hu7-contenido-principal {
+  flex: 1;
+}
+
+
+.hu7-header-slot-asesores {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #EFEFE9;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.hu7-header-slot-asesores strong {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+
+
+.hu7-contenedorSUP {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 48px 24px 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hu7-titulo-seccion {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hu7-barra-controles {
+  display: flex;
+  align-items: center;
+}
+
+.hu7-btn-exportar {
+  height: 40px;
+  padding: 0 20px;
+  background-color: var(--surface);
+  border: 1px solid var(--primary-color);
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.hu7-btn-exportar:hover {
+  background-color: var(--primary-soft);
+}
+
+.hu7-contenedorINF {
+  padding: 0 48px 48px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
