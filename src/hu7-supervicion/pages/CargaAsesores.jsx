@@ -2,7 +2,7 @@ import React from 'react';
 import Header from '/src/shared/components/Header.jsx';
 import Footer from '/src/shared/components/Footer.jsx';
 import '../hu7.css';
-import '../css/CargaAsesores.css';
+import '../CargaAsesores.css';
 
 export default function CargaAsesores() {
   const periodo = "2026-2";
