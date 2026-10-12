@@ -1,6 +1,5 @@
 import React from 'react';
-import Header from '/src/shared/components/Header.jsx';
-import Footer from '/src/shared/components/Footer.jsx';
+import PageLayout from '../../shared/components/PageLayout.jsx';
 import '../hu7.css';
 import '../CargaAsesores.css';
 
@@ -8,17 +7,7 @@ export default function CargaAsesores() {
   const periodo = "2026-2";
 
   return (
-    <div className="hu7-pantalla-layout">
-      <Header 
-        slot={
-          <div className="hu7-header-slot-asesores">
-            <span>Asesores activos</span>
-            <strong>38</strong>
-          </div>
-        } 
-      />
-
-      {/* Contenido Principal */}
+    <PageLayout>
       <main className="hu7-contenido-principal">
         
         <div className="hu7-contenedorSUP">
@@ -39,20 +28,16 @@ export default function CargaAsesores() {
 
         <div className="hu7-contenedorINF">
           
-            <div className="hu7-tarjeta-tabla-asesores">
-            </div>
+          <div className="hu7-tarjeta-tabla-asesores">
+            {/*  la tabla de asesores */}
+          </div>
 
-            <div className="hu7-fila-resumen-asesores">
-            </div>
+          <div className="hu7-fila-resumen-asesores">
+            {/*  indicadores globales de carga */}
+          </div>
 
         </div>
       </main>
-
-
-
-
-
-      <Footer detalle="6 asesores con carga" />
-    </div>
+    </PageLayout>
   );
 }

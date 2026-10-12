@@ -1,21 +1,11 @@
 import React from 'react';
-import Header from '/src/shared/components/Header.jsx';
-import Footer from '/src/shared/components/Footer.jsx';
+import PageLayout from '../../shared/components/PageLayout.jsx';
 import '../hu7.css';
 import '../TrabajosAdmin.css';
 
 export default function TrabajosAdmin() {
   return (
-    <div className="hu7-pantalla-layout">
-      <Header 
-        slot={
-          <div className="hu7-header-slot-trabajos">
-            <span>Trabajos del periodo</span>
-            <strong>12</strong>
-          </div>
-        } 
-      />
-
+    <PageLayout>
       <main className="hu7-contenido-principal">
         
         <div className="hu7-contenedorSUP">
@@ -108,7 +98,7 @@ export default function TrabajosAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {/* lasfilas dinámicas */}
+                {/* Filas dinámicas */}
               </tbody>
             </table>
 
@@ -125,8 +115,6 @@ export default function TrabajosAdmin() {
 
         </div>
       </main>
-
-      <Footer detalle="12 trabajos del periodo" />
-    </div>
+    </PageLayout>
   );
 }

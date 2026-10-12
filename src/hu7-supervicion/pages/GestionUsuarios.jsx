@@ -1,24 +1,12 @@
 
-
 import React from 'react';
-import Header from '/src/shared/components/Header.jsx';
-import Footer from '/src/shared/components/Footer.jsx';
+import PageLayout from '../../shared/components/PageLayout.jsx';
 import '../hu7.css';
 import '../GestionUsuarios.css';
 
 export default function GestionUsuarios() {
   return (
-    <div className="hu7-pantalla-layout">
-      <Header 
-        slot={
-          <div className="hu7-header-slot-usuarios">
-            <span>Usuarios</span>
-            <strong>86 · 3 bloqueados</strong>
-          </div>
-        } 
-      />
-
-
+    <PageLayout>
       <main className="hu7-contenido-principal">
         
         {/* PARTE SUPERIOR: Títulos a la izquierda + Botones de acción a la derecha */}
@@ -101,6 +89,8 @@ export default function GestionUsuarios() {
                 </tr>
               </thead>
               <tbody>
+
+
               </tbody>
             </table>
 
@@ -119,8 +109,6 @@ export default function GestionUsuarios() {
 
         </div>
       </main>
-
-      <Footer detalle="única sección con gestión de roles" />
-    </div>
+    </PageLayout>
   );
 }
