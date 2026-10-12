@@ -1,9 +1,7 @@
 import React from 'react';
-import Header from '../../shared/components/Header.jsx';
-import Footer from '../../shared/components/Footer.jsx';
+import PageLayout from '../../shared/components/PageLayout.jsx';
 import "../hu7.css";
 import "../TableroAdmin.css";
-
 
 export default function TableroAdmin() {
     const totalTrabajos = 12;
@@ -31,36 +29,32 @@ export default function TableroAdmin() {
     const fechalimite = "19/12/2026";
 
     return (
-        <div className="hu7-pantalla-layout">
-            <Header slot={<span>{periodo} · datos al {new Date().toLocaleDateString()}</span>} />
-
+        <PageLayout> 
             <main className="hu7-contenido-principal">
                 <div className="hu7-contenedorSUP">
                     <div className="hu7-titulo-seccion">
                         <h6 className="hu7-subtitulo-pantalla">Inicio · Tablero</h6>
                         <h1 className="hu7-titulo-pantalla">Tablero del Periodo</h1>
                         <h6 className="hu7-subtitulo-pantalla2">
-                        Semestre {periodo} · datos al {new Date().toLocaleDateString()}
+                            Semestre {periodo} · datos al {new Date().toLocaleDateString()}
                         </h6>
                     </div>
 
                     <div className="hu7-barra-controles">
                         <div className="hu7-campo-periodo">
-                        <label htmlFor="select-periodo">PERIODO</label>
-                        <select id="select-periodo" className="hu7-select-periodo" defaultValue={periodo}>
-                            <option value="2026-2">2026-2</option>
-                            <option value="2026-1">2026-1</option>
-                            <option value="2025-2">2025-2</option>
-                        </select>
+                            <label htmlFor="select-periodo">PERIODO</label>
+                            <select id="select-periodo" className="hu7-select-periodo" defaultValue={periodo}>
+                                <option value="2026-2">2026-2</option>
+                                <option value="2026-1">2026-1</option>
+                                <option value="2025-2">2025-2</option>
+                            </select>
                         </div>
 
                         <button type="button" className="hu7-btn-exportar">
-                        Exportar reporte
+                            Exportar reporte
                         </button>
                     </div>
-                    </div>
-
-                
+                </div>
 
                 <div className="hu7-contenedorINF">
 
@@ -72,10 +66,10 @@ export default function TableroAdmin() {
                             <h6>TRABAJOS POR ESTADO</h6>
                             <p className="numero">{totalTrabajos}</p>
                             <div className="hu7-lista-estados">
-                            <div className="hu7-item-estado"><span className="hu7-lista-Propuesta">Propuesta</span> <strong className="Numeronegrita">{Propuesta}</strong></div>
-                            <div className="hu7-item-estado"><span className="hu7-lista-EnDesarrollo">En Desarrollo</span> <strong className="Numeronegrita">{EnDesarrollo}</strong></div>
-                            <div className="hu7-item-estado"><span className="hu7-lista-Concluido">Concluido</span> <strong className="Numeronegrita">{Concluido}</strong></div>
-                            <div className="hu7-item-estado"><span className="hu7-lista-Desistido">Desistido</span> <strong className="Numeronegrita">{Desistido}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-Propuesta">Propuesta</span> <strong className="Numeronegrita">{Propuesta}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-EnDesarrollo">En Desarrollo</span> <strong className="Numeronegrita">{EnDesarrollo}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-Concluido">Concluido</span> <strong className="Numeronegrita">{Concluido}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-Desistido">Desistido</span> <strong className="Numeronegrita">{Desistido}</strong></div>
                             </div>
                         </div>
 
@@ -84,17 +78,16 @@ export default function TableroAdmin() {
                             <h6>AVANCE PROMEDIO</h6>
                             <p className="numero">{avancePromedio}%</p>
                             <div className="hu7-barra-contenedor">
-                            <div className="hu7-barra-relleno verde" style={{ width: `${avancePromedio}%` }}></div>
+                                <div className="hu7-barra-relleno verde" style={{ width: `${avancePromedio}%` }}></div>
                             </div>
-                            <div className="Descripccion">De los 9 trabajos activos . +7 puntos frente a agosto</div>
-
+                            <div className="descripcion">De los 9 trabajos activos · +7 puntos frente a agosto</div>
                         </div>
 
                         {/* Entregables Vencidos */}
                         <div className="hu7-tarjeta-kpi-EntregablesVencidos">
                             <h6>ENTREGABLES VENCIDOS</h6>
                             <p className="numeroVencido">{entregablesVencidos}</p>
-                            <div className="Descripccion">En 5 trabajos . el más antiguo con 14 días de retraso</div>
+                            <div className="descripcion">En 5 trabajos · el más antiguo con 14 días de retraso</div>
                             
                             <button type="button" 
                                 className="hu7-boton-texto" 
@@ -102,14 +95,13 @@ export default function TableroAdmin() {
                             >
                                 Ver detalle
                             </button>
-
                         </div>
 
                         {/* Sustentaciones */}
                         <div className="hu7-tarjeta-kpi-Sustentaciones">
                             <h6>SUSTENTACIONES</h6>
                             <p className="numero">2</p>
-                            <div className="Descripccion">1 programada . realizada . nota promedio 17</div>
+                            <div className="descripcion">1 programada · realizada · nota promedio 17</div>
 
                             <button type="button" 
                                 className="hu7-boton-texto" 
@@ -117,14 +109,12 @@ export default function TableroAdmin() {
                             >
                                 Ver calendario
                             </button>
-
                         </div>
 
-                        </div>
+                    </div>
 
-
-                        {/* FILA INF de 3 CAJAS */}
-                        <div className="hu7-kpi-fila-inferior">
+                    {/* FILA INF DE 3 CAJAS */}
+                    <div className="hu7-kpi-fila-inferior">
 
                         {/* Trabajos por Línea de Investigación */}
                         <div className="hu7-tarjeta-kpi-TrabajosLineaInvestigacion">
@@ -143,14 +133,12 @@ export default function TableroAdmin() {
                                 </div>
                             </div>
 
-
                             <div className="hu7-lista-lineas">
                                 <div className="hu7-item-linea"><span>Automatización y control</span> <strong className="Numeronegrita">2</strong></div>
                                 <div className="hu7-barra-contenedor">
                                     <div className="hu7-barra-relleno verde" style={{ width: `${trabajosAutomatizacionControl}%` }}></div>
                                 </div>
                             </div>
-
 
                             <div className="hu7-lista-lineas">
                                 <div className="hu7-item-linea"><span>Innovación educativa</span> <strong className="Numeronegrita">2</strong></div>
@@ -172,8 +160,6 @@ export default function TableroAdmin() {
                                     <div className="hu7-barra-relleno verde" style={{ width: `${trabajosIngenieriaSoftware}%` }}></div>
                                 </div>
                             </div>
-
-                            
                         </div>
 
                         {/* Trabajos por Carrera */}
@@ -182,25 +168,25 @@ export default function TableroAdmin() {
 
                             <div className="hu7-carrera-bloque">
                                 <div className="hu7-item-carrera"><span><strong>Ingeniería de Sistemas</strong></span> <strong>5</strong></div>
-                                    <p className="avancepromedio">Avance promedio {avancepromIngSistemas}%</p>
-                                    <div className="hu7-barra-contenedor">
-                                        <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngSistemas}%` }}></div>
+                                <p className="avancepromedio">Avance promedio {avancepromIngSistemas}%</p>
+                                <div className="hu7-barra-contenedor">
+                                    <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngSistemas}%` }}></div>
                                 </div>
                             </div>
 
                             <div className="hu7-carrera-bloque">
                                 <div className="hu7-item-carrera"><span><strong>Ingeniería Industrial</strong></span> <strong>4</strong></div>
-                                    <p className="avancepromedio">Avance promedio {avancepromIngIndustrial}%</p>
-                                    <div className="hu7-barra-contenedor">
-                                        <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngIndustrial}%` }}></div>
-                                    </div>
+                                <p className="avancepromedio">Avance promedio {avancepromIngIndustrial}%</p>
+                                <div className="hu7-barra-contenedor">
+                                    <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngIndustrial}%` }}></div>
+                                </div>
                             </div>
 
                             <div className="hu7-carrera-bloque">
                                 <div className="hu7-item-carrera"><span><strong>Ingeniería Civil</strong></span> <strong>3</strong></div>
-                                    <p className="avancepromedio">Avance promedio {avancepromIngCivil}%</p>
-                                    <div className="hu7-barra-contenedor">
-                                        <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngCivil}%` }}></div>
+                                <p className="avancepromedio">Avance promedio {avancepromIngCivil}%</p>
+                                <div className="hu7-barra-contenedor">
+                                    <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngCivil}%` }}></div>
                                 </div>
                             </div>
                         </div>
@@ -210,23 +196,23 @@ export default function TableroAdmin() {
                             <h6>REQUIERE ATENCIÓN</h6>
 
                             <div className="hu7-tarjeta-kpi-RequiereAtencion-rojo">
-                            <h6>2 TRABAJOS SIN ASESOR</h6>
-                            <p className="descripcion">La etapa de asignación cierra el {fechacierre}</p>
+                                <h6>2 TRABAJOS SIN ASESOR</h6>
+                                <p className="descripcion">La etapa de asignación cierra el {fechacierre}</p>
                             </div>
 
                             <div className="hu7-tarjeta-kpi-RequiereAtencion-amarillo1">
-                            <h6>1 ASESOR CON CUPO COMPLETO</h6>
-                            <p className="descripcion">Ing. Ocampo Salas · 3 avances en espera hace más de 5 días</p>
+                                <h6>1 ASESOR CON CUPO COMPLETO</h6>
+                                <p className="descripcion">Ing. Ocampo Salas · 3 avances en espera hace más de 5 días</p>
                             </div>
 
                             <div className="hu7-tarjeta-kpi-RequiereAtencion-amarillo2">
-                            <h6>7 TRABAJOS CONCLUIDOS SIN SUSTENTACIÓN</h6>
-                            <p className="descripcion">Programar antes de fecha límite {fechalimite}</p>
+                                <h6>7 TRABAJOS CONCLUIDOS SIN SUSTENTACIÓN</h6>
+                                <p className="descripcion">Programar antes de fecha límite {fechalimite}</p>
                             </div>
 
                             <div className="hu7-tarjeta-kpi-CuentasBloqueadas">
-                            <h6>3 CUENTAS BLOQUEADAS</h6>
-                            <p className="descripcion">Por retiro del semestre o solicitud de Secretaría</p>
+                                <h6>3 CUENTAS BLOQUEADAS</h6>
+                                <p className="descripcion">Por retiro del semestre o solicitud de Secretaría</p>
                             </div>
                         </div>
 
@@ -234,10 +220,6 @@ export default function TableroAdmin() {
 
                 </div>
             </main>
-
-        
-        <Footer detalle="12 trabajos del periodo" />
-        </div>
-
+        </PageLayout>
     );
-    }
+}
