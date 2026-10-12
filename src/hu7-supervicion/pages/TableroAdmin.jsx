@@ -1,8 +1,8 @@
 import React from 'react';
 import Header from '../../shared/components/Header.jsx';
 import Footer from '../../shared/components/Footer.jsx';
-import '../css/hu7.css';
-import '../css/TableroAdmin.css';
+import "/src/hu7-supervicion/css/hu7.css";
+import '/src/hu7-supervicion/css/TableroAdmin.css'
 
 
 export default function TableroAdmin() {
