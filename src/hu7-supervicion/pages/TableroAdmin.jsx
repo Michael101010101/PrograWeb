@@ -36,12 +36,23 @@ export default function TableroAdmin() {
                 <div className="hu7-tarjeta-kpi-TrabajoEstado">
                     <h6>TRABAJOS POR ESTADO</h6>
                     <p className="numero">{totalTrabajos}</p>
-                        <div className="hu7-lista-estados">
+                        <div className="hu7-lista-Propuesta">
                             <div className="hu7-item-estado"><span>Propuesta</span> <strong>{Propuesta}</strong></div>
+                        </div>
+
+                        <div className="hu7-lista-EnDesarrollo">
                             <div className="hu7-item-estado"><span>En Desarrollo</span> <strong>{EnDesarrollo}</strong></div>
+                        </div>
+
+                        <div className="hu7-lista-Concluido">
                             <div className="hu7-item-estado"><span>Concluido</span> <strong>{Concluido}</strong></div>
+                        </div>
+
+                        <div className="hu7-lista-Desistido">
                             <div className="hu7-item-estado"><span>Desistido</span> <strong>{Desistido}</strong></div>
                         </div>
+
+
                 </div>
 
                 {/* 2. Avance Promedio */}
