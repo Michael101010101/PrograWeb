@@ -1,0 +1,63 @@
+.hu7-contenedorSUP{
+    padding: 0 48px 48px 48px;
+}
+
+
+/*tableros base*/
+[class*="hu7-tarjeta-kpi-"] {
+  background-color: var(--surface); 
+  border: 1px solid var(--border); 
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/*titulos interfos*/
+[class*="hu7-tarjeta-kpi-"] h6 {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--muted-text-color); 
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.numero {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--primary-color); 
+  margin: 8px 0;
+}
+
+.hu7-tarjeta-kpi-RequiereAtencion-rojo {
+  background-color: #FDF2F2;
+  border-left: 4px solid var(--danger-color); 
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+ 
+
+
+.hu7-tarjeta-kpi-RequiereAtencion-amarillo1,
+.hu7-tarjeta-kpi-RequiereAtencion-amarillo2 {
+  background-color: #FEFCE8;
+  border-left: 4px solid var(--warning-color); 
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.hu7-tarjeta-kpi-CuentasBloqueadas {
+  background-color: #F8FAFC;
+  border-left: 4px solid var(--muted-text-color); 
+  padding: 12px 16px;
+  border-radius: 4px;
+}
+
+.descripcion {
+  font-size: 13px;
+  color: var(--muted-text-color);
+  margin-top: 4px;
+}
