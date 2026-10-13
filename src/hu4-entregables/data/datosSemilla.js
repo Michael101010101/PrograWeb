@@ -20,7 +20,7 @@ const trabajos = [
     linea: 'Ciencia de datos aplicada',
     estado: 'en_desarrollo',
     integrantes: ['u-001', 'u-002'],
-    asesor: { usuarioId: 'u-101', nombre: 'Dra. Mariela Quispe Ramos', trato: 'tu asesora' },
+    asesor: { usuarioId: 'u-101', nombre: 'Dra. Mariela Quispe Ramos', correo: 'mquispe@ulima.edu.pe', trato: 'tu asesora' },
   },
   {
     codigo: 'TFC-2026-2-015',
@@ -28,7 +28,7 @@ const trabajos = [
     linea: 'Innovación educativa',
     estado: 'en_desarrollo',
     integrantes: [],
-    asesor: { usuarioId: 'u-101', nombre: 'Dra. Mariela Quispe Ramos', trato: 'tu asesora' },
+    asesor: { usuarioId: 'u-101', nombre: 'Dra. Mariela Quispe Ramos', correo: 'mquispe@ulima.edu.pe', trato: 'tu asesora' },
   },
   {
     codigo: 'TFC-2026-2-012',
@@ -36,7 +36,7 @@ const trabajos = [
     linea: 'Gestión de operaciones',
     estado: 'concluido',
     integrantes: ['u-004'],
-    asesor: { usuarioId: 'u-102', nombre: 'Mg. Julio Vargas Aliaga', trato: 'tu asesor' },
+    asesor: { usuarioId: 'u-102', nombre: 'Mg. Julio Vargas Aliaga', correo: 'jvargas@ulima.edu.pe', trato: 'tu asesor' },
   },
 ];
 

@@ -130,7 +130,10 @@ export function detallePlan(datos, codigo, hoy = HOY) {
  *  proximos  -> entregables y requisitos que vencen en los siguientes 14 días
  */
 export function alertasDe(datos, codigo, hoy = HOY) {
-  const { items } = detallePlan(datos, codigo, hoy);
+  const { trabajo, items } = detallePlan(datos, codigo, hoy);
+  const aprobados = items.filter((e) => e.estado === 'aprobado');
+  // Un trabajo concluido ya no genera alertas.
+  if (trabajo?.estado === 'concluido') return { vencidos: [], proximos: [], aprobados, pendientes: [] };
   const enRango = (dias) => dias >= 0 && dias <= DIAS_ALERTA;
 
   const vencidos = items.filter((e) => e.estado === 'vencido');
@@ -143,7 +146,6 @@ export function alertasDe(datos, codigo, hoy = HOY) {
       .filter((r) => enRango(r.diasParaVencer)),
   ].sort((a, b) => a.diasParaVencer - b.diasParaVencer);
 
-  const aprobados = items.filter((e) => e.estado === 'aprobado');
   return {
     vencidos,
     proximos,

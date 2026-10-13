@@ -22,6 +22,9 @@ import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
 import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 
+// HU-4 · Plan de entregables
+import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
+
   
 
 
@@ -54,7 +57,7 @@ export default function AppRouter() {
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
         <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
-        <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
+        <Route path="entregables" element={<PlanEntregablesPage />} />
         <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
         <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
