@@ -1,0 +1,20 @@
+
+declarar fuera del return: 
+    const ads = [{
+        name: "ander"
+    },
+    {
+        name: "rosa"
+    },
+    {
+        name: "ander 2"
+    }
+    ]
+
+
+
+
+dentro del return llamar: 
+        {ads.map((item) => {
+          return <h1>sadasdsa {item.name}</h1>
+        })}

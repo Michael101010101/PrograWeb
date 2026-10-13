@@ -12,7 +12,7 @@ return (
       <AuthProvider>
         <div>
           
-          <TableroAdmin />
+          <TableroAdmin/>
          
         </div>
       </AuthProvider>

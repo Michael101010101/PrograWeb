@@ -4,10 +4,11 @@ import '../hu7.css';
 import '../TrabajosAdmin.css';
 
 export default function TrabajosAdmin() {
+
   return (
     <PageLayout>
       <main className="hu7-contenido-principal">
-        
+
         <div className="hu7-contenedorSUP">
           <div className="hu7-titulo-seccion">
             <h6 className="hu7-subtitulo-pantalla">Inicio · Trabajos</h6>
@@ -25,14 +26,14 @@ export default function TrabajosAdmin() {
         </div>
 
         <div className="hu7-contenedorINF">
-          
+
           <div className="hu7-barra-filtros-trabajos">
             <div className="hu7-filtro-buscar">
               <label htmlFor="input-buscar">BUSCAR</label>
-              <input 
-                id="input-buscar" 
-                type="text" 
-                placeholder="Título, código o integrante..." 
+              <input
+                id="input-buscar"
+                type="text"
+                placeholder="Título, código o integrante..."
                 className="hu7-input-buscar"
               />
             </div>
@@ -85,7 +86,7 @@ export default function TrabajosAdmin() {
           </div>
 
           <div className="hu7-tarjeta-tabla-trabajos">
-            
+
             <table className="hu7-tabla-trabajos">
               <thead>
                 <tr>
