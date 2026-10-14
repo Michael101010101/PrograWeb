@@ -18,7 +18,7 @@ import NuevaPasswordPage from '../hu1-cuenta/pages/NuevaPasswordPage.jsx';
 import VerificarCorreoPage from '../hu1-cuenta/pages/VerificarCorreoPage.jsx';
 import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
-import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';git status
+import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
 import RegistrarTrabajoPage from '../hu2-trabajo/pages/RegistrarTrabajoPage.jsx';
 
 // Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
