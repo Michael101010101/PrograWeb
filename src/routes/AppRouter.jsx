@@ -7,6 +7,9 @@ import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 import BandejaRevisionPage from '../h5-revision-retroalimentacion/pages/BandejaRevisionPage.jsx';
 import RevisionAvancePage from '../h5-revision-retroalimentacion/pages/RevisionAvancePage.jsx';
 import RevisionLayout from '../h5-revision-retroalimentacion/components/RevisionLayout.jsx';
+import RetroalimentacionPage from '../h5-revision-retroalimentacion/pages/RetroalimentacionPage.jsx';
+import HistorialVersionesPage from '../h5-revision-retroalimentacion/pages/HistorialVersionesPage.jsx';
+import TrabajoConsolidadoPage from '../h5-revision-retroalimentacion/pages/TrabajoConsolidadoPage.jsx';
 
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
@@ -51,7 +54,11 @@ export default function AppRouter() {
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
         <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
         <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
-        <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
+        <Route path="retroalimentacion" element={<RevisionLayout />}>
+          <Route index element={<RetroalimentacionPage />} />
+          <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+          <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
+        </Route>
         <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
       </Route>
@@ -63,6 +70,8 @@ export default function AppRouter() {
 
         <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
         <Route path="revision" element={<RevisionLayout />}>
+        <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+        <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
         <Route index element={<BandejaRevisionPage />} />
         <Route path=":id" element={<RevisionAvancePage />} />
         </Route>
