@@ -9,6 +9,7 @@ import { PERIODO } from '../../shared/config/periodo.js';
 import useEntregables from '../hooks/useEntregables.js';
 import { alertasDe, detallePlan, trabajoDeEstudiante, ultimaRetroalimentacion } from '../services/entregablesService.js';
 import { formatearFecha } from '../utils/fechas.js';
+import { capitalizar, unirConY } from '../utils/texto.js';
 import SlotTrabajo from '../components/SlotTrabajo.jsx';
 import BarraAvance from '../components/BarraAvance.jsx';
 import ItemEntregable from '../components/ItemEntregable.jsx';
@@ -16,12 +17,6 @@ import ComposicionAvance from '../components/ComposicionAvance.jsx';
 import ModalRegistrarAvance from '../components/modales/ModalRegistrarAvance.jsx';
 import ModalSolicitarAmpliacion from '../components/modales/ModalSolicitarAmpliacion.jsx';
 import '../styles/hu4.css';
-
-// "tu asesora" -> "Tu asesora"
-const capitalizar = (texto) => texto[0].toUpperCase() + texto.slice(1);
-
-// "1, 2 y 3"
-const unirConY = (lista) => (lista.length > 1 ? `${lista.slice(0, -1).join(', ')} y ${lista.at(-1)}` : lista.join(''));
 
 /** Pantalla 4.1 · Plan de entregables (rol Estudiante). Ruta: /estudiante/entregables */
 export default function PlanEntregablesPage() {

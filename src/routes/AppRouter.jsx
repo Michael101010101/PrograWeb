@@ -24,6 +24,7 @@ import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 
 // HU-4 · Plan de entregables
 import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
+import AlertasVencimientoPage from '../hu4-entregables/pages/AlertasVencimientoPage.jsx';
 
   
 
@@ -58,6 +59,7 @@ export default function AppRouter() {
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
         <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
         <Route path="entregables" element={<PlanEntregablesPage />} />
+        <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
         <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
         <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />

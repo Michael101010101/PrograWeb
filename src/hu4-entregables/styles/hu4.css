@@ -104,3 +104,42 @@
   .hu4-item--vencido .hu4-item__cuerpo { border-right: 1px solid var(--danger); border-bottom: 0; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
   .hu4-slot { display: none; }
 }
+
+/* ───────── 4.4 · Alertas de vencimiento ───────── */
+.hu4-tono--danger { color: var(--danger); }
+.hu4-tono--warning { color: var(--warning-text); }
+.hu4-tono--success { color: var(--success); }
+
+.hu4-grupo { border: 1px solid; border-radius: var(--radius); background: var(--surface); margin-bottom: 20px; overflow: hidden; }
+.hu4-grupo--danger { border-color: var(--danger); }
+.hu4-grupo--warning { border-color: var(--warning); }
+.hu4-grupo__head { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid; }
+.hu4-grupo--danger .hu4-grupo__head { background: var(--danger-soft); border-color: var(--danger); }
+.hu4-grupo--warning .hu4-grupo__head { background: var(--warning-soft); border-color: var(--warning); }
+.hu4-grupo__head h2 { font-family: var(--font-body); font-size: 16px; }
+.hu4-grupo--danger h2 { color: var(--danger); }
+.hu4-grupo--warning h2 { color: var(--warning-text); }
+.hu4-grupo__conteo { background: var(--surface); padding: 2px 10px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 600; }
+.hu4-grupo--danger .hu4-grupo__conteo { color: var(--danger); }
+.hu4-grupo--warning .hu4-grupo__conteo { color: var(--warning-text); }
+
+.hu4-alerta-fila { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 18px 24px; }
+.hu4-alerta-fila + .hu4-alerta-fila { border-top: 1px solid var(--border); }
+.hu4-alerta-fila .hu4-punto { align-self: start; }
+.hu4-alerta-fila__texto { display: grid; gap: 2px; font-size: 14px; }
+.hu4-alerta-fila__texto h3 { font-family: var(--font-body); font-size: 17px; color: var(--text); }
+.hu4-alerta-fila__acciones { display: flex; gap: 12px; }
+
+.hu4-resumen { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 20px; align-items: center; margin-top: 32px; }
+.hu4-resumen .empty-state__icon { margin: 0; }
+.hu4-resumen__texto h2 { font-size: 19px; line-height: 26px; }
+.hu4-resumen__cifras { display: flex; gap: 32px; margin: 0; }
+.hu4-resumen__cifras dd { margin: 2px 0 0; font-size: 24px; font-weight: 600; }
+
+.hu4-requisitos { margin: 0; padding-left: 20px; display: grid; gap: 8px; }
+
+@media (max-width: 800px) {
+  .hu4-alerta-fila, .hu4-resumen { grid-template-columns: 14px minmax(0, 1fr); }
+  .hu4-alerta-fila__acciones, .hu4-resumen__cifras { grid-column: 2; flex-wrap: wrap; }
+  .hu4-resumen { grid-template-columns: 1fr; }
+}
