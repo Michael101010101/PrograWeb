@@ -4,6 +4,8 @@ import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
 import FichaTrabajoPage from '../hu2-trabajo/pages/FichaTrabajoPage.jsx';
+import FichaPropuestaPage from '../hu2-trabajo/pages/FichaPropuestaPage.jsx';
+import FichaConcluidaPage from '../hu2-trabajo/pages/FichaConcluidaPage.jsx';
 
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
@@ -16,7 +18,7 @@ import NuevaPasswordPage from '../hu1-cuenta/pages/NuevaPasswordPage.jsx';
 import VerificarCorreoPage from '../hu1-cuenta/pages/VerificarCorreoPage.jsx';
 import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
-import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
+import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';git status
 import RegistrarTrabajoPage from '../hu2-trabajo/pages/RegistrarTrabajoPage.jsx';
 
 // Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
@@ -32,6 +34,8 @@ export default function AppRouter() {
       <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
       <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
+      <Route path="/andrea-ficha-propuesta" element={<FichaPropuestaPage />} />
+      <Route path="/andrea-ficha-concluida" element={<FichaConcluidaPage />} />
 
       {/* Solo sin sesión */}
       <Route element={<SoloPublico />}>
@@ -57,8 +61,7 @@ export default function AppRouter() {
       <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
       <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
       <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
-      <Route path="mi-trabajo/ficha" element={<FichaTrabajoPage />}
-/>
+      <Route path="mi-trabajo/ficha" element={<FichaTrabajoPage />}/>
       </Route>
 
       {/* Asesor */}
