@@ -6,6 +6,7 @@ import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
 import FichaTrabajoPage from '../hu2-trabajo/pages/FichaTrabajoPage.jsx';
 import FichaPropuestaPage from '../hu2-trabajo/pages/FichaPropuestaPage.jsx';
 import FichaConcluidaPage from '../hu2-trabajo/pages/FichaConcluidaPage.jsx';
+import PruebaModalesPage from '../hu2-trabajo/pages/PruebaModalesPage.jsx';
 
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
@@ -36,6 +37,7 @@ export default function AppRouter() {
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
       <Route path="/andrea-ficha-propuesta" element={<FichaPropuestaPage />} />
       <Route path="/andrea-ficha-concluida" element={<FichaConcluidaPage />} />
+      <Route path="/andrea-modales" element={<PruebaModalesPage />} />
 
       {/* Solo sin sesión */}
       <Route element={<SoloPublico />}>
