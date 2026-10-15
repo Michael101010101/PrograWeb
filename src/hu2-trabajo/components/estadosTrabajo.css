@@ -352,3 +352,156 @@
     color: inherit;
     cursor: pointer;
   }
+  .hu2-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  background: rgba(20, 28, 24, 0.35);
+}
+.hu2-lista-errores {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.hu2-error-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px;
+  background: #fff7f6;
+  border: 1px solid #e7c3c0;
+  border-radius: 4px;
+}
+
+.hu2-error-item span {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: #b4322b;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.hu2-error-item p {
+  margin: 1px 0 0;
+  color: #8c302b;
+  font-size: 11px;
+}
+.hu2-badge-propuesta {
+  display: inline-block;
+  background: #f1f0ea;
+  color: #66716b;
+  border-radius: 3px;
+  padding: 5px 8px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.hu2-modal {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  animation: modal-in 0.16s ease-out;
+}
+
+.hu2-btn-principal:disabled,
+.hu2-btn-peligro:disabled,
+.hu2-btn-secundario:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.hu2-modal-titulo button.hu2-modal-cerrar {
+  padding: 2px 6px;
+}
+
+.hu2-modal-estado .hu2-modal-titulo {
+  margin-bottom: 18px;
+}
+
+.hu2-opciones-estado {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.hu2-opciones-estado label {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e1e3dc;
+  border-radius: 4px;
+  padding: 10px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.hu2-opciones-estado label.is-activa {
+  border-color: #2c5f4a;
+  background: #e4efe9;
+}
+
+.hu2-opciones-estado input {
+  accent-color: #2c5f4a;
+}
+
+.hu2-textarea-estado.hu2-con-error {
+  border-color: #b4322b;
+}
+
+.hu2-contador.hu2-con-error {
+  color: #b4322b;
+}
+
+.hu2-chip-trabajo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 480px;
+  padding: 8px 14px;
+  border-radius: 5px;
+  background: #e4efe9;
+  color: #1e4534;
+  font-size: 13px;
+}
+
+.hu2-chip-trabajo--vacio {
+  background: #f1f0ea;
+  color: #66716b;
+}
+
+.hu2-chip-trabajo__titulo {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 330px;
+}
+
+.hu2-chip-trabajo .hu2-mini-barra {
+  width: 70px;
+  flex-shrink: 0;
+}
+
+.hu2-chip-trabajo__sin-asesor {
+  background: #ffffff;
+  border-radius: 3px;
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+@media (max-width: 1100px) {
+  .hu2-chip-trabajo {
+    display: none;
+  }
+}

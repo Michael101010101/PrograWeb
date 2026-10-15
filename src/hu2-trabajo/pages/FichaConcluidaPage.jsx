@@ -1,177 +1,152 @@
+import { useNavigate } from 'react-router-dom';
 import './fichaEstados.css';
-import PageLayout from '../../shared/components/PageLayout.jsx';
+import EstadoBadge from '../components/EstadoBadge.jsx';
+import { PLANTILLA_PLAN } from '../config.js';
+import { fecha, fechaCorta, hora } from '../utils/fechas.js';
 
-export default function FichaConcluidaPage() {
-  const entregables = [
-    {
-      numero: 1,
-      nombre: 'Plan de investigación',
-      fecha: '15 · 29/08',
-    },
-    {
-      numero: 2,
-      nombre: 'Marco teórico',
-      fecha: '20 · 20/09',
-    },
-    {
-      numero: 3,
-      nombre: 'Diseño metodológico',
-      fecha: '20 · 09/10',
-    },
-    {
-      numero: 4,
-      nombre: 'Resultados preliminares',
-      fecha: '20 · 30/10',
-    },
-    {
-      numero: 5,
-      nombre: 'Informe final',
-      fecha: '25 · 24/11',
-    },
-  ];
+export default function FichaConcluidaPage({ trabajo }) {
+  const navigate = useNavigate();
+  const { avance, asesor, sustentacion } = trabajo;
+  const entregables = trabajo.plan ?? PLANTILLA_PLAN.map((e, i) => ({ ...e, orden: i + 1, fecha: null, estado: 'aprobado' }));
+  const responsable = trabajo.integrantes.find((i) => i.responsable);
+  const otros = trabajo.integrantes.filter((i) => !i.responsable);
 
   return (
-    <PageLayout>
-      <div className="fe-contenedor">
-        <section className="fe-cabecera">
-          <div className="fe-cabecera-superior">
-            <div>
-              <div className="fe-estado-linea">
-                <span className="fe-badge fe-badge-concluido">
-                  Concluido
-                </span>
+    <div className="fe-contenedor">
+      <section className="fe-cabecera">
+        <div className="fe-cabecera-superior">
+          <div>
+            <div className="fe-estado-linea">
+              <EstadoBadge estado={trabajo.estado} />
 
-                <span className="fe-registro">
-                  Cerrado el 28/11/2026 · código TFC-2026-2-012
-                </span>
-              </div>
-
-              <h1>
-                Optimización de rutas de reparto para comercios de Lima Metropolitana
-              </h1>
-
-              <p className="fe-subtitulo">
-                Gestión de operaciones · Ingeniería Industrial · asesor Mg. Julio Vargas Aliaga
-              </p>
+              <span className="fe-registro">
+                Cerrado el {fecha(trabajo.cerradoEn)} · código {trabajo.codigo}
+              </span>
             </div>
 
-            <div className="fe-acciones">
-              <button type="button" className="fe-btn-editar-disabled">
-                Editar ficha
-              </button>
+            <h1>{trabajo.titulo}</h1>
 
-              <button type="button" className="fe-btn-principal">
-                Ver mi sustentación
-              </button>
-            </div>
+            <p className="fe-subtitulo">
+              {trabajo.linea} · {trabajo.carrera}
+              {asesor && ` · asesor${asesor.genero === 'f' ? 'a' : ''} ${asesor.nombre}`}
+            </p>
           </div>
 
-          <div className="fe-avance">
-            <span className="fe-avance-label">AVANCE</span>
+          <div className="fe-acciones">
+            <button type="button" className="fe-btn-editar-disabled" disabled title="La ficha de un trabajo concluido no se edita">
+              Editar ficha
+            </button>
 
-            <div className="fe-barra">
-              <div
-                className="fe-barra-relleno"
-                style={{ width: '100%' }}
-              ></div>
+            <button type="button" className="fe-btn-principal" onClick={() => navigate('/estudiante/sustentacion')}>
+              Ver mi sustentación
+            </button>
+          </div>
+        </div>
+
+        <div className="fe-avance">
+          <span className="fe-avance-label">AVANCE</span>
+
+          <div className="fe-barra">
+            <div className="fe-barra-relleno" style={{ width: `${avance.porcentaje}%` }}></div>
+          </div>
+
+          <strong className="fe-100">{avance.porcentaje}%</strong>
+
+          <span className="fe-avance-texto">
+            {avance.aprobados} de {avance.total} entregables aprobados · la ficha y el plan quedan en modo lectura
+          </span>
+        </div>
+      </section>
+
+      <div className="fe-grid-concluida">
+        <main className="fe-columna-principal">
+          <section className="fe-card fe-plan">
+            <h2>Plan de entregables · modo lectura</h2>
+
+            <div className="fe-entregables">
+              {entregables.map((entregable) => (
+                <div className="fe-entregable" key={entregable.orden}>
+                  <div className="fe-entregable-linea"></div>
+
+                  <span className="fe-aprobado">Aprobado</span>
+
+                  <strong>
+                    {entregable.orden}. {entregable.nombre}
+                  </strong>
+
+                  <small>
+                    {entregable.peso}
+                    {entregable.fecha && ` · ${fechaCorta(entregable.fecha)}`}
+                  </small>
+                </div>
+              ))}
             </div>
 
-            <strong className="fe-100">100%</strong>
+            <p className="fe-nota-plan">
+              Ya no se admiten nuevos avances. El historial de versiones y los
+              comentarios siguen disponibles.
+            </p>
+          </section>
 
-            <span className="fe-avance-texto">
-              5 de 5 entregables aprobados · la ficha y el plan quedan en modo lectura
-            </span>
-          </div>
-        </section>
+          <section className="fe-card fe-resumen-concluido">
+            <h2>Resumen</h2>
 
-        <div className="fe-grid-concluida">
-          <main className="fe-columna-principal">
-            <section className="fe-card fe-plan">
-              <h2>Plan de entregables · modo lectura</h2>
+            <p>{trabajo.resumen}</p>
 
-              <div className="fe-entregables">
-                {entregables.map((entregable) => (
-                  <div
-                    className="fe-entregable"
-                    key={entregable.numero}
-                  >
-                    <div className="fe-entregable-linea"></div>
+            <div className="fe-separador"></div>
 
-                    <span className="fe-aprobado">
-                      Aprobado
-                    </span>
+            <p className="fe-card-label">EQUIPO</p>
 
-                    <strong>
-                      {entregable.numero}. {entregable.nombre}
-                    </strong>
+            <p className="fe-equipo-texto">
+              {[`${responsable?.nombre} (responsable)`, ...otros.map((i) => i.nombre)].join(' · ')}
+            </p>
+          </section>
+        </main>
 
-                    <small>{entregable.fecha}</small>
-                  </div>
-                ))}
-              </div>
+        <aside className="fe-card fe-sustentacion">
+          <p className="fe-card-label">{sustentacion ? 'SUSTENTACIÓN PROGRAMADA' : 'SUSTENTACIÓN'}</p>
 
-              <p className="fe-nota-plan">
-                Ya no se admiten nuevos avances. El historial de versiones y los
-                comentarios siguen disponibles.
-              </p>
-            </section>
-
-            <section className="fe-card fe-resumen-concluido">
-              <h2>Resumen</h2>
+          {sustentacion ? (
+            <>
+              <h2>
+                {fecha(sustentacion.fecha)} · {hora(sustentacion.fecha)}
+              </h2>
 
               <p>
-                Se diseñó un modelo de ruteo con ventanas de tiempo para 42
-                comercios de abarrotes de Lima Metropolitana, con una reducción
-                simulada de 18% en distancia recorrida frente a la operación actual.
+                {sustentacion.lugar} · modalidad {sustentacion.modalidad}
               </p>
 
-              <div className="fe-separador"></div>
+              <div className="fe-jurado">
+                <p className="fe-card-label">JURADO</p>
 
-              <p className="fe-card-label">EQUIPO</p>
-
-              <p className="fe-equipo-texto">
-                Diana Rojas Tito (responsable) · Jorge Tapia Bendezú
-              </p>
-            </section>
-          </main>
-
-          <aside className="fe-card fe-sustentacion">
-            <p className="fe-card-label">SUSTENTACIÓN PROGRAMADA</p>
-
-            <h2>11/12/2026 · 10:00</h2>
-
-            <p>
-              Sala A-402, pabellón A · modalidad presencial
-            </p>
-
-            <div className="fe-jurado">
-              <p className="fe-card-label">JURADO</p>
-
-              <div className="fe-jurado-persona">
-                <span>Dr. Ricardo Cárdenas Loayza</span>
-                <span className="fe-presidente">
-                  Presidente
-                </span>
+                {sustentacion.jurado.map((miembro) =>
+                  miembro.presidente ? (
+                    <div className="fe-jurado-persona" key={miembro.nombre}>
+                      <span>{miembro.nombre}</span>
+                      <span className="fe-presidente">Presidente</span>
+                    </div>
+                  ) : (
+                    <p key={miembro.nombre}>{miembro.nombre}</p>
+                  )
+                )}
               </div>
 
-              <p>Mg. Sandra Bustamante Ríos</p>
-              <p>Ing. Luis Fernando Ocampo Salas</p>
-            </div>
-
+              <p className="fe-indicacion">
+                Presenta el informe final impreso en la oficina TFC al menos
+                5 días hábiles antes.
+              </p>
+            </>
+          ) : (
             <p className="fe-indicacion">
-              Presenta el informe final impreso en la oficina TFC al menos
-              5 días hábiles antes.
+              La coordinación programará la fecha, la sala y el jurado. Te avisaremos por correo.
             </p>
+          )}
 
-            <button
-              type="button"
-              className="fe-btn-principal fe-btn-abajo"
-            >
-              Ver detalle de mi sustentación
-            </button>
-          </aside>
-        </div>
+          <button type="button" className="fe-btn-principal fe-btn-abajo" onClick={() => navigate('/estudiante/sustentacion')}>
+            Ver detalle de mi sustentación
+          </button>
+        </aside>
       </div>
-    </PageLayout>
+    </div>
   );
 }

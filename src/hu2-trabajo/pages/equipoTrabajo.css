@@ -349,3 +349,23 @@
     margin-left: 56px;
   }
 }
+.btn-guardar-equipo:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-no-disponible:not(:disabled) {
+  cursor: pointer;
+}
+
+.resultado-estudiante.no-disponible {
+  background: #fafaf7;
+}
+
+.resultado-estudiante.no-disponible strong {
+  color: #66716b;
+}
+
+.campo-busqueda input:disabled {
+  background: #f8f8f4;
+}

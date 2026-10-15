@@ -1,24 +1,29 @@
+import Hu2Modal from './Hu2Modal.jsx';
+import { ESTADOS } from '../config.js';
+import { fecha } from '../utils/fechas.js';
 import './estadosTrabajo.css';
 
-export default function ErrorIntegranteModal() {
+export default function ErrorIntegranteModal({ integrante, ocupadoEn, onCerrar, onBuscarOtro }) {
   return (
-    <div className="hu2-modal">
-      <h2>No se pudo agregar al integrante</h2>
+    <Hu2Modal abierto={Boolean(integrante)} onCerrar={onCerrar} titulo="No se pudo agregar al integrante">
+      {integrante && (
+        <>
+          <div className="hu2-alerta hu2-alerta-warning" role="alert">
+            <strong>{integrante.nombre}</strong> ya participa en el trabajo
+            «{ocupadoEn?.titulo}», {ESTADOS[ocupadoEn?.estado]?.label.toLowerCase()} desde
+            el {fecha(ocupadoEn?.desde)}.
+          </div>
 
-      <div className="hu2-alerta hu2-alerta-warning">
-        <strong>Diana Carolina Rojas Tito</strong> ya participa en el trabajo
-        «Optimización de rutas de reparto para comercios de Lima Metropolitana»,
-        en desarrollo desde el 21/08/2026.
-      </div>
+          <div className="hu2-estudiante-bloqueado">
+            <div>
+              <strong>{integrante.nombre}</strong>
+              <p>{integrante.codigo} · {integrante.carrera}</p>
+            </div>
 
-      <div className="hu2-estudiante-bloqueado">
-        <div>
-          <strong>Diana Carolina Rojas Tito</strong>
-          <p>20210466 · Ingeniería Industrial</p>
-        </div>
-
-        <span>No disponible</span>
-      </div>
+            <span>No disponible</span>
+          </div>
+        </>
+      )}
 
       <p className="hu2-nota">
         Si el estudiante desistió de su trabajo anterior, la coordinación debe
@@ -26,14 +31,14 @@ export default function ErrorIntegranteModal() {
       </p>
 
       <div className="hu2-acciones-derecha">
-        <button type="button" className="hu2-btn-texto">
+        <button type="button" className="hu2-btn-texto" onClick={onCerrar}>
           Cerrar
         </button>
 
-        <button type="button" className="hu2-btn-principal">
+        <button type="button" className="hu2-btn-principal" onClick={onBuscarOtro}>
           Buscar otro estudiante
         </button>
       </div>
-    </div>
+    </Hu2Modal>
   );
 }

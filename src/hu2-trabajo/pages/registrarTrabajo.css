@@ -234,3 +234,28 @@
     grid-template-columns: 1fr;
   }
 }
+.registro-formulario .con-error,
+.registro-formulario .palabras-input.con-error {
+  border-color: #b4322b;
+}
+
+.registro-formulario small.texto-error {
+  color: #b4322b;
+}
+
+.registro-formulario select:disabled {
+  background: #f8f8f4;
+  color: #66716b;
+}
+
+.registro-formulario .acciones button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.registro-fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}

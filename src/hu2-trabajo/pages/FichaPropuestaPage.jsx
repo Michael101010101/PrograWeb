@@ -1,148 +1,158 @@
+import { useNavigate } from 'react-router-dom';
 import './fichaEstados.css';
-import PageLayout from '../../shared/components/PageLayout.jsx';
+import EstadoBadge from '../components/EstadoBadge.jsx';
+import { PERIODO } from '../../shared/config/periodo.js';
+import { obtenerAsesoresDestacados } from '../../shared/integraciones.js';
+import { diasHasta, fecha } from '../utils/fechas.js';
 
-export default function FichaPropuestaPage() {
+function cierreAsignacion() {
+  const etapa = PERIODO.cronograma.find((e) => e.etapa === 2);
+  const [dia, mes] = etapa.rango.split('–')[1].trim().split('/');
+  const anio = PERIODO.semestre.split('-')[0];
+  return new Date(`${anio}-${mes}-${dia}T23:59:59`);
+}
+
+export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarEstado }) {
+  const navigate = useNavigate();
+  const ayudaPermiso = puedeGestionar ? undefined : 'Solo el responsable del equipo puede hacerlo';
+
+  const cierre = cierreAsignacion();
+  const dias = diasHasta(cierre);
+
+  const destacados = obtenerAsesoresDestacados();
+  const deMiLinea = destacados.filter((a) => a.linea === trabajo.linea);
+  const sugeridos = deMiLinea.length > 0 ? deMiLinea : destacados;
+
   return (
-    <PageLayout>
-      <div className="fe-contenedor">
-        <section className="fe-cabecera">
-          <div className="fe-cabecera-superior">
-            <div>
-              <div className="fe-estado-linea">
-                <span className="fe-badge fe-badge-propuesta">
-                  Propuesta
-                </span>
+    <div className="fe-contenedor">
+      <section className="fe-cabecera">
+        <div className="fe-cabecera-superior">
+          <div>
+            <div className="fe-estado-linea">
+              <EstadoBadge estado={trabajo.estado} />
 
-                <span className="fe-registro">
-                  Registrado el 26/08/2026 · código TFC-2026-2-051
-                </span>
-              </div>
-
-              <h1>
-                Automatización del control de calidad en líneas de envasado de conservas
-              </h1>
-
-              <p className="fe-subtitulo">
-                Automatización y control · Ingeniería Industrial
-              </p>
+              <span className="fe-registro">
+                Registrado el {fecha(trabajo.registradoEn)} · código {trabajo.codigo}
+              </span>
             </div>
 
-            <div className="fe-acciones">
-              <button type="button" className="fe-btn-secundario">
-                Editar ficha
-              </button>
+            <h1>{trabajo.titulo}</h1>
 
-              <button type="button" className="fe-btn-estado">
-                Cambiar estado
-              </button>
-            </div>
+            <p className="fe-subtitulo">
+              {trabajo.linea} · {trabajo.carrera}
+            </p>
           </div>
 
-          <div className="fe-avance">
-            <span className="fe-avance-label">AVANCE</span>
+          <div className="fe-acciones">
+            <button type="button" className="fe-btn-secundario" onClick={() => navigate('/estudiante/mi-trabajo/editar')} disabled={!puedeGestionar} title={ayudaPermiso}>
+              Editar ficha
+            </button>
 
-            <div className="fe-barra">
-              <div
-                className="fe-barra-relleno"
-                style={{ width: '0%' }}
-              ></div>
-            </div>
-
-            <strong>0%</strong>
-
-            <span className="fe-avance-texto">
-              El plan de entregables se habilita cuando un asesor acepte
-            </span>
+            <button type="button" className="fe-btn-estado" onClick={onCambiarEstado} disabled={!puedeGestionar} title={ayudaPermiso}>
+              Cambiar estado
+            </button>
           </div>
-        </section>
-
-        <div className="fe-grid-propuesta">
-          <main className="fe-columna-principal">
-            <section className="fe-sin-asesor">
-              <div className="fe-icono-mas">+</div>
-
-              <h2>Aún no tienes asesor</h2>
-
-              <p>
-                Elige un asesor del directorio entre quienes tengan cupo en
-                <br />
-                Automatización y control. Solo puedes mantener una solicitud activa
-                <br />
-                por trabajo.
-              </p>
-
-              <button type="button" className="fe-btn-principal">
-                Buscar asesor con cupo
-              </button>
-            </section>
-
-            <section className="fe-card">
-              <h2>Resumen</h2>
-
-              <p className="fe-resumen">
-                Se propone un sistema de visión artificial que detecte defectos
-                de sellado en latas de conserva sobre la línea de envasado, con
-                alertas en tiempo real al operario y registro histórico para
-                control estadístico de calidad.
-              </p>
-
-              <div className="fe-chips">
-                <span>visión artificial</span>
-                <span>control de calidad</span>
-                <span>envasado</span>
-              </div>
-            </section>
-          </main>
-
-          <aside className="fe-lateral">
-            <section className="fe-card">
-              <p className="fe-card-label">EQUIPO</p>
-
-              <div className="fe-persona">
-                <div className="fe-avatar">JT</div>
-
-                <div>
-                  <strong>Jorge Luis Tapia Bendezú</strong>
-                  <p>Responsable</p>
-                </div>
-              </div>
-
-              <div className="fe-persona">
-                <div className="fe-avatar">AF</div>
-
-                <div>
-                  <strong>Ana Lucía Ferreyra Loza</strong>
-                  <p>Integrante</p>
-                </div>
-              </div>
-
-              <button type="button" className="fe-btn-link">
-                Gestionar equipo
-              </button>
-            </section>
-
-            <section className="fe-card fe-plazo">
-              <h3>Plazo de la etapa 2</h3>
-
-              <p>
-                La asignación de asesores cierra el 11/09/2026.
-                <br />
-                Faltan 5 días.
-              </p>
-            </section>
-
-            <section className="fe-card">
-              <p className="fe-card-label">ASESORES SUGERIDOS</p>
-
-              <div className="fe-asesores">
-                <p>Mg. Andrés Chávez Ninahuanca · cupo 4 de 6</p>
-                <p>Dr. Pedro Salazar Huamán · cupo 2 de 5</p>
-                <p>Mg. Sandra Bustamante Ríos · cupo 1 de 4</p>
-              </div>
-            </section>
-          </aside>
         </div>
+
+        <div className="fe-avance">
+          <span className="fe-avance-label">AVANCE</span>
+
+          <div className="fe-barra">
+            <div className="fe-barra-relleno" style={{ width: '0%' }}></div>
+          </div>
+
+          <strong>0%</strong>
+
+          <span className="fe-avance-texto">
+            El plan de entregables se habilita cuando un asesor acepte
+          </span>
+        </div>
+      </section>
+
+      <div className="fe-grid-propuesta">
+        <main className="fe-columna-principal">
+          <section className="fe-sin-asesor">
+            <div className="fe-icono-mas">+</div>
+
+            <h2>Aún no tienes asesor</h2>
+
+            <p>
+              Elige un asesor del directorio entre quienes tengan cupo en
+              <br />
+              {trabajo.linea}. Solo puedes mantener una solicitud activa
+              <br />
+              por trabajo.
+            </p>
+
+            <button type="button" className="fe-btn-principal" onClick={() => navigate('/estudiante/asesores')}>
+              Buscar asesor con cupo
+            </button>
+          </section>
+
+          <section className="fe-card">
+            <h2>Resumen</h2>
+
+            <p className="fe-resumen">{trabajo.resumen}</p>
+
+            <div className="fe-chips">
+              {trabajo.palabrasClave.map((palabra) => (
+                <span key={palabra}>{palabra}</span>
+              ))}
+            </div>
+          </section>
+        </main>
+
+        <aside className="fe-lateral">
+          <section className="fe-card">
+            <p className="fe-card-label">EQUIPO</p>
+
+            {trabajo.integrantes.map((integrante) => (
+              <div className="fe-persona" key={integrante.usuarioId}>
+                <div className="fe-avatar">{integrante.iniciales}</div>
+
+                <div>
+                  <strong>{integrante.nombre}</strong>
+                  <p>{integrante.responsable ? 'Responsable' : 'Integrante'}</p>
+                </div>
+              </div>
+            ))}
+
+            <button type="button" className="fe-btn-link" onClick={() => navigate('/estudiante/mi-trabajo/equipo')}>
+              {puedeGestionar ? 'Gestionar equipo' : 'Ver equipo'}
+            </button>
+          </section>
+
+          <section className="fe-card fe-plazo">
+            <h3>Plazo de la etapa 2</h3>
+
+            {dias >= 0 ? (
+              <p>
+                La asignación de asesores cierra el {fecha(cierre.toISOString())}.
+                <br />
+                {dias === 0 ? 'Cierra hoy.' : `Faltan ${dias} día${dias === 1 ? '' : 's'}.`}
+              </p>
+            ) : (
+              <p>
+                La asignación de asesores cerró el {fecha(cierre.toISOString())}.
+                <br />
+                Escribe a la coordinación para una asignación extemporánea.
+              </p>
+            )}
+          </section>
+
+          <section className="fe-card">
+            <p className="fe-card-label">ASESORES SUGERIDOS</p>
+
+            <div className="fe-asesores">
+              {sugeridos.map((asesor) => (
+                <p key={asesor.id}>
+                  {asesor.nombre} · cupo {asesor.cupo}
+                </p>
+              ))}
+            </div>
+          </section>
+        </aside>
       </div>
-    </PageLayout>
+    </div>
   );
 }

@@ -1,40 +1,46 @@
+import Hu2Modal from './Hu2Modal.jsx';
 import './estadosTrabajo.css';
 
-export default function ErrorRegistroModal() {
+const CAMPOS = [
+  ['titulo', 'TÍTULO DEL TRABAJO'],
+  ['linea', 'LÍNEA DE INVESTIGACIÓN'],
+  ['resumen', 'RESUMEN'],
+  ['objetivos', 'OBJETIVOS'],
+  ['palabrasClave', 'PALABRAS CLAVE'],
+];
+
+export default function ErrorRegistroModal({ abierto, errores = {}, valores = {}, onCerrar, titulo = 'No pudimos registrar el trabajo' }) {
+  const conError = CAMPOS.filter(([campo]) => errores[campo]);
+  const n = conError.length;
+
   return (
-    <div className="hu2-modal hu2-modal-registro">
-      <h2>No pudimos registrar el trabajo</h2>
-
-      <div className="hu2-alerta hu2-alerta-error">
-        Revisa 3 campos antes de continuar.
+    <Hu2Modal abierto={abierto} onCerrar={onCerrar} titulo={titulo} className="hu2-modal-registro">
+      <div className="hu2-alerta hu2-alerta-error" role="alert">
+        Revisa {n} campo{n === 1 ? '' : 's'} antes de continuar.
       </div>
 
-      <div className="hu2-campo-error">
-        <label>TÍTULO DEL TRABAJO</label>
-        <input type="text" value="Tesis" readOnly />
-        <small>El título debe tener al menos 20 caracteres</small>
+      {conError.map(([campo, etiqueta]) => (
+        <div className="hu2-campo-error" key={campo}>
+          <label>{etiqueta}</label>
+          {campo === 'linea' && (
+            <select value="" disabled>
+              <option value="">Selecciona una línea</option>
+            </select>
+          )}
+          {(campo === 'resumen' || campo === 'objetivos') && <textarea value={valores[campo] ?? ''} readOnly />}
+          {campo === 'titulo' && <input type="text" value={valores.titulo ?? ''} readOnly />}
+          {campo === 'palabrasClave' && (
+            <input type="text" value={(valores.palabrasClave ?? []).join(', ') || 'Sin palabras clave'} readOnly />
+          )}
+          <small>{errores[campo]}</small>
+        </div>
+      ))}
+
+      <div className="hu2-acciones-derecha">
+        <button type="button" className="hu2-btn-principal" onClick={onCerrar}>
+          Corregir campos
+        </button>
       </div>
-
-      <div className="hu2-campo-error">
-        <label>LÍNEA DE INVESTIGACIÓN</label>
-
-        <select value="" disabled>
-          <option value="">Selecciona una línea</option>
-        </select>
-
-        <small>Debes elegir una línea de investigación</small>
-      </div>
-
-      <div className="hu2-campo-error">
-        <label>RESUMEN</label>
-
-        <textarea
-          value="Trata sobre deserción universitaria."
-          readOnly
-        />
-
-        <small>Faltan 264 caracteres para el mínimo · 36 / 1200</small>
-      </div>
-    </div>
+    </Hu2Modal>
   );
 }
