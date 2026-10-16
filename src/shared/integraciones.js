@@ -1,12 +1,11 @@
 // Puntos de integración entre historias (solo LECTURA de entidades ajenas).
 // Mientras cada historia no se fusione a develop, estas funciones devuelven datos de ejemplo.
 // Al integrar, el dueño de cada entidad reemplaza el cuerpo por la llamada a su repositorio.
-
+import { resumenTrabajoVigente } from '../hu2-trabajo/services/trabajoService.js';
 /** HU-2 · Trabajo vigente del estudiante: { codigo, titulo, avance } | null */
-export function obtenerTrabajoVigente(/* usuarioId */) {
-  return null;
+export function obtenerTrabajoVigente(usuarioId) {
+  return usuarioId ? resumenTrabajoVigente(usuarioId) : null;
 }
-
 /** HU-3 · Asesores con cupo para la landing pública. */
 export function obtenerAsesoresDestacados() {
   return [

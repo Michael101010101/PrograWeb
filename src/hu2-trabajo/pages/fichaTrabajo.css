@@ -1,0 +1,320 @@
+.ficha-contenedor {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  
+  .ficha-cabecera {
+    background: #ffffff;
+    border: 1px solid #dedfd9;
+    border-radius: 5px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04);
+  }
+  
+  .ficha-cabecera-superior {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  
+  .ficha-estado-linea {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  
+  .estado-desarrollo {
+    background: #e4f1f8;
+    color: #2f7296;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .registro-info {
+    font-size: 11px;
+    color: #6b736e;
+  }
+  
+  .ficha-cabecera h1 {
+    margin: 0;
+    color: #214f3d;
+    font-size: 26px;
+  }
+  
+  .ficha-subtitulo {
+    margin: 8px 0 0;
+    color: #68716c;
+    font-size: 13px;
+  }
+  
+  .ficha-acciones {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .btn-editar,
+  .btn-cambiar-estado {
+    padding: 11px 18px;
+    border-radius: 5px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    background: #ffffff;
+  }
+  
+  .btn-editar {
+    border: 1px solid #2c654d;
+    color: #2c654d;
+  }
+  
+  .btn-cambiar-estado {
+    border: 1px solid #dedfd9;
+    color: #a33333;
+  }
+  
+  .avance-bloque {
+    display: grid;
+    grid-template-columns: auto minmax(200px, 1fr) auto auto;
+    gap: 14px;
+    align-items: center;
+    border-top: 1px solid #e1e3df;
+    margin-top: 20px;
+    padding-top: 18px;
+  }
+  
+  .avance-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #5e6762;
+  }
+  
+  .barra-avance {
+    height: 8px;
+    background: #e4e7e2;
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  
+  .barra-avance-relleno {
+    width: 55%;
+    height: 100%;
+    background: #2f654d;
+  }
+  
+  .avance-porcentaje {
+    color: #285c45;
+    font-size: 20px;
+  }
+  
+  .avance-detalle {
+    color: #69716d;
+    font-size: 11px;
+  }
+  
+  .ficha-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 20px;
+    align-items: start;
+  }
+  
+  .ficha-principal,
+  .ficha-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .ficha-card {
+    background: #ffffff;
+    border: 1px solid #dedfd9;
+    border-radius: 5px;
+    padding: 18px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.03);
+  }
+  
+  .ficha-card h2 {
+    margin: 0 0 12px;
+    color: #214f3d;
+    font-size: 18px;
+  }
+  
+  .resumen-card p {
+    margin: 0;
+    line-height: 1.5;
+    font-size: 13px;
+    color: #2f3532;
+  }
+  
+  .chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  
+  .chips span {
+    background: #e4efe9;
+    color: #35634f;
+    border-radius: 3px;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  
+  .equipo-card {
+    min-height: 260px;
+  }
+  
+  .equipo-card-titulo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .btn-gestionar-equipo {
+    border: none;
+    background: transparent;
+    color: #2c654d;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .equipo-miembros {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  
+  .miembro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid #e0e2de;
+    border-radius: 5px;
+    padding: 10px 12px;
+  }
+  
+  .miembro-avatar,
+  .asesora-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #e4efe9;
+    color: #397059;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  
+  .miembro-texto strong {
+    font-size: 12px;
+  }
+  
+  .badge-responsable {
+    background: #fff1d9;
+    color: #ac751d;
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 9px;
+  }
+  
+  .card-label {
+    margin: 0 0 12px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #68716c;
+    letter-spacing: 0.5px;
+  }
+  
+  .asesora-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .asesora-info strong {
+    font-size: 14px;
+  }
+  
+  .asesora-info p {
+    margin: 4px 0 0;
+    color: #6a726d;
+    font-size: 11px;
+  }
+  
+  .asesora-detalle {
+    margin: 14px 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #6a726d;
+  }
+  
+  .btn-secundario-ancho,
+  .btn-acceso-principal,
+  .btn-avance {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .btn-secundario-ancho {
+    background: #ffffff;
+    border: 1px solid #2c654d;
+    color: #2c654d;
+  }
+  
+  .vencido-card {
+    border-color: #d8a050;
+    background: #fff8ea;
+  }
+  
+  .vencido-card h3 {
+    margin: 0 0 8px;
+    color: #8c5a12;
+    font-size: 14px;
+  }
+  
+  .vencido-card p {
+    margin: 0 0 12px;
+    color: #855918;
+    font-size: 11px;
+  }
+  
+  .btn-avance {
+    border: none;
+    background: #bb7817;
+    color: #ffffff;
+  }
+  
+  .btn-acceso-principal {
+    border: 1px solid #2c654d;
+    background: #2c654d;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  @media (max-width: 900px) {
+    .ficha-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .ficha-cabecera-superior {
+      flex-direction: column;
+    }
+  
+    .avance-bloque {
+      grid-template-columns: 1fr;
+    }
+  }
