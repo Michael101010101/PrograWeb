@@ -12,6 +12,7 @@ export default function PageLayout({
   accionesPublicas,
   navExtra,
   navInfo,
+  navContadores,
   footerDetalle,
   footerPoliticaDatos,
   centrado = false,
@@ -19,7 +20,7 @@ export default function PageLayout({
   return (
     <div className="app-shell">
       <Header slot={headerSlot} accionesPublicas={accionesPublicas} />
-      <NavBar extra={navExtra} info={navInfo} />
+      <NavBar extra={navExtra} info={navInfo} contadores={navContadores} />
       <main className={`page-content ${centrado ? 'page-content--center' : ''}`}>
         <div className="page-content__inner">{children}</div>
       </main>
