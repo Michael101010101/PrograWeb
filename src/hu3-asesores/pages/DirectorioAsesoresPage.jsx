@@ -16,6 +16,7 @@ import {
 } from '../services/asesoriasService.js';
 import AsesorCard from '../components/AsesorCard.jsx';
 import FiltrosDirectorio from '../components/FiltrosDirectorio.jsx';
+import EstadoSolicitud from '../components/EstadoSolicitud.jsx';
 import Paginacion from '../components/Paginacion.jsx';
 import { SlotTrabajo } from '../components/SlotsCabecera.jsx';
 import ModalSolicitarAsesoria from '../components/modales/ModalSolicitarAsesoria.jsx';
@@ -139,6 +140,14 @@ export default function DirectorioAsesoresPage() {
           </div>
         }
       />
+
+      {trabajo && (
+        <EstadoSolicitud
+          datos={datos}
+          trabajo={trabajo}
+          onRetirar={() => setModal({ tipo: 'activa', asesor: buscarAsesor(datos, activa.asesorId) })}
+        />
+      )}
 
       <FiltrosDirectorio filtros={filtros} onCambiar={cambiarFiltro} />
 

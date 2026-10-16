@@ -157,3 +157,6 @@
 /* Barra simple del cupo ocupado (Mi ficha) */
 .hu3-barra-cupo { height: 8px; border-radius: 4px; background: var(--border); overflow: hidden; margin-bottom: 10px; }
 .hu3-barra-cupo div { height: 100%; background: var(--primary); }
+
+/* Estado de la solicitud del estudiante (arriba del directorio) */
+.hu3-mi-solicitud { margin-bottom: 16px; }

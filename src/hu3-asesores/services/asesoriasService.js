@@ -53,6 +53,16 @@ export function solicitudActiva(datos, codigoTrabajo) {
   return datos.solicitudes.find((s) => s.trabajo.codigo === codigoTrabajo && s.estado === 'pendiente') ?? null;
 }
 
+// Última solicitud que envió el equipo de un trabajo (para mostrarle su estado al estudiante).
+export function ultimaSolicitud(datos, codigoTrabajo) {
+  return [...datos.solicitudes].reverse().find((s) => s.trabajo.codigo === codigoTrabajo) ?? null;
+}
+
+// Último término de asesoría registrado para un trabajo (o null).
+export function ultimoTermino(datos, codigoTrabajo) {
+  return [...datos.historial].reverse().find((h) => h.codigoTrabajo === codigoTrabajo) ?? null;
+}
+
 export function solicitudesDeAsesor(datos, asesorId) {
   return datos.solicitudes.filter((s) => s.asesorId === asesorId);
 }
