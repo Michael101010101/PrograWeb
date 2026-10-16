@@ -82,9 +82,12 @@ const asesores = [
   {
     id: 'a-08', usuarioId: 'u-102', titulo: 'Mg.', gradoAcademico: 'Magíster',
     nombres: 'Julio César', apellidos: 'Vargas Aliaga', correo: 'jvargas@ulima.edu.pe',
-    departamento: 'Ingeniería Industrial', lineas: ['Gestión de operaciones'],
+    departamento: 'Ingeniería Industrial', lineas: ['Gestión de operaciones', 'Automatización y control'],
     especialidad: 'Logística y cadena de suministro', trabajosAsesorados: 11,
     cupoMaximo: 5, cupoOcupado: 3, sinCupoDesde: null,
+    experiencia:
+      'Ingeniero industrial con maestría en gestión de operaciones. Ha asesorado 11 trabajos de fin de carrera sobre logística, planificación de la producción y mejora de procesos en plantas industriales.',
+    concluidos: 8, tiempoRevision: '3.1 días', sustentacionesJurado: 6,
   },
   {
     id: 'a-09', usuarioId: null, titulo: 'Dr.', gradoAcademico: 'Doctor',
@@ -204,7 +207,7 @@ const solicitudes = [
   {
     id: 's-011', asesorId: 'a-07', estado: 'aceptada', fecha: '2026-08-31',
     trabajo: {
-      codigo: 'TFC-2026-2-012',
+      codigo: 'TFC-2026-2-047',
       titulo: 'Modelo predictivo de deserción en estudiantes de primer ciclo',
       linea: 'Ciencia de datos aplicada',
       equipo: [
@@ -254,7 +257,7 @@ const trabajos = [
     estado: 'propuesta', asesorId: null, avance: 0, porRevisar: 0, nota: null,
   },
   {
-    codigo: 'TFC-2026-2-012',
+    codigo: 'TFC-2026-2-047',
     titulo: 'Modelo predictivo de deserción en estudiantes de primer ciclo',
     linea: 'Ciencia de datos aplicada', carrera: 'Ingeniería de Sistemas',
     integrantes: [
@@ -283,15 +286,49 @@ const trabajos = [
     estado: 'concluido', asesorId: 'a-07', avance: 100, porRevisar: 0,
     nota: { tono: 'muted', texto: 'Sustentación pendiente de programar por coordinación' },
   },
+  {
+    codigo: 'TFC-2026-2-020',
+    titulo: 'Rediseño del layout de un almacén de productos de consumo masivo',
+    linea: 'Gestión de operaciones', carrera: 'Ingeniería Industrial',
+    integrantes: [
+      { usuarioId: null, nombre: 'Lucía Fernández Paz' },
+      { usuarioId: null, nombre: 'Mateo Rivas Coronado' },
+    ],
+    estado: 'en_desarrollo', asesorId: 'a-08', avance: 40, porRevisar: 1,
+    nota: { tono: 'warning', texto: 'Próximo vencimiento 15/09/2026' },
+  },
+  {
+    codigo: 'TFC-2026-2-024',
+    titulo: 'Planificación de la producción en una planta de bebidas con programación lineal',
+    linea: 'Gestión de operaciones', carrera: 'Ingeniería Industrial',
+    integrantes: [{ usuarioId: null, nombre: 'Sofía Mendoza Ugarte' }],
+    estado: 'en_desarrollo', asesorId: 'a-08', avance: 70, porRevisar: 0,
+    nota: { tono: 'danger', texto: '1 entregable vencido sin presentar' },
+  },
+  {
+    codigo: 'TFC-2026-2-031',
+    titulo: 'Reducción de mermas en la cadena de frío de una distribuidora de lácteos',
+    linea: 'Gestión de operaciones', carrera: 'Ingeniería Industrial',
+    integrantes: [
+      { usuarioId: null, nombre: 'Valentina Ruiz Paredes' },
+      { usuarioId: null, nombre: 'Andrés Salinas Vega' },
+    ],
+    estado: 'concluido', asesorId: 'a-08', avance: 100, porRevisar: 0,
+    nota: { tono: 'muted', texto: 'Sustentación pendiente de programar por coordinación' },
+  },
 ];
 
 // Próximos entregables de los asesorados (la entidad Entregable es de la HU-4).
 const vencimientos = [
-  { trabajoCodigo: 'TFC-2026-2-012', entregable: '4. Resultados preliminares', fecha: '2026-08-30', peso: 20 },
+  { trabajoCodigo: 'TFC-2026-2-047', entregable: '4. Resultados preliminares', fecha: '2026-08-30', peso: 20 },
   { trabajoCodigo: 'TFC-2026-2-015', entregable: '3. Diseño metodológico', fecha: '2026-09-12', peso: 20 },
-  { trabajoCodigo: 'TFC-2026-2-012', entregable: '5. Informe final', fecha: '2026-11-27', peso: 25 },
+  { trabajoCodigo: 'TFC-2026-2-047', entregable: '5. Informe final', fecha: '2026-11-27', peso: 25 },
   { trabajoCodigo: 'TFC-2026-2-015', entregable: '4. Resultados preliminares', fecha: '2026-10-16', peso: 20 },
   { trabajoCodigo: 'TFC-2026-2-015', entregable: '5. Informe final', fecha: '2026-11-27', peso: 25 },
+  { trabajoCodigo: 'TFC-2026-2-024', entregable: '4. Resultados preliminares', fecha: '2026-09-01', peso: 20 },
+  { trabajoCodigo: 'TFC-2026-2-020', entregable: '3. Diseño metodológico', fecha: '2026-09-15', peso: 20 },
+  { trabajoCodigo: 'TFC-2026-2-020', entregable: '4. Resultados preliminares', fecha: '2026-10-20', peso: 20 },
+  { trabajoCodigo: 'TFC-2026-2-024', entregable: '5. Informe final', fecha: '2026-11-27', peso: 25 },
 ];
 
 export const DATOS_SEMILLA = { asesores, solicitudes, trabajos, vencimientos, historial: [] };
