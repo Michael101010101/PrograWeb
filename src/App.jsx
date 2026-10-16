@@ -12,7 +12,7 @@ return (
       <AuthProvider>
         <div>
           
-          <CargaAsesores/>
+          <TrabajosAdmin/>
          
         </div>
       </AuthProvider>

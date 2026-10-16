@@ -1,6 +1,6 @@
 import React from 'react';
 import PageLayout from '../../shared/components/PageLayout.jsx';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx'; // libreria para descargar en excel
 import '../hu7.css';
 import '../CargaAsesores.css';
 
@@ -74,7 +74,7 @@ export default function CargaAsesores() {
   const periodo = "2026-2";
 
   const handleExportarExcel = () => {
-    // A. Mapear los datos para definir los nombres exactos de las columnas en el Excel
+    //  esta parte es para mapear los datos para definir los nombres exactos de las columnas en el Excel
     const datosExcel = asesoresData.map((item) => ({
       "ASESOR": item.nombre,
       "CARRERA": item.carrera,
@@ -84,17 +84,19 @@ export default function CargaAsesores() {
       "TIEMPO DE REVISIÓN": item.tiempoRevision
     }));
 
-    // Convertir el arreglo de objetos a una hoja de cálculo (Worksheet)
+    // esta linea es para convertir el arreglo de objetos a una hoja de cálculo
     const worksheet = XLSX.utils.json_to_sheet(datosExcel);
 
-    // Crear un nuevo libro de trabajo (Workbook) y adjuntar la hoja
+    // esta linea es para crear un nuevo libro de trabajo y adjuntar la hoja
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Carga de Asesores");
 
-    //  Descargar archivo con el nombre especificado en el requerimiento
-    XLSX.writeFile(workbook, "tfc-2026-2-metricas.xlsx");
+    //  esta linea es para descargar archivo con el nombre especificado en el requerimiento
+    XLSX.writeFile(workbook, "2026-2-CargadeAsesores.xlsx");
   };
-  // estos const son de los botones para interactividad
+
+
+  // estos const son de los botones para interactividad que dicen "Ver más"
   const handleExportar = () => {
     alert("Exportando reporte de carga de asesores a Excel...");
   };
