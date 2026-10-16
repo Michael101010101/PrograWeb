@@ -5,26 +5,14 @@
   flex-direction: column;
 }
 
+
 .hu7-contenido-principal {
-  flex: 1;
-}
-
-
-.hu7-header-slot-asesores {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: #EFEFE9;
-  padding: 6px 12px;
-  border-radius: 6px;
+  background-color: #F1F0EA; 
+  padding: -50px;          
+  box-sizing: border-box;
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
-  color: var(--text-color);
-}
-
-.hu7-header-slot-asesores strong {
-  font-weight: 700;
-  color: var(--primary-color);
+  color: #1A211D;
+  
 }
 
 
@@ -32,45 +20,314 @@
 .hu7-contenedorSUP {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 32px 48px 24px 48px;
-  width: 100%;
-  box-sizing: border-box;
+  align-items: flex-start;
+  margin-bottom: 24px;
 }
 
-.hu7-titulo-seccion {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.hu7-subtitulo-pantalla {
+  font-size: 13px;
+  color: #66716B;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.hu7-barra-controles {
-  display: flex;
-  align-items: center;
+.hu7-titulo-pantalla {
+  font-family: 'Lora', serif;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0 0 16px 0;
 }
 
-.hu7-btn-exportar {
-  height: 40px;
-  padding: 0 20px;
-  background-color: var(--surface);
-  border: 1px solid var(--primary-color);
-  border-radius: 6px;
+.hu7-subtitulo-pantalla2 {
+  font-size: 16px;
+  color: #66716B;
+  margin: 0;
+  font-weight: normal;
+}
+
+/*boton exportar*/
+.hu7-boton-exportar {
+  background-color: #E4EFE9;
+  color: #128754;
+  border: 1px solid #2C5F4A;
+  padding: 7px 18px;
+  border-radius: 5px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-color);
+  font-size: 14px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  white-space: nowrap;
+
 }
 
-.hu7-btn-exportar:hover {
-  background-color: var(--primary-soft);
+.hu7-boton-exportar:hover {
+  background-color: #2C5F4A;
+  color: #FFFFFF;
 }
+
+
 
 .hu7-contenedorINF {
   padding: 0 48px 48px 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.hu7-tarjeta-tabla-asesores {
+  background-color: #FFFFFF;
+  border: 1px solid #E1E3DC;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.hu7-tabla-asesores {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+/* encabezados de la tabla */
+.hu7-tabla-asesores thead th {
+  background-color: #F8F8F5;
+  color: #66716B;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #E1E3DC;
+  text-transform: uppercase;
+}
+
+/* filas y celfdas de tabla */
+.hu7-tabla-asesores tbody tr {
+  border-bottom: 1px solid #E1E3DC;
+  transition: background-color 0.15s ease;
+}
+
+.hu7-tabla-asesores tbody tr:last-child {
+  border-bottom: none;
+}
+
+.hu7-tabla-asesores tbody tr:hover {
+  background-color: #F8FBF9;
+}
+
+.hu7-tabla-asesores tbody td {
+  padding: 16px 20px;
+  font-size: 15px;
+  color: #1A211D;
+  vertical-align: middle;
+}
+
+.hu7-col-asesor {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hu7-nombre-asesor {
+  font-weight: 600;
+  color: #1A211D;
+  font-size: 17px;
+}
+
+.hu7-carrera-asesor {
+  font-size: 15px;
+  color: #66716B;
+}
+
+
+/*columna cupo y la barrita de progrso*/
+.hu7-col-cupo {
+  min-width: 130px;
+}
+
+.hu7-contenedor-cupo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 110px;
+}
+
+.hu7-texto-cupo {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1A211D;
+}
+
+.hu7-barra-progreso-bg {
+  width: 100%;
+  height: 8px;
+  background-color: #E1E3DC;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+
+.hu7-barra-progreso-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* boton Ver Detalle */
+.hu7-boton-detalle {
+  background: none;
+  border: none;
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hu7-boton-detalle:hover {
+  text-decoration: underline;
+  background-color: #E4EFE9;
+}
+
+
+
+/* tarjetas de recomendacion y la otra del costadso*/
+.hu7-fila-resumen-asesores {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  align-items: stretch; /* esto es para que ambas tarjetas tengan la misma altura*/
+  gap: 24px;
+  width: 100%;
+}
+
+.hu7-tarjeta-recomendacion {
+  background-color: #f2e5c8a3;
+  border: 1.5px solid #B7791F;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  box-sizing: border-box;
+}
+
+.hu7-tarjeta-recomendacion h3 {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: 'Inter';
+  color: #B7791F;
+  margin: 0 0 12px 0;
+  letter-spacing: 0.5px;
+}
+
+
+.hu7-tarjeta-resumen-facultad {
+  background-color: #FFFFFF;
+  border: 1px solid #E1E3DC;
+  border-radius: 8px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hu7-tarjeta-resumen-facultad h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--muted-text-color);
+  text-transform: uppercase;
+  font-family: 'Inter';
+  letter-spacing: 0.5px;
+  margin: 0 0 20px 0;
+}
+
+.recomendacion-texto{
+  font-family: 'Inter';
+  color: #B7791F;
+  font-size: 14px;
+  margin-bottom: 12px;
+
+}
+
+
+.hu7-botones-recomendacion {
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  
+}
+
+.hu7-boton-escribir {
+  background-color: #B7791F;
+  color: #FFFFFF;
+  border: none;
+  padding: 8px 16px;
+
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap
+}
+
+.hu7-boton-ampliar {
+  background-color: #FFFFFF;
+  color: #B7791F;
+  border: 1px solid #B7791F;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Métricas de resumen */
+.hu7-metricas-resumen {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 50px;
+  
+}
+
+
+.hu7-metrica-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hu7-metrica-titulo {
+  font-size: 13px;
+  color: #66716B;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+}
+
+.hu7-metrica-valor {
+  font-size: 34px;
+  font-weight: 700;
+  color: #1E4534;
+  line-height: 1;
+}
+
+.hu7-metrica-subtexto {
+  font-size: 12px;
+  color: #66716B;
+}
+
+/*linea de division: ------*/
+.hu7-nota-objetivo {
+  font-size: 13px;
+  color: #66716B;
+  border-top: 1px solid #E1E3DC;
+  padding-top: 16px;
+  margin: 0;
+  line-height: 18px;
 }
