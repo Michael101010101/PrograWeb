@@ -4,6 +4,7 @@ import EstadoBadge from '../components/EstadoBadge.jsx';
 import { PERIODO } from '../../shared/config/periodo.js';
 import { obtenerAsesoresDestacados } from '../../shared/integraciones.js';
 import { diasHasta, fecha } from '../utils/fechas.js';
+import { useToast } from '../../shared/components/ToastProvider.jsx';
 
 function cierreAsignacion() {
   const etapa = PERIODO.cronograma.find((e) => e.etapa === 2);
@@ -14,7 +15,16 @@ function cierreAsignacion() {
 
 export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarEstado }) {
   const navigate = useNavigate();
-  const ayudaPermiso = puedeGestionar ? undefined : 'Solo el responsable del equipo puede hacerlo';
+    const { mostrar } = useToast();
+
+  const soloResponsable = (accion) => () => {
+    if (puedeGestionar) return accion();
+    mostrar({
+      tipo: 'aviso',
+      titulo: 'Solo el responsable puede hacerlo',
+      mensaje: 'Pide al responsable del equipo que haga el cambio o que te transfiera la responsabilidad.',
+    });
+  };
 
   const cierre = cierreAsignacion();
   const dias = diasHasta(cierre);
@@ -44,11 +54,11 @@ export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarE
           </div>
 
           <div className="fe-acciones">
-            <button type="button" className="fe-btn-secundario" onClick={() => navigate('/estudiante/mi-trabajo/editar')} disabled={!puedeGestionar} title={ayudaPermiso}>
+            <button type="button" className="fe-btn-secundario" onClick={soloResponsable(() => navigate('/estudiante/mi-trabajo/editar'))}>
               Editar ficha
             </button>
 
-            <button type="button" className="fe-btn-estado" onClick={onCambiarEstado} disabled={!puedeGestionar} title={ayudaPermiso}>
+            <button type="button" className="fe-btn-estado" onClick={soloResponsable(onCambiarEstado)}>
               Cambiar estado
             </button>
           </div>

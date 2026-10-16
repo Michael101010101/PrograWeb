@@ -27,7 +27,7 @@ export default function AppRouter() {
       <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
       <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
-
+      
       <Route element={<SoloPublico />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registro/estudiante" element={<RegistroEstudiantePage />} />

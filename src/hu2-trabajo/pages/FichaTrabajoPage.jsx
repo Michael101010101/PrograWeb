@@ -3,11 +3,21 @@ import './fichaTrabajo.css';
 import EstadoBadge from '../components/EstadoBadge.jsx';
 import { fecha } from '../utils/fechas.js';
 import { inicialesDeNombre } from '../utils/nombres.js';
+import { useToast } from '../../shared/components/ToastProvider.jsx';
 
 export default function FichaTrabajoPage({ trabajo, puedeGestionar, onCambiarEstado }) {
   const navigate = useNavigate();
   const { avance, asesor } = trabajo;
-  const ayudaPermiso = puedeGestionar ? undefined : 'Solo el responsable del equipo puede hacerlo';
+   const { mostrar } = useToast();
+
+  const soloResponsable = (accion) => () => {
+    if (puedeGestionar) return accion();
+    mostrar({
+      tipo: 'aviso',
+      titulo: 'Solo el responsable puede hacerlo',
+      mensaje: 'Pide al responsable del equipo que haga el cambio o que te transfiera la responsabilidad.',
+    });
+  }; 
 
   return (
     <div className="ficha-contenedor">
@@ -30,11 +40,11 @@ export default function FichaTrabajoPage({ trabajo, puedeGestionar, onCambiarEst
           </div>
 
           <div className="ficha-acciones">
-            <button type="button" className="btn-editar" onClick={() => navigate('/estudiante/mi-trabajo/editar')} disabled={!puedeGestionar} title={ayudaPermiso}>
+            <button type="button" className="btn-editar" onClick={soloResponsable(() => navigate('/estudiante/mi-trabajo/editar'))}>
               Editar ficha
             </button>
 
-            <button type="button" className="btn-cambiar-estado" onClick={onCambiarEstado} disabled={!puedeGestionar} title={ayudaPermiso}>
+            <button type="button" className="btn-cambiar-estado" onClick={soloResponsable(onCambiarEstado)}>
               Cambiar estado
             </button>
           </div>
