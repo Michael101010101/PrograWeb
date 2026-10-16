@@ -14,7 +14,7 @@ export default function AccesoDenegadoPage({ rutaSolicitada, rolesRequeridos = [
   const asunto = encodeURIComponent(`Acceso a ${rutaSolicitada}`);
 
   return (
-    <PageLayout centrado>
+    <PageLayout centrado footerDetalle={false}>
       <div className="card" style={{ maxWidth: 600, margin: '0 auto' }}>
         <EmptyState
           icono="⊘"

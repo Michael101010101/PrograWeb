@@ -4,6 +4,7 @@ import * as tokens from './tokensRepository.js';
 import * as invitaciones from './invitacionesRepository.js';
 import { esperar, leerObjeto, guardarObjeto } from './localStore.js';
 import { hashPassword } from '../utils/hash.js';
+import { enviarCorreo } from './correoService.js';
 import {
   limpiar,
   validarCambioPassword,
@@ -138,8 +139,19 @@ export async function registrarEstudiante(datos) {
     ultimoIngreso: null,
   });
   const verificacion = tokens.emitir('verificacion', nuevo.id);
-  // Sin envío real de correos (fuera de alcance): se devuelve el enlace para la demo.
-  return { usuario: usuarios.sinSecretos(nuevo), enlaceDemo: `/verificar/${verificacion.token}` };
+  
+  const envio = await enviarCorreo({
+  para: correo,
+  asunto: 'Verifica tu cuenta de Trabajos de Fin de Carrera',
+  mensaje: `Hola, ${limpiar(datos.nombres)}. Para activar tu cuenta usa el botón de abajo. El enlace vence en 24 horas.`,
+  enlace: `/verificar/${verificacion.token}`,
+  textoEnlace: 'Verificar mi correo',
+  });
+  return {
+  usuario: usuarios.sinSecretos(nuevo),
+  enlaceDemo: `/verificar/${verificacion.token}`,
+  correoEnviado: envio.enviado,
+  };
 }
 
 export async function registrarAsesor(datos) {
@@ -213,7 +225,15 @@ export async function crearInvitacion(solicitante, correoIngresado) {
   if (vigente) {
     throw new ServiceError(409, 'Ese correo ya tiene una invitación vigente.', { campos: { correo: 'Ya tiene una invitación vigente' } });
   }
-  return invitaciones.crear({ correo, invitadoPor: solicitante.id });
+  const inv = invitaciones.crear({ correo, invitadoPor: solicitante.id });
+  const envio = await enviarCorreo({
+    para: correo,
+    asunto: 'Invitación a la coordinación TFC',
+    mensaje: `${solicitante.nombres.split(' ')[0]} ${solicitante.apellidos} te invitó a crear una cuenta de coordinación en Trabajos de Fin de Carrera. Tu código es ${inv.codigo}; vence en 7 días y solo puede usarse una vez.`,
+    enlace: `/registro/coordinador?invitacion=${inv.codigo}`,
+    textoEnlace: 'Crear mi cuenta',
+  });
+  return { ...inv, correoEnviado: envio.enviado };
 }
 
 export async function listarInvitaciones(solicitante) {
@@ -253,7 +273,14 @@ export async function reenviarVerificacion(usuarioId) {
   if (!u) throw new ServiceError(404, 'No encontramos la cuenta.');
   if (u.estado !== 'sin_verificar') throw new ServiceError(409, 'Tu cuenta ya está verificada.');
   const t = tokens.emitir('verificacion', u.id);
-  return { correo: u.correo, enlaceDemo: `/verificar/${t.token}` };
+  const envio = await enviarCorreo({
+    para: u.correo,
+    asunto: 'Verifica tu cuenta de Trabajos de Fin de Carrera',
+    mensaje: `Hola, ${u.nombres.split(' ')[0]}. Te enviamos un nuevo enlace para activar tu cuenta. Vence en 24 horas y reemplaza a los anteriores.`,
+    enlace: `/verificar/${t.token}`,
+    textoEnlace: 'Verificar mi correo',
+    });
+  return { correo: u.correo, enlaceDemo: `/verificar/${t.token}`, correoEnviado: envio.enviado };
 }
 
 /* ─────────── Recuperación de contraseña ─────────── */
@@ -268,6 +295,13 @@ export async function solicitarRecuperacion(correoIngresado) {
   // Por seguridad la respuesta visible es la misma exista o no la cuenta.
   if (!u || u.estado === 'bloqueado') return { correo, enlaceDemo: null };
   const t = tokens.emitir('recuperacion', u.id);
+  await enviarCorreo({
+    para: correo,
+    asunto: 'Recupera tu contraseña',
+    mensaje: `Hola, ${u.nombres.split(' ')[0]}. Recibimos una solicitud para cambiar tu contraseña. El enlace vence en 60 minutos y solo puede usarse una vez. Si no la pediste, ignora este correo.`,
+    enlace: `/recuperar/${t.token}`,
+    textoEnlace: 'Crear nueva contraseña',
+  });
   return { correo, enlaceDemo: `/recuperar/${t.token}` };
 }
 

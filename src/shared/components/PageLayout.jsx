@@ -13,6 +13,7 @@ export default function PageLayout({
   navExtra,
   navInfo,
   footerDetalle,
+  footerPoliticaDatos,
   centrado = false,
 }) {
   return (
@@ -22,7 +23,7 @@ export default function PageLayout({
       <main className={`page-content ${centrado ? 'page-content--center' : ''}`}>
         <div className="page-content__inner">{children}</div>
       </main>
-      <Footer detalle={footerDetalle} />
+      <Footer detalle={footerDetalle} politicaDatos={footerPoliticaDatos} />
     </div>
   );
 }
