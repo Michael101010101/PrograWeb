@@ -25,6 +25,8 @@ import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 // HU-4 · Plan de entregables
 import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
 import AlertasVencimientoPage from '../hu4-entregables/pages/AlertasVencimientoPage.jsx';
+import DefinirPlanPage from '../hu4-entregables/pages/DefinirPlanPage.jsx';
+import PlanesAsesorPage from '../hu4-entregables/pages/PlanesAsesorPage.jsx';
 
   
 
@@ -67,7 +69,9 @@ export default function AppRouter() {
 
       {/* Asesor */}
       <Route path="/asesor" element={<RutaProtegida roles={['asesor']} />}>
-        <Route path="asesorados" element={<EnConstruccion titulo="Mis asesorados" historia="HU-3" />} />
+        {/* TEMPORAL hasta integrar la HU-3: "Mis asesorados" de Christopher reemplaza a PlanesAsesorPage */}
+        <Route path="asesorados" element={<PlanesAsesorPage />} />
+        <Route path="asesorados/:codigo/plan" element={<DefinirPlanPage />} />
         <Route path="solicitudes" element={<EnConstruccion titulo="Solicitudes recibidas" historia="HU-3" />} />
         <Route path="revision" element={<EnConstruccion titulo="Bandeja de revisión" historia="HU-5" />} />
         <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />

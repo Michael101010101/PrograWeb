@@ -143,3 +143,65 @@
   .hu4-alerta-fila__acciones, .hu4-resumen__cifras { grid-column: 2; flex-wrap: wrap; }
   .hu4-resumen { grid-template-columns: 1fr; }
 }
+
+/* ───────── 4.2 · Definir el plan (asesor) ───────── */
+.hu4-plan-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.hu4-form { display: grid; gap: 18px; }
+.hu4-form .form-actions { margin-top: 4px; }
+
+.hu4-pesos { border: 1px solid; border-radius: var(--radius-sm); padding: 14px 18px; display: grid; gap: 8px; }
+.hu4-pesos--ok { background: var(--primary-soft); border-color: var(--primary); }
+.hu4-pesos--falta { background: var(--warning-soft); border-color: var(--warning); }
+.hu4-pesos--error { background: var(--danger-soft); border-color: var(--danger); }
+.hu4-pesos__fila { display: flex; justify-content: space-between; font-size: 15px; }
+.hu4-pesos--ok .hu4-pesos__fila strong:last-child { color: var(--success); }
+.hu4-pesos--falta .hu4-pesos__fila strong:last-child { color: var(--warning-text); }
+.hu4-pesos--error .hu4-pesos__fila { color: var(--danger); }
+.hu4-pesos__detalle { font-size: 12px; color: var(--muted); }
+.hu4-pesos--error .hu4-pesos__detalle { color: var(--danger); }
+
+.hu4-plan-grid > .card + .card { margin-top: 0; }
+.card.hu4-tabla-plan { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.hu4-tabla-plan__head { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; }
+.hu4-tabla-plan__vacio { padding: 24px; border-top: 1px solid var(--border); }
+.hu4-tabla { width: 100%; border-collapse: collapse; font-size: 15px; }
+.hu4-tabla th { white-space: nowrap; text-align: left; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; padding: 12px 24px; background: var(--surface-subtle); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.hu4-tabla td { padding: 16px 24px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.hu4-tabla td strong { font-weight: 500; }
+.hu4-tabla tr.is-editando td { background: var(--primary-soft); }
+.hu4-tabla__estado { display: block; font-size: 12px; font-weight: 600; margin-top: 2px; }
+.hu4-tabla__accion { text-align: right; white-space: nowrap; }
+.hu4-tabla__accion .link-button + .link-button { margin-left: 16px; }
+.hu4-tabla-plan__pie { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 24px; background: var(--surface-subtle); margin-top: auto; }
+
+.hu4-texto--neutral { color: var(--muted); }
+.hu4-texto--info { color: var(--info); }
+.hu4-texto--warning { color: var(--warning-text); }
+.hu4-texto--accent { color: #7d5f2c; }
+.hu4-texto--success { color: var(--success); }
+.hu4-texto--danger { color: var(--danger); }
+
+.hu4-pesos-actuales { background: var(--surface-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 16px; }
+.hu4-pesos-actuales ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.hu4-pesos-actuales li { display: flex; justify-content: space-between; }
+.hu4-pesos-actuales li.is-resaltado { color: var(--danger); font-weight: 600; }
+
+.hu4-ampliaciones { display: grid; gap: 12px; margin-bottom: 20px; }
+.hu4-ampliaciones h2 { font-family: var(--font-body); font-size: 16px; color: var(--warning-text); }
+.hu4-ampliaciones__fila { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: var(--text); }
+.hu4-ampliaciones__acciones { display: flex; gap: 10px; }
+
+.hu4-planes { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
+.hu4-planes__card { display: grid; gap: 10px; align-content: start; }
+.hu4-planes > .card + .card { margin-top: 0; }
+.hu4-planes__card h2 { font-size: 19px; line-height: 26px; }
+.hu4-planes__avance { display: flex; align-items: center; gap: 12px; }
+.hu4-planes__card .btn { justify-self: start; }
+
+@media (max-width: 1100px) {
+  .hu4-plan-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 700px) {
+  .hu4-tabla th, .hu4-tabla td { padding: 12px; }
+  .hu4-tabla-plan__pie, .hu4-ampliaciones__fila { flex-direction: column; align-items: flex-start; }
+}
