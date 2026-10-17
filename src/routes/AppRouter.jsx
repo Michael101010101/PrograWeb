@@ -3,6 +3,7 @@ import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 
+
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
 import LoginPage from '../hu1-cuenta/pages/LoginPage.jsx';
@@ -23,8 +24,9 @@ import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
 
 // HU-7 · Supervisión y métricas
 import TableroAdmin from '../hu7-supervicion/pages/TableroAdmin.jsx';
-import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
+import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
+import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 
 export default function AppRouter() {
   return (
