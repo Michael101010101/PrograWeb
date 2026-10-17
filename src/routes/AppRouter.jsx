@@ -1,7 +1,15 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
+
+// H5 · Revisión y retroalimentación
+import BandejaRevisionPage from '../h5-revision-retroalimentacion/pages/BandejaRevisionPage.jsx';
+import RevisionAvancePage from '../h5-revision-retroalimentacion/pages/RevisionAvancePage.jsx';
+import RevisionLayout from '../h5-revision-retroalimentacion/components/RevisionLayout.jsx';
+import RetroalimentacionPage from '../h5-revision-retroalimentacion/pages/RetroalimentacionPage.jsx';
+import HistorialVersionesPage from '../h5-revision-retroalimentacion/pages/HistorialVersionesPage.jsx';
+import TrabajoConsolidadoPage from '../h5-revision-retroalimentacion/pages/TrabajoConsolidadoPage.jsx';
 
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
@@ -67,12 +75,17 @@ export default function AppRouter() {
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
         <Route path="mi-trabajo" element={<MiTrabajoPage />} />
+        <Route path="mi-trabajo/ficha" element={<MiTrabajoPage vistaFicha />} />
         <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
         <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
         <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
         <Route path="entregables" element={<PlanEntregablesPage />} />
         <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
-        <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
+        <Route path="retroalimentacion" element={<RevisionLayout />}>
+          <Route index element={<RetroalimentacionPage />} />
+          <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+          <Route path="trabajo/:codigo" element={<Navigate to="/estudiante/mi-trabajo" replace />} />
+        </Route>
         <Route path="asesores" element={<DirectorioAsesoresPage />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
       </Route>
@@ -83,7 +96,12 @@ export default function AppRouter() {
         <Route path="asesorados/:codigo" element={<DetalleAsesoradoPage />} />
         <Route path="asesorados/:codigo/plan" element={<DefinirPlanPage />} />
         <Route path="solicitudes" element={<SolicitudesRecibidasPage />} />
-        <Route path="revision" element={<EnConstruccion titulo="Bandeja de revisión" historia="HU-5" />} />
+        <Route path="revision" element={<RevisionLayout />}>
+          <Route index element={<BandejaRevisionPage />} />
+          <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+          <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
+          <Route path=":id" element={<RevisionAvancePage />} />
+        </Route>
         <Route path="ficha" element={<MiFichaPage />} />
       </Route>
 
@@ -91,7 +109,7 @@ export default function AppRouter() {
       <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
         <Route path="invitaciones" element={<InvitacionesPage />} />
         <Route path="tablero" element={<TableroAdmin />} />
-        <Route path="trabajos" element={<TableroAdmin />} />
+        <Route path="trabajos" element={<TrabajosAdmin />} />
         <Route path="carga" element={<CargaAsesores />} />
         <Route path="usuarios" element={<GestionUsuarios />} />
         <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
@@ -100,4 +118,4 @@ export default function AppRouter() {
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
-}
+}

@@ -1,9 +1,10 @@
 // Utilidades de fechas de la HU-4.
 // Las fechas se guardan como texto 'AAAA-MM-DD': se comparan como texto y se guardan fácil en JSON.
 
-// "Hoy" fijo para la demo (igual que en la HU-3 y la HU-6): así los días de retraso
-// y las alertas coinciden siempre con los mockups (semana del 06/09/2026).
-export const HOY = '2026-09-06';
+// Fecha actual del calendario de Lima.
+export const HOY = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'America/Lima', year: 'numeric', month: '2-digit', day: '2-digit',
+}).format(new Date());
 
 // Límites del semestre 2026-2 (del cronograma del periodo): las fechas límite deben caer aquí.
 export const SEMESTRE = { nombre: '2026-2', inicio: '2026-08-10', fin: '2026-12-19' };

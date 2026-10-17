@@ -1,0 +1,120 @@
+.h5 { width: 100%; }
+.h5 .page-head { margin-bottom: 24px; align-items: end; }
+.h5-grid { display: grid; gap: 24px; align-items: start; }
+.h5-grid--revision { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.h5-grid--lateral { grid-template-columns: minmax(0, 3.6fr) minmax(260px, 1fr); }
+.h5-stack { display: flex; flex-direction: column; gap: 20px; }
+.h5-panel, .h5-version, .h5-tabla-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-card); }
+.h5-panel { padding: 26px; min-width: 0; }
+.h5-panel h2 { margin-bottom: 20px; }
+.h5-panel h3 { margin-bottom: 12px; }
+.h5-panel-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 16px; }
+.h5-panel-head h2 { margin-bottom: 0; }
+.h5-panel--suave { background: var(--surface-subtle); }
+.h5-panel--aviso { background: var(--warning-soft); border-color: var(--accent); color: var(--warning-text); }
+.h5-panel--aviso h3 { color: inherit; }
+.h5-panel--comentarios { min-height: 650px; }
+.h5-acciones, .h5-tabs { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.h5-tab-activo { background: var(--primary-soft); color: var(--primary); border: 1px solid transparent; }
+.h5-tabla-scroll { overflow-x: auto; }
+.h5-tabla { border-collapse: collapse; width: 100%; }
+.h5-tabla th, .h5-tabla td { text-align: left; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+.h5-tabla th { font-size: var(--fs-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); background: var(--surface-subtle); }
+.h5-tabla th:last-child { text-align: right; }
+.h5-tabla td:last-child .h5-acciones { justify-content: end; }
+.h5-tabla small, .h5-version small, .h5-version-resumen small, .h5-equipo small { display: block; color: var(--muted); font-size: var(--fs-aux); }
+.h5-titulo-trabajo { font-family: var(--font-display); font-size: var(--fs-subtitle); font-weight: 600; }
+.h5-tabla-pie { padding: 18px 24px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: var(--muted); font-size: var(--fs-aux); }
+.h5-pagina { background: var(--primary); color: white; padding: 8px 14px; border-radius: var(--radius-sm); }
+.h5 .h5-danger { color: var(--danger); }
+.h5 .h5-warning { color: var(--warning-text); }
+.h5 .h5-success { color: var(--success); }
+.h5-estado { display: inline-block; flex-shrink: 0; font-size: 12px; font-weight: 600; line-height: 18px; padding: 4px 12px; border-radius: var(--radius-sm); color: var(--muted); background: var(--surface-subtle); }
+.h5-estado--aprobado { color: var(--success); background: var(--primary-soft); }
+.h5-estado--observado { color: var(--warning-text); background: var(--warning-soft); }
+.h5-estado--en_revision, .h5-estado--en_desarrollo { color: var(--info); background: var(--info-soft); }
+.h5-estado--vencido { color: var(--danger); background: var(--danger-soft); }
+.h5-datos { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 30px; margin: 24px 0; }
+.h5-datos dt, .h5-form label, .h5-filtros label { font-size: var(--fs-label); text-transform: uppercase; color: var(--muted); font-weight: 600; letter-spacing: .05em; }
+.h5-datos dd { margin: 0; }
+.h5-documento { display: flex; align-items: center; justify-content: space-between; gap: 16px; background: var(--surface-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; margin: 12px 0 20px; }
+.h5-documento span { color: var(--primary); overflow-wrap: anywhere; min-width: 0; }
+.h5-documento a { flex-shrink: 0; }
+.h5-version-resumen { display: flex; justify-content: space-between; gap: 12px; border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-sm); }
+.h5-nota { color: var(--muted); font-size: var(--fs-aux); margin: 16px 0; }
+.h5-conversacion { display: flex; flex-direction: column; gap: 14px; }
+.h5-mensaje { display: flex; align-items: start; gap: 14px; }
+.h5-mensaje .avatar { flex-shrink: 0; background: var(--primary-soft); color: var(--primary); }
+.h5-mensaje__cuerpo { flex: 1; min-width: 0; border: 1px solid var(--border); background: var(--surface-subtle); border-radius: var(--radius-sm); padding: 16px; }
+.h5-mensaje__cuerpo p { white-space: pre-wrap; overflow-wrap: anywhere; }
+.h5-mensaje--estudiante .h5-mensaje__cuerpo { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-dark); }
+.h5-mensaje__cabecera { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.h5-mensaje time { font-size: var(--fs-aux); color: var(--muted); }
+.h5-cita { border-left: 3px solid var(--border); padding-left: 10px; font-size: var(--fs-aux); margin-bottom: 12px; color: var(--muted); }
+.h5-form { display: flex; flex-direction: column; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+.h5-form textarea { width: 100%; min-height: 110px; padding: 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); resize: vertical; }
+.h5-form textarea[aria-invalid=true] { border-color: var(--danger); }
+.h5-form small { color: var(--muted); }
+.h5-form > button { align-self: start; }
+.h5-decisiones { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+.h5 .h5-btn-observar { border: 1px solid var(--accent); color: var(--warning-text); background: white; }
+.h5-filtros { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 24px; }
+.h5-filtros label { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 180px; }
+.h5-filtros select { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: white; text-transform: none; letter-spacing: normal; }
+.h5-version summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px; cursor: pointer; list-style: none; }
+.h5-version summary::before { content: '▸'; color: var(--muted); }
+.h5-version[open] summary::before { content: '▾'; }
+.h5-version summary > div:first-of-type { flex: 1; }
+.h5-version summary strong { font-size: 18px; }
+.h5-version--aprobada[open] { border-color: var(--primary); }
+.h5-version--aprobada[open] summary { background: var(--primary-soft); }
+.h5-version__contenido { padding: 24px; border-top: 1px solid var(--border); }
+.h5-lista, .h5-equipo { padding: 0; margin: 0; list-style: none; }
+.h5-lista li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.h5-lista small { flex-shrink: 0; color: var(--muted); }
+.h5-enlace-historial { margin-top: 16px; }
+.h5-trabajo { margin-bottom: 20px; }
+.h5-trabajo h1 { margin: 20px 0; }
+.h5-progreso { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid var(--border); }
+.h5 progress { accent-color: var(--primary); border: 0; height: 10px; border-radius: 3px; overflow: hidden; }
+.h5 progress::-webkit-progress-bar { background: var(--border); }
+.h5 progress::-webkit-progress-value { background: var(--primary); }
+.h5-progreso progress { flex: 1; min-width: 100px; }
+.h5-progreso strong { font-size: 26px; color: var(--primary-dark); }
+.h5-slot { display: flex; gap: 12px; align-items: center; background: var(--primary-soft); color: var(--primary-dark); padding: 8px 14px; border-radius: var(--radius-sm); font-size: var(--fs-aux); }
+.h5-slot span { max-width: 260px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.h5-slot progress { width: 70px; height: 6px; accent-color: var(--primary); }
+.h5-timeline { list-style: none; padding: 0 0 0 18px; margin: 24px 0; }
+.h5-timeline__item { border-left: 2px solid var(--border); position: relative; padding: 0 0 28px 38px; }
+.h5-timeline__item:last-child { border-left-color: transparent; }
+.h5-timeline__item::before { content: ''; position: absolute; left: -9px; top: 5px; width: 16px; height: 16px; border: 2px dashed var(--muted); border-radius: 50%; background: white; }
+.h5-timeline__item--aprobado::before { border-style: solid; border-color: var(--success); background: var(--success); }
+.h5-timeline__item--observado::before { border-style: solid; border-color: var(--warning); background: var(--warning); }
+.h5-timeline__item--en_revision::before { border-style: solid; border-color: var(--info); background: var(--info); }
+.h5-timeline__item--vencido::before { border-style: solid; border-color: var(--danger); background: var(--danger); }
+.h5-timeline h3 { font-family: var(--font-body); margin: 4px 0; }
+.h5 blockquote { border-left: 3px solid var(--primary); background: var(--surface-subtle); padding: 14px; margin: 16px 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.h5-equipo li { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.h5-equipo li:last-child { border-bottom: 0; }
+.h5-eventos { border-top: 1px solid var(--border); padding-top: 20px; }
+.h5-eventos summary { cursor: pointer; font-weight: 600; color: var(--primary); }
+.h5-eventos li { padding: 12px 0; overflow-wrap: anywhere; }
+.h5-eventos time { display: block; color: var(--muted); font-size: var(--fs-aux); }
+.h5-volver { margin-bottom: 16px; }
+/* Solo las pantallas HU-5 usan el ancho del mockup; no afecta las otras historias. */
+.app-shell:has(.h5) .app-header__inner,
+.app-shell:has(.h5) .app-nav__inner,
+.app-shell:has(.h5) .app-footer__inner,
+.app-shell:has(.h5) .page-content__inner { max-width: 1920px; }
+.h5-grid--lateral > aside h3 { font-family: var(--font-body); font-size: var(--fs-label); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.h5-equipo { font-size: 14px; }
+.h5 .h5-tabla-panel { min-height: 600px; display: flex; flex-direction: column; }
+.h5-tabla-pie { margin-top: auto; }
+@media (max-width: 1050px) { .h5-grid--lateral { grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); } .h5-mensaje { gap: 8px; } .h5-documento { flex-wrap: wrap; } }
+@media (max-width: 800px) { .h5-grid--revision, .h5-grid--lateral { grid-template-columns: minmax(0, 1fr); } .h5-panel { padding: 20px; } .h5-panel--comentarios { min-height: 0; } .h5-tabla th, .h5-tabla td { padding: 14px; } .h5-tabla { min-width: 720px; } .h5-slot span { max-width: 160px; } }
+@media (max-width: 480px) { .h5-decisiones, .h5-datos { grid-template-columns: 1fr; } .h5-version summary { padding: 16px; flex-wrap: wrap; } .h5-mensaje .avatar { display: none; } .h5-progreso span:last-child { width: 100%; } }
+
+.h5-consolidada-timeline { min-height: 590px; }
+.h5-equipo li { display: flex; align-items: center; gap: 12px; }
+.h5-equipo-avatar { flex-shrink: 0; background: var(--primary-soft); color: var(--primary); }
+@media (max-width: 800px) { .h5-consolidada-timeline { min-height: 0; } }
