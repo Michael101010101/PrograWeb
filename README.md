@@ -1,16 +1,29 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Cuentas de prueba (contraseña: `Tfc2026!`)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Correo | Rol | Estado |
+| --- | --- | --- |
+| rquispe@aloe.ulima.edu.pe | Estudiante | Activo |
+| drojas@aloe.ulima.edu.pe | Estudiante | Activo |
+| bpalomino@aloe.ulima.edu.pe | Estudiante | Sin verificar |
+| jtapia@aloe.ulima.edu.pe | Estudiante | Bloqueado |
+| mquispe@ulima.edu.pe | Asesor | Activo |
+| achavez@ulima.edu.pe | Asesor | Pendiente de validación |
+| cvelasquez@ulima.edu.pe | Administrador | Activo |
 
-## React Compiler
+Invitación de coordinación vigente: `/registro/coordinador?invitacion=INV-7K2P-94QX`
+(correo lmorales@ulima.edu.pe).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Cómo usan la HU-1 las demás historias
 
-## Expanding the ESLint configuration
+```jsx
+import { useAuth } from '../hu1-cuenta/context/AuthContext.jsx';
+import PageLayout from '../shared/components/PageLayout.jsx';
+import { useToast } from '../shared/components/ToastProvider.jsx';
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+const { usuario } = useAuth();          // { id, rol, nombres, apellidos, correo, … }
+<PageLayout headerSlot={<MiChip />}>…</PageLayout>
+```
+
+Rutas protegidas: se agregan dentro del grupo de su rol en `AppRouter.jsx`.

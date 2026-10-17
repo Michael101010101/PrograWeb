@@ -24,7 +24,29 @@ import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
 import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
 
-// Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
+// HU-2 · Registro del trabajo
+import MiTrabajoPage from '../hu2-trabajo/pages/MiTrabajoPage.jsx';
+import RegistrarTrabajoPage from '../hu2-trabajo/pages/RegistrarTrabajoPage.jsx';
+import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
+
+// HU-7 · Supervisión y métricas
+import TableroAdmin from '../hu7-supervicion/pages/TableroAdmin.jsx';
+import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
+import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
+import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
+
+// HU-4 · Plan de entregables
+import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
+import AlertasVencimientoPage from '../hu4-entregables/pages/AlertasVencimientoPage.jsx';
+import DefinirPlanPage from '../hu4-entregables/pages/DefinirPlanPage.jsx';
+
+// HU-3 · Asesores y asignación
+import DirectorioAsesoresPage from '../hu3-asesores/pages/DirectorioAsesoresPage.jsx';
+import SolicitudesRecibidasPage from '../hu3-asesores/pages/SolicitudesRecibidasPage.jsx';
+import MisAsesoradosPage from '../hu3-asesores/pages/MisAsesoradosPage.jsx';
+import DetalleAsesoradoPage from '../hu3-asesores/pages/DetalleAsesoradoPage.jsx';
+import MiFichaPage from '../hu3-asesores/pages/MiFichaPage.jsx';
+
 export default function AppRouter() {
   return (
     <Routes>
@@ -32,7 +54,7 @@ export default function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/proceso" element={<EnConstruccion titulo="El proceso" historia="HU-1 (contenido informativo)" />} />
       <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
-      <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
+      <Route path="/asesores" element={<DirectorioAsesoresPage />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
 
       {/* Solo sin sesión */}
@@ -52,39 +74,44 @@ export default function AppRouter() {
 
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
-        <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
-        <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
+        <Route path="mi-trabajo" element={<MiTrabajoPage />} />
+        <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
+        <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
+        <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
+        <Route path="entregables" element={<PlanEntregablesPage />} />
+        <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
         <Route path="retroalimentacion" element={<RevisionLayout />}>
           <Route index element={<RetroalimentacionPage />} />
           <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
           <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
         </Route>
-        <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
+        <Route path="asesores" element={<DirectorioAsesoresPage />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
       </Route>
 
       {/* Asesor */}
       <Route path="/asesor" element={<RutaProtegida roles={['asesor']} />}>
-        <Route path="asesorados" element={<EnConstruccion titulo="Mis asesorados" historia="HU-3" />} />
-        <Route path="solicitudes" element={<EnConstruccion titulo="Solicitudes recibidas" historia="HU-3" />} />
-
-        <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
+        <Route path="asesorados" element={<MisAsesoradosPage />} />
+        <Route path="asesorados/:codigo" element={<DetalleAsesoradoPage />} />
+        <Route path="asesorados/:codigo/plan" element={<DefinirPlanPage />} />
+        <Route path="solicitudes" element={<SolicitudesRecibidasPage />} />
         <Route path="revision" element={<RevisionLayout />}>
-        <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
-        <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
-        <Route index element={<BandejaRevisionPage />} />
-        <Route path=":id" element={<RevisionAvancePage />} />
+          <Route index element={<BandejaRevisionPage />} />
+          <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+          <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
+          <Route path=":id" element={<RevisionAvancePage />} />
         </Route>
+        <Route path="ficha" element={<MiFichaPage />} />
       </Route>
 
-      {/* Administrador · coordinación */}
+      {/* Administrador · coordinación (HU-7) */}
       <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
         <Route path="invitaciones" element={<InvitacionesPage />} />
-        <Route path="tablero" element={<EnConstruccion titulo="Tablero del periodo" historia="HU-7" />} />
-        <Route path="trabajos" element={<EnConstruccion titulo="Trabajos del periodo" historia="HU-7" />} />
-        <Route path="carga" element={<EnConstruccion titulo="Carga por asesor" historia="HU-7" />} />
+        <Route path="tablero" element={<TableroAdmin />} />
+        <Route path="trabajos" element={<TrabajosAdmin />} />
+        <Route path="carga" element={<CargaAsesores />} />
+        <Route path="usuarios" element={<GestionUsuarios />} />
         <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
-        <Route path="usuarios" element={<EnConstruccion titulo="Gestión de usuarios" historia="HU-7" />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
