@@ -31,9 +31,9 @@ import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
 
 // HU-7 · Supervisión y métricas
 import TableroAdmin from '../hu7-supervicion/pages/TableroAdmin.jsx';
-import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
 import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
+import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 
 // HU-4 · Plan de entregables
 import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
@@ -113,9 +113,8 @@ export default function AppRouter() {
         <Route path="ficha" element={<MiFichaPage />} />
       </Route>
 
-      {/* Administrador · coordinación (HU-7) */}
-      <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
-        <Route path="invitaciones" element={<InvitacionesPage />} />
+      {/* Administrador | coordinación (HU-7) */}
+      <Route path="/admin" element={<RutaProtegida roles={['coordinador', 'administrador', 'Administrador']} />}>
         <Route path="tablero" element={<TableroAdmin />} />
         <Route path="trabajos" element={<TrabajosAdmin />} />
         <Route path="carga" element={<CargaAsesores />} />

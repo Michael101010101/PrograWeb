@@ -14,8 +14,13 @@ export default function NavBar({ extra, info, contadores = {} }) {
   const { usuario, cerrarSesion } = useAuth();
   const { mostrar } = useToast();
   const navigate = useNavigate();
-  const rol = usuario?.rol ?? 'publico';
-  const items = extra ? [...NAV_POR_ROL[rol], extra] : NAV_POR_ROL[rol];
+
+
+  const rol = usuario?.rol?.toLowerCase() ?? 'publico';
+  
+  // Si por alguna razón el rol no existe en NAV_POR_ROL, hace fallback a 'publico' para no romper la app
+  const menuActual = NAV_POR_ROL[rol] || NAV_POR_ROL.publico;
+  const items = extra ? [...menuActual, extra] : menuActual;
 
   const salir = () => {
     cerrarSesion();

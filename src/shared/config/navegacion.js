@@ -1,5 +1,15 @@
 // Menú de la barra de navegación, propio de cada rol.
-// Cada historia agrega aquí su entrada cuando tenga su vista lista.
+
+
+const menuCoordinador = [
+  { to: '/admin/tablero', label: 'Tablero' },
+  { to: '/admin/trabajos', label: 'Trabajos' },
+  { to: '/admin/carga', label: 'Carga por asesor' },
+  { to: '/admin/sustentaciones', label: 'Sustentaciones' },
+  { to: '/admin/usuarios', label: 'Usuarios' },
+  { to: '/cuenta', label: 'Mi cuenta' },
+];
+
 export const NAV_POR_ROL = {
   publico: [
     { to: '/', label: 'Inicio', end: true },
@@ -22,12 +32,6 @@ export const NAV_POR_ROL = {
     { to: '/asesor/ficha', label: 'Mi ficha' },
     { to: '/cuenta', label: 'Mi cuenta' },
   ],
-  coordinador: [
-    { to: '/admin/tablero', label: 'Tablero' },
-    { to: '/admin/trabajos', label: 'Trabajos' },
-    { to: '/admin/carga', label: 'Carga por asesor' },
-    { to: '/admin/sustentaciones', label: 'Sustentaciones' },
-    { to: '/admin/usuarios', label: 'Usuarios' },
-    { to: '/cuenta', label: 'Mi cuenta' },
-  ],
+  coordinador: menuCoordinador,
+  administrador: menuCoordinador,
 };
