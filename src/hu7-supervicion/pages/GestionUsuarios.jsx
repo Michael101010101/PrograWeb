@@ -5,7 +5,6 @@ import ModalValidarAsesor from '../components/ModalValidarAsesor.jsx';
 import '../hu7.css';
 import '../GestionUsuarios.css';
 
-
 const usuariosIniciales = [
   {
     id: 1,
@@ -97,7 +96,8 @@ const usuariosIniciales = [
     carreraDepartamento: "Ingeniería de Sistemas",
     estado: "Activo"
   },
-  // --- A PARTIR DE AQUI SE MUESTRAN EN LA PAGINA 2 (8 USUARIOS) ---
+
+
   {
     id: 11,
     nombre: "Dra. Gabriela Torres Anchante",
@@ -182,7 +182,7 @@ export default function GestionUsuarios() {
   const [filtroEstado, setFiltroEstado] = useState('Todos');
   const [filtroCarrera, setFiltroCarrera] = useState('Todos');
 
-  //   estado para la paginacion dinamica (cambiamos a 10 elementos por pagina)
+  // estado para la paginacion dinamica (cambiamos a 10 elementos por pagina)
   const [paginaActual, setPaginaActual] = useState(1);
   const elementosPorPagina = 10; // aca definimos 10 por vista para que salgan 10 en la pag 1 y 8 en la pag 2
 
@@ -215,7 +215,7 @@ export default function GestionUsuarios() {
     return coincideTexto && coincideRol && coincideEstado && coincideCarrera;
   });
 
-  // Cacalculo de usuarios paginados
+  // calculo de usuarios paginados
   const totalPaginas = Math.ceil(usuariosFiltrados.length / elementosPorPagina) || 1;
   const indiceInicio = (paginaActual - 1) * elementosPorPagina;
   const usuariosPaginados = usuariosFiltrados.slice(indiceInicio, indiceInicio + elementosPorPagina);
@@ -243,19 +243,19 @@ export default function GestionUsuarios() {
     setModalBloquearAbierto(true);
   };
 
-  // desbloquea un usuario directamente en la lista
+  // Desbloquea un usuario directamente en la lista
   const desbloquearUsuario = (id) => {
     setListaUsuarios((prev) =>
       prev.map((u) => u.id === id ? { ...u, estado: 'Activo' } : u)
     );
   };
 
-  // abre el modal para registrar nuevo usuario
+  // Abre el modal para registrar nuevo usuario
   const registrarNuevoUsuario = () => {
     setModalRegistrarAbierto(true);
   };
 
-  // guarda el nuevo usuario registrado
+  // Guarda el nuevo usuario registrado
   const handleGuardarNuevoUsuario = (e) => {
     e.preventDefault();
     const nuevo = {
@@ -279,7 +279,7 @@ export default function GestionUsuarios() {
     setListaUsuarios((usuariosPrevios) =>
       usuariosPrevios.map((u) =>
         u.id === id ? { ...u, estado: 'Bloqueado', motivoBloqueo: motivo } : u
-      )  );
+      )   );
     setModalBloquearAbierto(false);
   };
 
@@ -290,8 +290,7 @@ export default function GestionUsuarios() {
         u.id === id 
           ? { ...u, estado: 'Activo', rol: rolAsignado, cupoMaximo: cupoMaximo } 
           : u
-      )
-    );
+      )   );
     setModalValidarAbierto(false);
   };
 
@@ -318,16 +317,16 @@ export default function GestionUsuarios() {
             <button 
               type="button" 
               className="hu7-boton-registrar"
-              onClick={registrarNuevoUsuario}  >
+              onClick={registrarNuevoUsuario}   >
               Registrar usuario
             </button>
           </div>
         </div>
 
-
+        {/* Sección Inferior */}
         <div className="hu7-contenedorINF">
           
-          {/*  barra de filtros */}
+          {/* Barra de Filtros */}
           <div className="hu7-barra-filtros-usuarios">
             <div className="hu7-filtro-buscar">
               <label htmlFor="input-buscar-usuario">BUSCAR</label>
@@ -339,7 +338,8 @@ export default function GestionUsuarios() {
                 value={busqueda}
                 onChange={(e) => {
                   setBusqueda(e.target.value);
-                  setPaginaActual(1);      }}/>
+                  setPaginaActual(1);
+                }}/>
             </div>
 
             <div className="hu7-filtro-seleccionar">
@@ -349,7 +349,8 @@ export default function GestionUsuarios() {
                 value={filtroRol}
                 onChange={(e) => {
                   setFiltroRol(e.target.value);
-                  setPaginaActual(1);  }}
+                  setPaginaActual(1);
+                }}
                 className="hu7-seleccionar-filtro">
 
                 <option value="Todos">Todos</option>
@@ -384,7 +385,8 @@ export default function GestionUsuarios() {
                 value={filtroCarrera}
                 onChange={(e) => {
                   setFiltroCarrera(e.target.value);
-                  setPaginaActual(1); }}
+                  setPaginaActual(1);
+                }}
                 className="hu7-seleccionar-filtro">
                   
                 <option value="Todos">Todos</option>
@@ -397,7 +399,7 @@ export default function GestionUsuarios() {
             </div>
           </div>
 
-          {/* tabla usuarios */}
+          {/* Tabla de Usuarios */}
           <div className="hu7-tarjeta-tabla-usuarios">
             <table className="hu7-tabla-usuarios">
               <thead>
@@ -439,21 +441,21 @@ export default function GestionUsuarios() {
                           <button 
                             type="button" 
                             className="hu7-boton-validar-tabla"
-                            onClick={() => abrirValidarAsesores(u)}  >
+                            onClick={() => abrirValidarAsesores(u)}    >
                             Validar cuenta
                           </button>
                         ) : u.estado === 'Bloqueado' ? (
                           <button 
                             type="button" 
                             className="hu7-boton-desbloquear"
-                            onClick={() => desbloquearUsuario(u.id)}   >
+                            onClick={() => desbloquearUsuario(u.id)}  >
                             Desbloquear
                           </button>
                         ) : (
                           <button 
                             type="button" 
                             className="hu7-boton-editar"
-                            onClick={() => abrirBloquearUsuario(u)} >
+                            onClick={() => abrirBloquearUsuario(u)}  >
                             Bloquear
                           </button>
                         )}
@@ -480,7 +482,7 @@ export default function GestionUsuarios() {
                   type="button" 
                   className="hu7-boton-pag" 
                   disabled={paginaActual === 1}
-                  onClick={() => setPaginaActual(prev => prev - 1)}   >
+                  onClick={() => setPaginaActual(prev => prev - 1)}  >
                   Anterior
                 </button>
                 
@@ -488,7 +490,8 @@ export default function GestionUsuarios() {
                   <button 
                     key={index + 1}
                     type="button" 
-                    className={`hu7-boton-pag ${paginaActual === index + 1 ? 'active' : ''}`}   >
+                    className={`hu7-boton-pag ${paginaActual === index + 1 ? 'active' : ''}`}
+                    onClick={() => setPaginaActual(index + 1)}     >
                     {index + 1}
                   </button>
                 ))}
@@ -497,7 +500,7 @@ export default function GestionUsuarios() {
                   type="button" 
                   className="hu7-boton-pag" 
                   disabled={paginaActual === totalPaginas}
-                  onClick={() => setPaginaActual(prev => prev + 1)}  >
+                  onClick={() => setPaginaActual(prev => prev + 1)}     >
                   Siguiente
                 </button>
               </div>
@@ -507,7 +510,7 @@ export default function GestionUsuarios() {
 
         </div>
 
-        {/* modal para Registrar Nuevo Usuario */}
+        {/* Mregistrar Nuevo Usuario */}
         {modalRegistrarAbierto && (
           <div className="hu7-modal-overlay">
             <div className="hu7-modal-contenido">
@@ -524,7 +527,7 @@ export default function GestionUsuarios() {
                       required 
                       placeholder="Ej. Ana María Torres" 
                       value={nuevoNombre}
-                      onChange={(e) => setNuevoNombre(e.target.value)}   />
+                      onChange={(e) => setNuevoNombre(e.target.value)}    />
                   </div>
                   <div className="hu7-campo-form">
                     <label>Correo Institucional:</label>
@@ -533,7 +536,7 @@ export default function GestionUsuarios() {
                       required 
                       placeholder="ejemplo@ulima.edu.pe" 
                       value={nuevoCorreo}
-                      onChange={(e) => setNuevoCorreo(e.target.value)}/>
+                      onChange={(e) => setNuevoCorreo(e.target.value)}   />
                   </div>
                   <div className="hu7-campo-form">
                     <label>Código (opcional):</label>
@@ -541,7 +544,7 @@ export default function GestionUsuarios() {
                       type="text" 
                       placeholder="Ej. 20214589" 
                       value={nuevoCodigo}
-                      onChange={(e) => setNuevoCodigo(e.target.value)}/>
+                      onChange={(e) => setNuevoCodigo(e.target.value)}   />
                   </div>
                   <div className="hu7-campo-form">
                     <label>Rol:</label>
@@ -575,12 +578,12 @@ export default function GestionUsuarios() {
           </div>
         )}
 
-        {/* ventanas emergentes */}
+        {/* Ventanas Emergentes */}
         <ModalBloquearUsuario
           isOpen={modalBloquearAbierto}
           onClose={() => setModalBloquearAbierto(false)}
           usuario={usuarioABloquear}
-          onConfirmarBloqueo={confirmarBloqueo}/>
+          onConfirmarBloqueo={confirmarBloqueo}  />
 
         <ModalValidarAsesor
           isOpen={modalValidarAbierto}
