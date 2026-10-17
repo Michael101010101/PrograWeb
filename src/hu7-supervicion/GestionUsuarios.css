@@ -1,4 +1,43 @@
+.hu7-contenido-principal {
+  background-color: #F1F0EA;
+  padding: 32px 48px 48px 48px;
+  min-height: calc(100vh - 128px);
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  color: #1A211D;
+}
 
+.hu7-contenedorSUP {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.hu7-subtitulo-pantalla {
+  font-size: 12px;
+  color: #66716B;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.hu7-titulo-pantalla {
+  font-family: 'Lora', serif;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 600;
+  color: #1E4534;
+  margin: 0 0 10px 0;
+}
+
+.hu7-subtitulo-pantalla2 {
+  font-size: 15px;
+  color: #66716B;
+  margin: 0;
+  font-weight: 400;
+}
 
 .hu7-barra-controles {
   display: flex;
@@ -6,7 +45,6 @@
   gap: 12px;
   padding-top: 10px;
 }
-
 
 .hu7-header-slot-usuarios {
   display: flex;
@@ -71,6 +109,11 @@
   transform: translateY(1px);
 }
 
+.hu7-contenedorINF {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
 
 .hu7-barra-filtros-usuarios {
   display: flex;
@@ -128,7 +171,6 @@
   border-color: #1E4534;
 }
 
-
 .hu7-tarjeta-tabla-usuarios {
   background-color: #FFFFFF;
   border: 1px solid #E1E3DC;
@@ -169,7 +211,7 @@
 }
 
 .hu7-tabla-usuarios tbody td {
-  padding: 18px 20px;
+  padding: 16px 20px;
   font-size: 14px;
   color: #1A211D;
   vertical-align: middle;
@@ -197,11 +239,11 @@
   color: #1A211D;
 }
 
-/* botonn Editar */
+/* boton Bloquear */
 .hu7-boton-editar {
   background: transparent;
   border: none;
-  color: #1E4534;
+  color: #B4322B;
   font-weight: 700;
   font-size: 14px;
   cursor: pointer;
@@ -211,8 +253,50 @@
 }
 
 .hu7-boton-editar:hover {
-  background-color: #E4EFE9;
+  background-color: #FCE8E6;
   text-decoration: underline;
+}
+
+/* boton Desbloquear */
+.hu7-boton-desbloquear {
+  background: transparent;
+  border: none;
+  color: #1E7F4D;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.hu7-boton-desbloquear:hover {
+  background-color: #E6F4EA;
+  text-decoration: underline;
+}
+
+/* boton Validar cuenta en la tabla */
+.hu7-boton-validar-tabla {
+  background: transparent;
+  border: none;
+  color: #B08948;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.hu7-boton-validar-tabla:hover {
+  background-color: #FAF6EC;
+  text-decoration: underline;
+}
+
+.hu7-texto-tu-cuenta {
+  font-size: 13px;
+  color: #66716B;
+  font-style: italic;
 }
 
 .hu7-tabla-vacia {
@@ -220,7 +304,6 @@
   padding: 30px;
   color: #66716B;
 }
-
 
 .hu7-estado {
   display: inline-block;
@@ -246,7 +329,6 @@
   background-color: #FEF3C7;
   color: #B7791F;
 }
-
 
 .hu7-paginacion-usuarios {
   display: flex;
@@ -292,4 +374,39 @@
 .hu7-boton-pag:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* eestilos para el formulario de registrar nuevo usuario dentro del modal */
+.hu7-form-registrar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hu7-campo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hu7-campo-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1A211D;
+}
+
+.hu7-campo-form input,
+.hu7-campo-form select {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #E1E3DC;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.hu7-campo-form input:focus,
+.hu7-campo-form select:focus {
+  border-color: #1E4534;
 }
