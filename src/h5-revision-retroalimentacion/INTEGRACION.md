@@ -1,3 +1,5 @@
+> Actualizaci?n de integraci?n: la vista consolidada del trabajo en desarrollo se muestra en /estudiante/mi-trabajo. La antigua ruta del estudiante redirige all?; el asesor conserva su consulta consolidada. HU-4 y HU-5 leen tfc.entregables y proyectan las decisiones de tfc.hu5.evento.v1.* sin duplicarlas en las versiones base. HU-2 aporta t?tulo, estado, integrantes y asesor desde tfc.trabajos. El plan relee el almacenamiento antes de cada acci?n y escucha cambios locales y de otras pesta?as. Las fechas de HU-4 usan el calendario actual de Lima. Esta persistencia sigue siendo local al navegador: Git comparte c?digo, no entregas ni revisiones entre computadoras. La asignaci?n din?mica desde HU-3 y el backend siguen pendientes. Las secciones siguientes describen la implementaci?n original y sus pasos hist?ricos.
+
 # HU-5 · Revisión y retroalimentación
 
 Implementación frontend con datos persistidos en el navegador. No requiere dependencias nuevas ni modifica HU-1, HU-2, HU-3 o HU-4. Único ajuste fuera del módulo: rutas HU-5 en `src/routes/AppRouter.jsx`.

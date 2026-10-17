@@ -1,3 +1,5 @@
+import { adaptarHu4 } from '../../h5-revision-retroalimentacion/services/adaptador.js';
+import { aplicarEventos } from '../../h5-revision-retroalimentacion/services/revisionService.js';
 import { DATOS_SEMILLA, PLANTILLA_CICLO } from '../data/datosSemilla.js';
 import { HOY, SEMESTRE, diasEntre, dentroDelSemestre } from '../utils/fechas.js';
 
@@ -14,7 +16,7 @@ export const DIAS_ALERTA = 14; // "Próximos a vencer · siguientes 14 días"
 
 // ─────────── Persistencia en localStorage ───────────
 
-export function cargarDatos() {
+export function cargarBase() {
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE));
     if (guardado) return guardado;
@@ -26,8 +28,25 @@ export function cargarDatos() {
   return iniciales;
 }
 
+export function cargarDatos() {
+  const base = cargarBase();
+  const eventos = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)).filter((k) => k.startsWith('tfc.hu5.evento.v1.')).map((k) => JSON.parse(localStorage.getItem(k)));
+  const proyectado = aplicarEventos(adaptarHu4(base), eventos);
+  const trabajos = localStorage.getItem('tfc.trabajos');
+  if (trabajos) {
+    for (const real of JSON.parse(trabajos)) {
+      const previo = proyectado.trabajos.find((t) => t.codigo === real.codigo);
+      const trabajo = { ...previo, ...real, integrantes: real.integrantes.map((i) => typeof i === 'string' ? i : i.usuarioId),
+        asesor: real.asesor ? { ...previo?.asesor, ...real.asesor, usuarioId: real.asesor.usuarioId ?? real.asesor.id } : null };
+      proyectado.trabajos = [...proyectado.trabajos.filter((t) => t.codigo !== real.codigo), trabajo];
+    }
+  }
+  return { ...base, ...proyectado };
+}
+
 export function guardarDatos(datos) {
   localStorage.setItem(CLAVE, JSON.stringify(datos));
+  window.dispatchEvent(new Event('entregables-cambio'));
 }
 
 // ─────────── Consultas (no modifican nada) ───────────
@@ -189,7 +208,7 @@ export function registrarAvance(datos, entregableId, { enlace, descripcion }, ho
   if (texto.length > 600) throw new Error('La descripción no puede superar los 600 caracteres.');
 
   const nuevo = {
-    id: `av-${Date.now()}`,
+    id: `av-${globalThis.crypto.randomUUID()}`,
     entregableId,
     version: item.avances.length + 1, // la versión se calcula sola
     fecha: hoy,

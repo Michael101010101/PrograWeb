@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as servicio from '../services/entregablesService.js';
 
 /**
@@ -10,10 +10,25 @@ import * as servicio from '../services/entregablesService.js';
 export default function useEntregables() {
   const [datos, setDatos] = useState(() => servicio.cargarDatos());
 
+  useEffect(() => {
+    const actualizar = () => setDatos(servicio.cargarDatos());
+    window.addEventListener('storage', actualizar);
+    window.addEventListener('hu5-cambio', actualizar);
+    window.addEventListener('entregables-cambio', actualizar);
+    return () => {
+      window.removeEventListener('storage', actualizar);
+      window.removeEventListener('hu5-cambio', actualizar);
+      window.removeEventListener('entregables-cambio', actualizar);
+    };
+  }, []);
+
   const ejecutar = (accion) => {
-    const nuevos = accion(datos);
+    const base = servicio.cargarBase();
+    const nuevos = accion(servicio.cargarDatos());
+    // Las decisiones siguen en el historial HU-5; no se copian a la base.
+    nuevos.avances = nuevos.avances.map((a) => base.avances.find((original) => original.id === a.id) ?? a);
     servicio.guardarDatos(nuevos);
-    setDatos(nuevos);
+    setDatos(servicio.cargarDatos());
   };
 
   return {

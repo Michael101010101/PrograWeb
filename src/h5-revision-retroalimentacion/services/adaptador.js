@@ -2,6 +2,7 @@
 export function adaptarHu4(datos) {
   if (!datos || !['trabajos', 'entregables', 'avances'].every((k) => Array.isArray(datos[k]))) throw new Error('Catálogo de HU-4 incompatible.');
   const trabajos = datos.trabajos.map((t) => ({ ...t,
+    responsableId: t.responsableId ?? t.integrantes?.find((i) => i.responsable)?.usuarioId,
     integrantes: (t.integrantes || []).map((i) => typeof i === 'string' ? i : i.usuarioId).filter(Boolean),
   }));
   const unicos = (lista, campo) => lista.every((item) => typeof item[campo] === 'string' && item[campo])

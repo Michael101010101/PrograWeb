@@ -18,7 +18,7 @@ export default function RetroalimentacionPage() {
   const versiones = versionesDe(datos, entregable?.id);
   const avance = params.has('version') ? versiones.find((a) => a.id === params.get('version')) : versiones[0];
   return <H5Page trabajo={trabajo}><PageHead migas="Inicio · Retroalimentación" titulo="Retroalimentación" descripcion="Consulta las revisiones de tu trabajo y responde a los comentarios del asesor."
-    acciones={trabajo && <Link className="btn btn--outline" to={`/estudiante/retroalimentacion/trabajo/${trabajo.codigo}`}>Ver trabajo consolidado</Link>} />
+    acciones={trabajo && <Link className="btn btn--outline" to="/estudiante/mi-trabajo">Ir a mi trabajo</Link>} />
     {!trabajo ? <EmptyState titulo="No hay trabajos disponibles" texto="No tienes un trabajo asociado para consultar su retroalimentación." /> : <>
       <div className="h5-filtros"><label>Trabajo<select value={trabajo.codigo} onChange={(e) => setParams({ trabajo: e.target.value })}>{datos.trabajos.map((t) => <option key={t.codigo} value={t.codigo}>{t.titulo}</option>)}</select></label>
         <label>Entregable<select value={entregable?.id ?? ''} onChange={(e) => setParams({ trabajo: trabajo.codigo, entregable: e.target.value })}>{entregables.map((e) => <option key={e.id} value={e.id}>{e.orden}. {e.nombre}</option>)}</select></label>

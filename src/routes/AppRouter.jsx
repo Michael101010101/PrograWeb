@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
@@ -75,6 +75,7 @@ export default function AppRouter() {
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
         <Route path="mi-trabajo" element={<MiTrabajoPage />} />
+        <Route path="mi-trabajo/ficha" element={<MiTrabajoPage vistaFicha />} />
         <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
         <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
         <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
@@ -83,7 +84,7 @@ export default function AppRouter() {
         <Route path="retroalimentacion" element={<RevisionLayout />}>
           <Route index element={<RetroalimentacionPage />} />
           <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
-          <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
+          <Route path="trabajo/:codigo" element={<Navigate to="/estudiante/mi-trabajo" replace />} />
         </Route>
         <Route path="asesores" element={<DirectorioAsesoresPage />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />

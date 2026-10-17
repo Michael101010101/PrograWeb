@@ -113,3 +113,8 @@
 @media (max-width: 1050px) { .h5-grid--lateral { grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); } .h5-mensaje { gap: 8px; } .h5-documento { flex-wrap: wrap; } }
 @media (max-width: 800px) { .h5-grid--revision, .h5-grid--lateral { grid-template-columns: minmax(0, 1fr); } .h5-panel { padding: 20px; } .h5-panel--comentarios { min-height: 0; } .h5-tabla th, .h5-tabla td { padding: 14px; } .h5-tabla { min-width: 720px; } .h5-slot span { max-width: 160px; } }
 @media (max-width: 480px) { .h5-decisiones, .h5-datos { grid-template-columns: 1fr; } .h5-version summary { padding: 16px; flex-wrap: wrap; } .h5-mensaje .avatar { display: none; } .h5-progreso span:last-child { width: 100%; } }
+
+.h5-consolidada-timeline { min-height: 590px; }
+.h5-equipo li { display: flex; align-items: center; gap: 12px; }
+.h5-equipo-avatar { flex-shrink: 0; background: var(--primary-soft); color: var(--primary); }
+@media (max-width: 800px) { .h5-consolidada-timeline { min-height: 0; } }
