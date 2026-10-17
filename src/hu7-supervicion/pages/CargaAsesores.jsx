@@ -4,9 +4,8 @@ import * as XLSX from 'xlsx'; // libreria para descargar en excel
 import '../hu7.css';
 import '../CargaAsesores.css';
 
-
-// datos 
-const asesoresData = [
+// datosssssssss iniciales de los asesores (lo pasamos a estado para que se actualice al ampliar cupo)
+const asesoresDataInicial = [
   {
     id: 1,
     nombre: "Ing. Luis Fernando Ocampo Salas",
@@ -74,6 +73,14 @@ export default function CargaAsesores() {
   const [exportado, setExportado] = useState(false);
   const periodo = "2026-2";
 
+  // para manejar los datos dinámicos y los modales interactivos
+  const [asesoresData, setAsesoresData] = useState(asesoresDataInicial);
+  const [asesorSeleccionado, setAsesorSeleccionado] = useState(null); // guarda el asesor para el modal de detalle
+  const [modalEscribir, setModalEscribir] = useState(false); // modal para mandar mensaje al profe 
+  const [modalAmpliar, setModalAmpliar] = useState(false); // modal para subir el cupo
+  const [mensajeTexto, setMensajeTexto] = useState("");
+  const [notificacionEscribir, setNotificacionEscribir] = useState(false);
+
   const handleExportarExcel = () => {
     // mapear los datos para definir nombres de columnas en Excel:
     const datosExcel = asesoresData.map((item) => ({
@@ -98,16 +105,43 @@ export default function CargaAsesores() {
     setExportado(true);
   };
 
-  const handleVerDetalle = (nombre) => {
-    alert(`Viendo detalle del asesor: ${nombre}`);
+  // Abre la ventana con el resumen completo del asesor
+  const handleVerDetalle = (asesorObj) => {
+    setAsesorSeleccionado(asesorObj);
   };
 
+  // Abre el modal para escribirle al Ing. Ocampo Salas
   const EscribirAsesor = () => {
-    alert("Abriendo ventana para escribir al Ing. Ocampo Salas...");
+    setModalEscribir(true);
   };
 
+  // Abre el modal para ampliar el cupo del Ing. Ocampo
   const AmpliarCupo = () => {
-    alert("Solicitando ampliación de cupo máximo...");
+    setModalAmpliar(true);
+  };
+
+  // Confirmar el envio de mensaje
+  const handleEnviarMensaje = (e) => {
+    e.preventDefault();
+    setModalEscribir(false);
+    setMensajeTexto("");
+    setNotificacionEscribir(true);
+    setTimeout(() => setNotificacionEscribir(false), 4000);
+  };
+
+  // Confirmar la ampliación de cupo (de 5/5 a 5/6)
+  const handleConfirmarAmpliacion = () => {
+    setAsesoresData(prev => prev.map(a => {
+      if (a.id === 1) {
+        return {
+          ...a,
+          total: a.total + 1,
+          disponible: a.disponible + 1
+        };
+      }
+      return a;
+    }));
+    setModalAmpliar(false);
   };
 
   return (
@@ -119,7 +153,7 @@ export default function CargaAsesores() {
             <h6 className="hu7-subtitulo-pantalla">Inicio · Carga por asesor</h6>
             <h1 className="hu7-titulo-pantalla">Carga por asesor</h1>
             <h6 className="hu7-subtitulo-pantalla2">
-              6 asesores con trabajos a cargo · ordenados por cupo ocupado
+              {asesoresData.length} asesores con trabajos a cargo · ordenados por cupo ocupado
             </h6>
           </div>
 
@@ -135,7 +169,7 @@ export default function CargaAsesores() {
                 <div className="hu7-textito-info">
                   <div className="hu7-textito-titulo">Reporte exportado</div>
                   <div className="hu7-textito-exportar">
-                    {periodo}-CargaAsesores.xlsx · 12 trabajos y 38 asesores
+                    {periodo}-CargaAsesores.xlsx · 6 asesores
                   </div>
                 </div>
                 <button 
@@ -150,6 +184,12 @@ export default function CargaAsesores() {
           </div>
         </div>
 
+        {/* Notificación cuando se le envía un mensaje al asesor */}
+        {notificacionEscribir && (
+          <div className="hu7-alerta-mensaje-enviado">
+            ✓ Mensaje enviado correctamente al Ing. Luis Fernando Ocampo Salas
+          </div>
+        )}
 
         <div className="hu7-contenedorINF">
           
@@ -199,11 +239,15 @@ export default function CargaAsesores() {
                         </div>
                       </td>
 
-                      <td>{asesor.disponible}</td>
+                      <td className={asesor.disponible === 0 ? "texto-rojo-bold" : "texto-verde-bold"}>
+                        {asesor.disponible}
+                      </td>
                       <td>{asesor.porRevisar}</td>
-                      <td>{asesor.tiempoRevision}</td>
+                      <td className={parseFloat(asesor.tiempoRevision) > 4 ? "texto-rojo-bold" : ""}>
+                        {asesor.tiempoRevision}
+                      </td>
                       <td>
-                        <button type="button" className="hu7-boton-detalle" onClick={() => handleVerDetalle(asesor.nombre)}>
+                        <button type="button" className="hu7-boton-detalle" onClick={() => handleVerDetalle(asesor)}>
                           Ver detalle
                         </button>
                       </td>
@@ -265,6 +309,114 @@ export default function CargaAsesores() {
             </div>  
           </div>
         </div>
+
+        {/* MODAL 1: Resumen de detalle del Asesor */}
+        {asesorSeleccionado && (
+          <div className="hu7-modal-overlay">
+            <div className="hu7-modal-contenido hu7-modal-resumen">
+              <div className="hu7-modal-header">
+                <h3>Resumen de Carga de Asesor</h3>
+                <button type="button" className="hu7-modal-cerrar" onClick={() => setAsesorSeleccionado(null)}>×</button>
+              </div>
+              <div className="hu7-modal-body">
+                <div className="hu7-detalle-fila">
+                  <span className="hu7-detalle-etiqueta">Asesor:</span>
+                  <strong className="hu7-detalle-valor">{asesorSeleccionado.nombre}</strong>
+                </div>
+                <div className="hu7-detalle-fila">
+                  <span className="hu7-detalle-etiqueta">Carrera:</span>
+                  <span className="hu7-detalle-valor">{asesorSeleccionado.carrera}</span>
+                </div>
+                <div className="hu7-detalle-fila">
+                  <span className="hu7-detalle-etiqueta">Cupo ocupado:</span>
+                  <span className="hu7-detalle-valor">{asesorSeleccionado.ocupado}/{asesorSeleccionado.total}</span>
+                </div>
+                <div className="hu7-detalle-fila">
+                  <span className="hu7-detalle-etiqueta">Disponible:</span>
+                  <span className="hu7-detalle-valor">{asesorSeleccionado.disponible}</span>
+                </div>
+                <div className="hu7-detalle-fila">
+                  <span className="hu7-detalle-etiqueta">Por revisar:</span>
+                  <span className="hu7-detalle-valor">{asesorSeleccionado.porRevisar} trabajos</span>
+                </div>
+                <div className="hu7-detalle-fila">
+                  <span className="hu7-detalle-etiqueta">Tiempo de revisión:</span>
+                  <span className="hu7-detalle-valor">{asesorSeleccionado.tiempoRevision}</span>
+                </div>
+              </div>
+              <div className="hu7-modal-footer">
+                <button type="button" className="hu7-boton-volver" onClick={() => setAsesorSeleccionado(null)}>
+                  Volver
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 2: Escribir al asesor */}
+        {modalEscribir && (
+          <div className="hu7-modal-overlay">
+            <div className="hu7-modal-contenido">
+              <div className="hu7-modal-header">
+                <h3>Escribir al Ing. Luis Fernando Ocampo Salas</h3>
+                <button type="button" className="hu7-modal-cerrar" onClick={() => setModalEscribir(false)}>×</button>
+              </div>
+              <form onSubmit={handleEnviarMensaje}>
+                <div className="hu7-modal-body">
+                  <label htmlFor="mensaje-asesor" style={{ fontSize: '13px', color: '#66716B', display: 'block', marginBottom: '8px' }}>
+                    Mensaje / Indicación sobre la carga de trabajos:
+                  </label>
+                  <textarea
+                    id="mensaje-asesor"
+                    className="hu7-textarea-mensaje"
+                    rows="4"
+                    required
+                    placeholder="Escribe aquí tu mensaje o solicitud de derivación de trabajos..."
+                    value={mensajeTexto}
+                    onChange={(e) => setMensajeTexto(e.target.value)}
+                  />
+                </div>
+                <div className="hu7-modal-footer-botones">
+                  <button type="button" className="hu7-boton-cancelar" onClick={() => setModalEscribir(false)}>
+                    Cancelar
+                  </button>
+                  <button type="submit" className="hu7-boton-escribir">
+                    Enviar mensaje
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* MODAL 3: Ampliar cupo máximo */}
+        {modalAmpliar && (
+          <div className="hu7-modal-overlay">
+            <div className="hu7-modal-contenido">
+              <div className="hu7-modal-header">
+                <h3>Solicitar Ampliación de Cupo</h3>
+                <button type="button" className="hu7-modal-cerrar" onClick={() => setModalAmpliar(false)}>×</button>
+              </div>
+              <div className="hu7-modal-body">
+                <p style={{ fontSize: '14px', color: '#1A211D', margin: '0 0 12px 0' }}>
+                  ¿Confirmas la ampliación de 1 cupo adicional para el <strong>Ing. Luis Fernando Ocampo Salas</strong>?
+                </p>
+                <div style={{ fontSize: '13px', backgroundColor: '#FEFCE8', padding: '10px 12px', borderLeft: '4px solid #B7791F', borderRadius: '4px' }}>
+                  El límite actual cambiará de <strong>5</strong> a <strong>6</strong> cupos máximos para este periodo.
+                </div>
+              </div>
+              <div className="hu7-modal-footer-botones">
+                <button type="button" className="hu7-boton-cancelar" onClick={() => setModalAmpliar(false)}>
+                  Cancelar
+                </button>
+                <button type="button" className="hu7-boton-escribir" onClick={handleConfirmarAmpliacion}>
+                  Confirmar ampliación
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
       </main>
     </PageLayout>
   );

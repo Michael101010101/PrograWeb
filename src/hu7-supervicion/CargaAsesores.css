@@ -5,23 +5,20 @@
   flex-direction: column;
 }
 
-
 .hu7-contenido-principal {
   background-color: #F1F0EA; 
-  padding: -50px;          
+  padding: 0;          
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
   color: #1A211D;
-  
 }
-
-
 
 .hu7-contenedorSUP {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 24px;
+  padding: 32px 48px 0 48px;
 }
 
 .hu7-subtitulo-pantalla {
@@ -37,7 +34,7 @@
   font-size: 30px;
   line-height: 36px;
   font-weight: 600;
-  color: var(--primary-color);
+  color: var(--primary-color, #1E4534);
   margin: 0 0 16px 0;
 }
 
@@ -58,17 +55,14 @@
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-
 }
 
 .hu7-boton-exportar:hover {
   background-color: #2C5F4A;
   color: #FFFFFF;
 }
-
 
 /* nota si sí se exporto sale*/
 .hu7-barra-controles {
@@ -80,12 +74,11 @@
 .hu7-textito-exportado {
   display: flex;
   align-items: center;
-  
   gap: 10px;
   background-color: #E4EFE9; 
   border: 1px solid #1E7F4D;    
   border-radius: 8px;
-  padding:14px 14px;
+  padding: 10px 14px;
   position: relative;
 }
 
@@ -117,26 +110,6 @@
   color: #1E7F4D;
   font-size: 14px;
   line-height: 1.2;
-}
-
-.hu7-textito-subtitulo {
-  font-size: 13px;
-  color: #4A5568;
-}
-
-.hu7-textito-cerrar {
-  background: transparent;
-  border: none;
-  font-size: 16px;
-  color: #4A5568;
-  cursor: pointer;
-  padding: 0 4px;
-  line-height: 1;
-  align-self: flex-start;
-}
-
-.hu7-textito-cerrar:hover {
-  color: #1A211D;
 }
 
 .hu7-contenedorINF {
@@ -172,7 +145,7 @@
   text-transform: uppercase;
 }
 
-/* filas y celfdas de tabla */
+/* filas y celdas de tabla */
 .hu7-tabla-asesores tbody tr {
   border-bottom: 1px solid #E1E3DC;
   transition: background-color 0.15s ease;
@@ -202,16 +175,15 @@
 .hu7-nombre-asesor {
   font-weight: 600;
   color: #1A211D;
-  font-size: 17px;
+  font-size: 16px;
 }
 
 .hu7-carrera-asesor {
-  font-size: 15px;
+  font-size: 14px;
   color: #66716B;
 }
 
-
-/*columna cupo y la barrita de progrso*/
+/*columna cupo y la barrita de progreso*/
 .hu7-col-cupo {
   min-width: 130px;
 }
@@ -245,17 +217,27 @@
   transition: width 0.3s ease, background-color 0.3s ease;
 }
 
+/* Colores condicionales en celdas */
+.texto-rojo-bold {
+  color: #B4322B !important;
+  font-weight: 700;
+}
+
+.texto-verde-bold {
+  color: #1E7F4D !important;
+  font-weight: 600;
+}
+
 /* boton Ver Detalle */
 .hu7-boton-detalle {
   background: none;
   border: none;
-  color: var(--primary-dark);
+  color: #1E4534;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   padding: 4px 8px;
   border-radius: 4px;
-  cursor: pointer;
 }
 
 .hu7-boton-detalle:hover {
@@ -263,13 +245,11 @@
   background-color: #E4EFE9;
 }
 
-
-
-/* tarjetas de recomendacion y la otra del costadso*/
+/* tarjetas de recomendacion y resumen de facultad */
 .hu7-fila-resumen-asesores {
   display: grid;
   grid-template-columns: 1fr 1.3fr;
-  align-items: stretch; /* esto es para que ambas tarjetas tengan la misma altura*/
+  align-items: stretch;
   gap: 24px;
   width: 100%;
 }
@@ -288,12 +268,11 @@
 .hu7-tarjeta-recomendacion h3 {
   font-size: 16px;
   font-weight: 700;
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
   color: #B7791F;
   margin: 0 0 12px 0;
   letter-spacing: 0.5px;
 }
-
 
 .hu7-tarjeta-resumen-facultad {
   background-color: #FFFFFF;
@@ -308,27 +287,25 @@
 .hu7-tarjeta-resumen-facultad h3 {
   font-size: 16px;
   font-weight: 700;
-  color: var(--muted-text-color);
+  color: #66716B;
   text-transform: uppercase;
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
   letter-spacing: 0.5px;
   margin: 0 0 20px 0;
 }
 
 .recomendacion-texto{
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
   color: #B7791F;
   font-size: 14px;
   margin-bottom: 12px;
-
+  line-height: 1.4;
 }
-
 
 .hu7-botones-recomendacion {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   font-size: 13px;
-  
 }
 
 .hu7-boton-escribir {
@@ -336,11 +313,14 @@
   color: #FFFFFF;
   border: none;
   padding: 8px 16px;
-
   border-radius: 6px;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap
+  white-space: nowrap;
+}
+
+.hu7-boton-escribir:hover {
+  background-color: #966116;
 }
 
 .hu7-boton-ampliar {
@@ -353,16 +333,18 @@
   cursor: pointer;
 }
 
+.hu7-boton-ampliar:hover {
+  background-color: #FEFCE8;
+}
+
 /* Métricas de resumen */
 .hu7-metricas-resumen {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   width: 100%;
-  margin-bottom: 50px;
-  
+  margin-bottom: 20px;
 }
-
 
 .hu7-metrica-item {
   display: flex;
@@ -371,27 +353,20 @@
 }
 
 .hu7-metrica-titulo {
-  font-size: 13px;
+  font-size: 12px;
   color: #66716B;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  
 }
 
 .hu7-metrica-valor {
-  font-size: 34px;
+  font-size: 32px;
   font-weight: 700;
   color: #1E4534;
   line-height: 1;
 }
 
-.hu7-metrica-subtexto {
-  font-size: 12px;
-  color: #66716B;
-}
-
-/*linea de division: ------*/
 .hu7-nota-objetivo {
   font-size: 13px;
   color: #66716B;
@@ -399,4 +374,124 @@
   padding-top: 16px;
   margin: 0;
   line-height: 18px;
+}
+
+/* Alerta de mensaje enviado */
+.hu7-alerta-mensaje-enviado {
+  margin: 0 48px 16px 48px;
+  background-color: #E4EFE9;
+  color: #1E7F4D;
+  border: 1px solid #1E7F4D;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Estilos de Modales emergentes */
+.hu7-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.hu7-modal-contenido {
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  padding: 24px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.hu7-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #E1E3DC;
+  padding-bottom: 12px;
+}
+
+.hu7-modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1A211D;
+}
+
+.hu7-modal-cerrar {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #66716B;
+}
+
+.hu7-detalle-fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed #E1E3DC;
+  font-size: 14px;
+}
+
+.hu7-detalle-etiqueta {
+  color: #66716B;
+  font-weight: 500;
+}
+
+.hu7-detalle-valor {
+  color: #1A211D;
+  font-weight: 600;
+}
+
+.hu7-modal-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hu7-boton-volver {
+  background-color: #1E4534;
+  color: #ffffff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hu7-textarea-mensaje {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 1px solid #E1E3DC;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  outline: none;
+}
+
+.hu7-modal-footer-botones {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.hu7-boton-cancelar {
+  background-color: #FFFFFF;
+  border: 1px solid #E1E3DC;
+  color: #66716B;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
 }

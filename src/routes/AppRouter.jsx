@@ -71,18 +71,10 @@ export default function AppRouter() {
         <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
       </Route>
 
-<<<<<<< HEAD
       {/* Administrador | coordinación (HU-7) */}
       <Route path="/admin" element={<RutaProtegida roles={['coordinador', 'administrador', 'Administrador']} />}>
         <Route path="tablero" element={<TableroAdmin />} />
         <Route path="trabajos" element={<TrabajosAdmin />} />
-=======
-      {/* Administrador · coordinación (HU-7) */}
-      <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
-        <Route path="invitaciones" element={<InvitacionesPage />} />
-        <Route path="tablero" element={<TableroAdmin />} />
-        <Route path="trabajos" element={<TableroAdmin />} />
->>>>>>> origin/main
         <Route path="carga" element={<CargaAsesores />} />
         <Route path="usuarios" element={<GestionUsuarios />} />
         <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
