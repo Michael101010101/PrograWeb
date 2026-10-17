@@ -47,6 +47,13 @@ import MisAsesoradosPage from '../hu3-asesores/pages/MisAsesoradosPage.jsx';
 import DetalleAsesoradoPage from '../hu3-asesores/pages/DetalleAsesoradoPage.jsx';
 import MiFichaPage from '../hu3-asesores/pages/MiFichaPage.jsx';
 
+// HU-6 · Sustentación
+import SustentacionesPage from '../hu6-sustentacion/pages/SustentacionesPage.jsx';
+import ProgramarSustentacionPage from '../hu6-sustentacion/pages/ProgramarSustentacionPage.jsx';
+import ConformarJuradoPage from '../hu6-sustentacion/pages/ConformarJuradoPage.jsx';
+import ActaSustentacionPage from '../hu6-sustentacion/pages/ActaSustentacionPage.jsx';
+import ActaImpresionPage from '../hu6-sustentacion/pages/ActaImpresionPage.jsx';
+import MiSustentacionPage from '../hu6-sustentacion/pages/MiSustentacionPage.jsx';
 export default function AppRouter() {
   return (
     <Routes>
@@ -70,6 +77,7 @@ export default function AppRouter() {
       {/* Cualquier rol con sesión */}
       <Route element={<RutaProtegida />}>
         <Route path="/cuenta" element={<MiCuentaPage />} />
+        <Route path="/sustentaciones/:id/impresion" element={<ActaImpresionPage />} />
       </Route>
 
       {/* Estudiante */}
@@ -87,7 +95,7 @@ export default function AppRouter() {
           <Route path="trabajo/:codigo" element={<Navigate to="/estudiante/mi-trabajo" replace />} />
         </Route>
         <Route path="asesores" element={<DirectorioAsesoresPage />} />
-        <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
+        <Route path="sustentacion" element={<MiSustentacionPage />} />
       </Route>
 
       {/* Asesor */}
@@ -112,7 +120,13 @@ export default function AppRouter() {
         <Route path="trabajos" element={<TrabajosAdmin />} />
         <Route path="carga" element={<CargaAsesores />} />
         <Route path="usuarios" element={<GestionUsuarios />} />
-        <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
+      {/* HU-6 · Sustentaciones */}
+        <Route path="sustentaciones" element={<SustentacionesPage />} />
+        <Route path="sustentaciones/programar" element={<ProgramarSustentacionPage />} />
+        <Route path="sustentaciones/programar/:codigo" element={<ProgramarSustentacionPage />} />
+        <Route path="sustentaciones/:id/reprogramar" element={<ProgramarSustentacionPage />} />
+        <Route path="sustentaciones/:id/jurado" element={<ConformarJuradoPage />} />
+        <Route path="sustentaciones/:id/acta" element={<ActaSustentacionPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
