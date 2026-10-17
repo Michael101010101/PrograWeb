@@ -1,7 +1,6 @@
-
 .hu7-contenido-principal {
   background-color: #F1F0EA;
-  padding: 40px 48px;
+  padding: 32px 48px 48px 48px;
   min-height: calc(100vh - 128px);
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
@@ -40,10 +39,10 @@
   font-weight: 400;
 }
 
-
 .hu7-barra-controles {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  gap: 12px;
   padding-top: 10px;
 }
 
@@ -52,7 +51,7 @@
   background-color: #E4EFE9;
   color: #1E4534;
   border: 1px solid #2C5F4A;
-  padding: 10px 20px;
+  padding: 8px 18px;
   border-radius: 6px;
   font-weight: 600;
   font-size: 14px;
@@ -66,6 +65,63 @@
   color: #FFFFFF;
 }
 
+/* Notificacion al exportar a Excel */
+.hu7-textito-exportado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #E4EFE9; 
+  border: 1px solid #1E7F4D;    
+  border-radius: 8px;
+  padding: 8px 14px;
+  position: relative;
+}
+
+.hu7-textito-icono {
+  width: 20px;
+  height: 20px;
+  background-color: #1E7F4D;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.hu7-textito-info {
+  display: flex;
+  flex-direction: column;
+  padding-right: 12px;
+}
+
+.hu7-textito-titulo {
+  font-weight: 700;
+  color: #1E7F4D;
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.hu7-textito-exportar {
+  font-size: 12px;
+  color: #4A5568;
+}
+
+.hu7-textito-cerrar {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #4A5568;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  align-self: flex-start;
+}
+
+.hu7-textito-cerrar:hover {
+  color: #1A211D;
+}
 
 .hu7-contenedorINF {
   display: flex;
@@ -91,7 +147,6 @@
   flex-direction: column;
   gap: 4px;
 }
-
 
 .hu7-filtro-seleccionar {
   flex: 1;
@@ -125,8 +180,6 @@
   border-color: #2C5F4A;
   background-color: #FFFFFF;
 }
-
-
 
 .hu7-tarjeta-tabla-trabajos {
   background-color: #FFFFFF;
@@ -167,12 +220,11 @@
 }
 
 .hu7-tabla-trabajos tbody td {
-  padding: 18px 20px;
+  padding: 16px 20px;
   font-size: 14px;
   color: #1A211D;
   vertical-align: middle;
 }
-
 
 .hu7-col-titulo {
   max-width: 380px;
@@ -195,21 +247,25 @@
   font-weight: 600;
 }
 
-
+/* Alineacion horizontal de la barra de avance y el texto */
 .hu7-col-avance {
-  min-width: 110px;
+  min-width: 120px;
+}
+
+.hu7-contenedor-avance-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .hu7-texto-avance {
   font-weight: 600;
   font-size: 13px;
-  display: block;
-  margin-bottom: 4px;
+  color: #1A211D;
 }
 
 .hu7-barra-progreso-bg {
-  width: 100%;
-  max-width: 100px;
+  width: 60px;
   height: 6px;
   background-color: #E1E3DC;
   border-radius: 3px;
@@ -220,7 +276,6 @@
   height: 100%;
   border-radius: 3px;
 }
-
 
 .hu7-estado {
   display: inline-block;
@@ -251,8 +306,6 @@
   background-color: #FCE8E6;
   color: #B4322B;
 }
-
-
 
 .hu7-paginacion-trabajos {
   padding: 16px 20px;

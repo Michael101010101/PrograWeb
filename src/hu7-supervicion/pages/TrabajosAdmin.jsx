@@ -4,7 +4,6 @@ import * as XLSX from 'xlsx';
 import '../hu7.css';
 import '../TrabajosAdmin.css';
 
-
 const trabajosData = [
   {
     codigo: "TFC-2026-2-047",
@@ -26,7 +25,6 @@ const trabajosData = [
     estado: "Concluido",
     carrera: "Ingeniería Industrial"
   },
-
   {
     codigo: "TFC-2026-2-051",
     titulo: "Automatización del control de calidad en líneas de envasado de conservas",
@@ -137,6 +135,10 @@ export default function TrabajosAdmin() {
   const [filtroAsesor, setFiltroAsesor] = useState('Todos');
   const [filtroCarrera, setFiltroCarrera] = useState('Todas');
 
+  // estado para mostrar la notificacion cuando se descargue el excel
+  const [exportado, setExportado] = useState(false);
+  const periodo = "2026-2";
+
   // logica del filtrado dinámico
   const trabajosFiltrados = trabajosData.filter((item) => {
     const coincideTexto = 
@@ -169,7 +171,10 @@ export default function TrabajosAdmin() {
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Trabajos de periodo");
 
-    XLSX.writeFile(workbook, "2026-2-TrabajosdePeriodo.xlsx");
+    XLSX.writeFile(workbook, `${periodo}-TrabajosdePeriodo.xlsx`);
+    
+    // activa la banderita de exportado
+    setExportado(true);
   };
 
   const getClaseEstado = (estado) => {
@@ -191,7 +196,7 @@ export default function TrabajosAdmin() {
             <h6 className="hu7-subtitulo-pantalla">Inicio · Trabajos</h6>
             <h1 className="hu7-titulo-pantalla">Trabajos del periodo</h1>
             <h6 className="hu7-subtitulo-pantalla2">
-              12 trabajos · 9 activos · 2 sin asesor
+              {trabajosData.length} trabajos · 9 activos · 2 sin asesor
             </h6>
           </div>
 
@@ -199,13 +204,31 @@ export default function TrabajosAdmin() {
             <button 
               type="button" 
               className="hu7-boton-exportar"
-              onClick={handleExportarExcel}
-            >   Exportar a Excel
+              onClick={handleExportarExcel} >
+              Exportar a Excel
             </button>
+
+            {/* banner de confirmación tras exportar a excel */}
+            {exportado && (
+              <div className="hu7-textito-exportado">
+                <div className="hu7-textito-icono">✓</div>
+                <div className="hu7-textito-info">
+                  <div className="hu7-textito-titulo">Reporte exportado</div>
+                  <div className="hu7-textito-exportar">
+                    {periodo}-TrabajosdePeriodo.xlsx · {trabajosFiltrados.length} trabajos mostrados
+                  </div>
+                </div>
+                <button 
+                  type="button" 
+                  className="hu7-textito-cerrar" 
+                  onClick={() => setExportado(false)}
+                  title="Cerrar aviso" >
+                  ×
+                </button>
+              </div>
+            )}
           </div>
         </div>
-
-
 
         <div className="hu7-contenedorINF">
 
@@ -218,18 +241,16 @@ export default function TrabajosAdmin() {
                 placeholder="Título, código o integrante..."
                 className="hu7-input-buscar"
                 value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}  
-              />
+                onChange={(e) => setBusqueda(e.target.value)} />
             </div>
 
             <div className="hu7-filtro-seleccionar">
-              <label htmlFor="seleccionar-estado">ESTADO</label>
+              <label htmlFor="select-estado">ESTADO</label>
               <select 
                 id="select-estado" 
                 value={filtroEstado} 
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro"  >
                 <option value="Todos">Todos</option>
                 <option value="Propuesta">Propuesta</option>
                 <option value="En desarrollo">En desarrollo</option>
@@ -244,8 +265,8 @@ export default function TrabajosAdmin() {
                 id="seleccionar-linea" 
                 value={filtroLinea} 
                 onChange={(e) => setFiltroLinea(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro">
+
                 <option value="Todas">Todas</option>
                 <option value="Ciencia de datos">Ciencia de datos</option>
                 <option value="Gestión de operaciones">Gestión de operaciones</option>
@@ -261,8 +282,9 @@ export default function TrabajosAdmin() {
                 id="seleccionar-asesor" 
                 value={filtroAsesor} 
                 onChange={(e) => setFiltroAsesor(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro"  >
+
+
                 <option value="Todos">Todos</option>
                 <option value="Quispe Ramos">Quispe Ramos</option>
                 <option value="Vargas Aliaga">Vargas Aliaga</option>
@@ -280,8 +302,8 @@ export default function TrabajosAdmin() {
                 id="seleccionar-carrera" 
                 value={filtroCarrera} 
                 onChange={(e) => setFiltroCarrera(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro">
+                  
                 <option value="Todas">Todas</option>
                 <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
                 <option value="Ingeniería Industrial">Ingeniería Industrial</option>
@@ -289,7 +311,6 @@ export default function TrabajosAdmin() {
               </select>
             </div>
           </div>
-
 
           <div className="hu7-tarjeta-tabla-trabajos">
             <table className="hu7-tabla-trabajos">
@@ -322,12 +343,17 @@ export default function TrabajosAdmin() {
                       </td>
 
                       <td className="hu7-col-avance">
-                        <span className="hu7-texto-avance">{item.avance}%</span>
-                        <div className="hu7-barra-progreso-bg">
-                          <div 
-                            className="hu7-barra-progreso-fill" 
-                            style={{ width: `${item.avance}%`, backgroundColor: '#1E4534' }}
-                          />
+                        <div className="hu7-contenedor-avance-fila">
+                          <div className="hu7-barra-progreso-bg">
+                            <div 
+                              className="hu7-barra-progreso-fill" 
+                              style={{ 
+                                width: `${item.avance}%`, 
+                                backgroundColor: item.avance === 100 ? '#1E7F4D' : '#1E4534' 
+                              }}
+                            />
+                          </div>
+                          <span className="hu7-texto-avance">{item.avance}%</span>
                         </div>
                       </td>
 
@@ -348,9 +374,11 @@ export default function TrabajosAdmin() {
               </tbody>
             </table>
 
-            {/* Paginacion */}
+            {/* Paginacion calculada de forma dinamica */}
             <div className="hu7-paginacion-trabajos">
-              <span>Mostrando {trabajosFiltrados.length > 0 ? `1-${trabajosFiltrados.length}` : '0'} de {trabajosData.length}</span>
+              <span>
+                Mostrando {trabajosFiltrados.length > 0 ? `1-${trabajosFiltrados.length}` : '0'} de {trabajosData.length}
+              </span>
               <div className="hu7-botones-paginacion">
                 <button type="button" className="hu7-boton-pag" disabled>Anterior</button>
                 <button type="button" className="hu7-boton-pag active">1</button>
