@@ -206,8 +206,7 @@ export default function GestionUsuarios() {
                 placeholder="Nombre, correo o código..." 
                 className="hu7-input-buscar"
                 value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-              />
+                onChange={(e) => setBusqueda(e.target.value)}/>
             </div>
 
             <div className="hu7-filtro-seleccionar">
@@ -216,8 +215,8 @@ export default function GestionUsuarios() {
                 id="seleccionar-rol" 
                 value={filtroRol}
                 onChange={(e) => setFiltroRol(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro">
+
                 <option value="Todos">Todos</option>
                 <option value="Estudiante">Estudiante</option>
                 <option value="Asesor">Asesor</option>
@@ -231,8 +230,8 @@ export default function GestionUsuarios() {
                 id="seleccionar-estado-usuario" 
                 value={filtroEstado}
                 onChange={(e) => setFiltroEstado(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro">
+
                 <option value="Todos">Todos</option>
                 <option value="Activo">Activo</option>
                 <option value="Bloqueado">Bloqueado</option>
@@ -246,8 +245,8 @@ export default function GestionUsuarios() {
                 id="seleccionar-carrera-dpto" 
                 value={filtroCarrera}
                 onChange={(e) => setFiltroCarrera(e.target.value)}
-                className="hu7-seleccionar-filtro"
-              >
+                className="hu7-seleccionar-filtro">
+                  
                 <option value="Todos">Todos</option>
                 <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
                 <option value="Ingeniería Industrial">Ingeniería Industrial</option>

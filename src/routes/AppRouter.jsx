@@ -22,10 +22,6 @@ import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
 import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 
-  
-
-
-// Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
 export default function AppRouter() {
   return (
     <Routes>
@@ -69,26 +65,12 @@ export default function AppRouter() {
       </Route>
 
       {/* Administrador | coordinación (HU-7) */}
-      <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
-        /* temporal para prueba directa: */
-        <Route path="invitaciones" element={<TableroAdmin />} />
-        <Route path="invitaciones" element={<GestionUsuarios />} />
-        <Route path="invitaciones" element={<CargaAsesores />} />
-
-        
-        
-        {/* mis paginas*/
-        
-        
-        
-        }
-
+      <Route path="/admin" element={<RutaProtegida roles={['coordinador', 'administrador', 'Administrador']} />}>
         <Route path="tablero" element={<TableroAdmin />} />
-        <Route path="trabajos" element={<TableroAdmin />} /> {/* O la vista de filtro de trabajos si la separas */}
+        <Route path="trabajos" element={<TrabajosAdmin />} />
         <Route path="carga" element={<CargaAsesores />} />
         <Route path="usuarios" element={<GestionUsuarios />} /> 
         <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
-      
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />
