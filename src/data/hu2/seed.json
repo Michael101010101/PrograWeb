@@ -1,0 +1,89 @@
+{
+  "_contrato": "Entidad Trabajo (dueña: HU-2). Los integrantes referencian usuarios de HU-1; asesor, avance, plan y sustentación son copias de lectura de HU-3, HU-4 y HU-6 hasta la integración.",
+  "trabajos": [
+    {
+      "id": "t-047",
+      "codigo": "TFC-2026-2-047",
+      "titulo": "Modelo predictivo de deserción en estudiantes de primer ciclo",
+      "linea": "Ciencia de datos aplicada",
+      "carrera": "Ingeniería de Sistemas",
+      "resumen": "Modelo de clasificación que estima la probabilidad de deserción de estudiantes de primer ciclo con datos académicos y de asistencia del periodo 2022-2025, para anticipar intervenciones de tutoría. Se integran las notas parciales, la asistencia semanal y los datos socioeconómicos de la ficha de matrícula, y se comparan tres familias de modelos con validación cruzada estratificada.",
+      "objetivos": "1. Construir la base analítica del periodo 2022-2025. 2. Entrenar y comparar tres modelos de clasificación. 3. Validar el modelo con la Oficina de Tutoría.",
+      "palabrasClave": ["deserción", "aprendizaje automático", "primer ciclo"],
+      "estado": "en_desarrollo",
+      "integrantes": [
+        { "usuarioId": "u-001", "responsable": true },
+        { "usuarioId": "u-002", "responsable": false }
+      ],
+      "asesor": {
+        "id": "u-101",
+        "nombre": "Dra. Mariela Quispe Ramos",
+        "departamento": "Ingeniería de Sistemas",
+        "genero": "f",
+        "aceptadaEn": "2026-09-09T10:00:00",
+        "diasRespuesta": 2.4
+      },
+      "avance": {
+        "porcentaje": 55,
+        "aprobados": 3,
+        "total": 5,
+        "proximoVencimiento": "2026-10-30",
+        "vencido": { "nombre": "Resultados preliminares", "fecha": "2026-08-30" }
+      },
+      "registradoEn": "2026-08-18T09:41:00",
+      "cerradoEn": null,
+      "historial": [
+        { "de": null, "a": "propuesta", "motivo": "Registro del trabajo", "fecha": "2026-08-18T09:41:00", "usuarioId": "u-001" },
+        { "de": "propuesta", "a": "en_desarrollo", "motivo": "Asesoría aceptada por la Dra. Mariela Quispe Ramos", "fecha": "2026-09-09T10:00:00", "usuarioId": "u-101" }
+      ]
+    },
+    {
+      "id": "t-012",
+      "codigo": "TFC-2026-2-012",
+      "titulo": "Optimización de rutas de reparto para comercios de Lima Metropolitana",
+      "linea": "Gestión de operaciones",
+      "carrera": "Ingeniería Industrial",
+      "resumen": "Se diseñó un modelo de ruteo con ventanas de tiempo para 42 comercios de abarrotes de Lima Metropolitana, con una reducción simulada de 18% en distancia recorrida frente a la operación actual.",
+      "objetivos": "1. Caracterizar la demanda de los comercios. 2. Formular el modelo de ruteo con ventanas de tiempo. 3. Simular escenarios frente a la operación actual.",
+      "palabrasClave": ["ruteo", "ventanas de tiempo", "última milla"],
+      "estado": "concluido",
+      "integrantes": [
+        { "usuarioId": "u-004", "responsable": true },
+        { "usuarioId": "u-003", "responsable": false }
+      ],
+      "asesor": {
+        "id": "u-102",
+        "nombre": "Mg. Julio Vargas Aliaga",
+        "departamento": "Ingeniería Industrial",
+        "genero": "m",
+        "aceptadaEn": "2026-09-02T11:00:00",
+        "diasRespuesta": 1.8
+      },
+      "avance": { "porcentaje": 100, "aprobados": 5, "total": 5, "proximoVencimiento": null, "vencido": null },
+      "plan": [
+        { "orden": 1, "nombre": "Plan de investigación", "peso": 15, "fecha": "2026-08-29", "estado": "aprobado" },
+        { "orden": 2, "nombre": "Marco teórico", "peso": 20, "fecha": "2026-09-20", "estado": "aprobado" },
+        { "orden": 3, "nombre": "Diseño metodológico", "peso": 20, "fecha": "2026-10-09", "estado": "aprobado" },
+        { "orden": 4, "nombre": "Resultados preliminares", "peso": 20, "fecha": "2026-10-30", "estado": "aprobado" },
+        { "orden": 5, "nombre": "Informe final", "peso": 25, "fecha": "2026-11-24", "estado": "aprobado" }
+      ],
+      "sustentacion": {
+        "fecha": "2026-12-11T10:00:00",
+        "lugar": "Sala A-402, pabellón A",
+        "modalidad": "presencial",
+        "jurado": [
+          { "nombre": "Dr. Ricardo Cárdenas Loayza", "presidente": true },
+          { "nombre": "Mg. Sandra Bustamante Ríos", "presidente": false },
+          { "nombre": "Ing. Luis Fernando Ocampo Salas", "presidente": false }
+        ]
+      },
+      "registradoEn": "2026-08-21T16:20:00",
+      "cerradoEn": "2026-11-28T12:00:00",
+      "historial": [
+        { "de": null, "a": "propuesta", "motivo": "Registro del trabajo", "fecha": "2026-08-21T16:20:00", "usuarioId": "u-004" },
+        { "de": "propuesta", "a": "en_desarrollo", "motivo": "Asesoría aceptada por el Mg. Julio Vargas Aliaga", "fecha": "2026-09-02T11:00:00", "usuarioId": "u-102" },
+        { "de": "en_desarrollo", "a": "concluido", "motivo": "Informe final aprobado por el asesor el 24/11/2026.", "fecha": "2026-11-28T12:00:00", "usuarioId": "u-004" }
+      ]
+    }
+  ]
+}

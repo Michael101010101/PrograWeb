@@ -8,8 +8,9 @@ import { PERIODO } from '../config/periodo.js';
  * Barra de navegación (56 px) propia de cada rol.
  * `extra`: ítem adicional para vistas públicas sueltas (Iniciar sesión, Crear cuenta…).
  * `info`: texto de la derecha; por defecto el semestre o la etapa en curso.
+ * `contadores`: números junto a un ítem, por ruta. Ej.: { '/asesor/solicitudes': 2 }
  */
-export default function NavBar({ extra, info }) {
+export default function NavBar({ extra, info, contadores = {} }) {
   const { usuario, cerrarSesion } = useAuth();
   const { mostrar } = useToast();
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ export default function NavBar({ extra, info }) {
             <li key={item.to}>
               <NavLink to={item.to} end={item.end} className="app-nav__link">
                 {item.label}
+                {contadores[item.to] > 0 && <span className="app-nav__count">{contadores[item.to]}</span>}
               </NavLink>
             </li>
           ))}
