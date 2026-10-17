@@ -45,7 +45,13 @@ export default function DetalleAsesoradoPage() {
             migas={`Inicio · Mis asesorados · ${trabajo.codigo}`}
             titulo={trabajo.titulo}
             descripcion={`${trabajo.linea}${trabajo.carrera ? ` · ${trabajo.carrera}` : ''} · código ${trabajo.codigo}`}
-            acciones={<Link to="/asesor/asesorados" className="btn btn--outline">Volver</Link>}
+            acciones={
+              <>
+                <Link to="/asesor/asesorados" className="btn btn--outline">Volver</Link>
+                {/* HU-4: enlace a la pantalla 4.2 "Definir el plan de entregables" */}
+                <Link to={`/asesor/asesorados/${trabajo.codigo}/plan`} className="btn btn--primary">Plan de entregables</Link>
+              </>
+            }
           />
 
           <div className="card stack" style={{ marginBottom: 16 }}>
