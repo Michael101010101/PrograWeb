@@ -318,3 +318,9 @@
       grid-template-columns: 1fr;
     }
   }
+  .ficha-contenedor h1,
+.ficha-contenedor p,
+.ficha-contenedor strong,
+.ficha-contenedor span {
+  overflow-wrap: anywhere;
+}
