@@ -1,8 +1,10 @@
-// Definimos las opciones del Administrador / Coordinador
+// Menú de la barra de navegación, propio de cada rol.
+
+
 const menuCoordinador = [
   { to: '/admin/tablero', label: 'Tablero' },
   { to: '/admin/trabajos', label: 'Trabajos' },
-  { to: '/admin/carga', label: 'Carga por asesor' }, // Verifica si tu ruta en AppRouter es /admin/carga o /admin/carga-asesores
+  { to: '/admin/carga', label: 'Carga por asesor' },
   { to: '/admin/sustentaciones', label: 'Sustentaciones' },
   { to: '/admin/usuarios', label: 'Usuarios' },
   { to: '/cuenta', label: 'Mi cuenta' },
@@ -30,8 +32,6 @@ export const NAV_POR_ROL = {
     { to: '/asesor/ficha', label: 'Mi ficha' },
     { to: '/cuenta', label: 'Mi cuenta' },
   ],
-
   coordinador: menuCoordinador,
   administrador: menuCoordinador,
-  Administrador: menuCoordinador,
 };
