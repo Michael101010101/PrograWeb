@@ -1,8 +1,15 @@
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
 import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 
+// H5 · Revisión y retroalimentación
+import BandejaRevisionPage from '../h5-revision-retroalimentacion/pages/BandejaRevisionPage.jsx';
+import RevisionAvancePage from '../h5-revision-retroalimentacion/pages/RevisionAvancePage.jsx';
+import RevisionLayout from '../h5-revision-retroalimentacion/components/RevisionLayout.jsx';
+import RetroalimentacionPage from '../h5-revision-retroalimentacion/pages/RetroalimentacionPage.jsx';
+import HistorialVersionesPage from '../h5-revision-retroalimentacion/pages/HistorialVersionesPage.jsx';
+import TrabajoConsolidadoPage from '../h5-revision-retroalimentacion/pages/TrabajoConsolidadoPage.jsx';
 
 // HU-1 · Cuenta y acceso
 import LandingPage from '../hu1-cuenta/pages/LandingPage.jsx';
@@ -28,6 +35,25 @@ import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
 import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 
+// HU-4 · Plan de entregables
+import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
+import AlertasVencimientoPage from '../hu4-entregables/pages/AlertasVencimientoPage.jsx';
+import DefinirPlanPage from '../hu4-entregables/pages/DefinirPlanPage.jsx';
+
+// HU-3 · Asesores y asignación
+import DirectorioAsesoresPage from '../hu3-asesores/pages/DirectorioAsesoresPage.jsx';
+import SolicitudesRecibidasPage from '../hu3-asesores/pages/SolicitudesRecibidasPage.jsx';
+import MisAsesoradosPage from '../hu3-asesores/pages/MisAsesoradosPage.jsx';
+import DetalleAsesoradoPage from '../hu3-asesores/pages/DetalleAsesoradoPage.jsx';
+import MiFichaPage from '../hu3-asesores/pages/MiFichaPage.jsx';
+
+// HU-6 · Sustentación
+import SustentacionesPage from '../hu6-sustentacion/pages/SustentacionesPage.jsx';
+import ProgramarSustentacionPage from '../hu6-sustentacion/pages/ProgramarSustentacionPage.jsx';
+import ConformarJuradoPage from '../hu6-sustentacion/pages/ConformarJuradoPage.jsx';
+import ActaSustentacionPage from '../hu6-sustentacion/pages/ActaSustentacionPage.jsx';
+import ActaImpresionPage from '../hu6-sustentacion/pages/ActaImpresionPage.jsx';
+import MiSustentacionPage from '../hu6-sustentacion/pages/MiSustentacionPage.jsx';
 export default function AppRouter() {
   return (
     <Routes>
@@ -35,7 +61,7 @@ export default function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/proceso" element={<EnConstruccion titulo="El proceso" historia="HU-1 (contenido informativo)" />} />
       <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
-      <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
+      <Route path="/asesores" element={<DirectorioAsesoresPage />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
 
       {/* Solo sin sesión */}
@@ -51,26 +77,40 @@ export default function AppRouter() {
       {/* Cualquier rol con sesión */}
       <Route element={<RutaProtegida />}>
         <Route path="/cuenta" element={<MiCuentaPage />} />
+        <Route path="/sustentaciones/:id/impresion" element={<ActaImpresionPage />} />
       </Route>
 
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
         <Route path="mi-trabajo" element={<MiTrabajoPage />} />
+        <Route path="mi-trabajo/ficha" element={<MiTrabajoPage vistaFicha />} />
         <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
         <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
         <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
-        <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
-        <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
-        <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
-        <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
+        <Route path="entregables" element={<PlanEntregablesPage />} />
+        <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
+        <Route path="retroalimentacion" element={<RevisionLayout />}>
+          <Route index element={<RetroalimentacionPage />} />
+          <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+          <Route path="trabajo/:codigo" element={<Navigate to="/estudiante/mi-trabajo" replace />} />
+        </Route>
+        <Route path="asesores" element={<DirectorioAsesoresPage />} />
+        <Route path="sustentacion" element={<MiSustentacionPage />} />
       </Route>
 
       {/* Asesor */}
       <Route path="/asesor" element={<RutaProtegida roles={['asesor']} />}>
-        <Route path="asesorados" element={<EnConstruccion titulo="Mis asesorados" historia="HU-3" />} />
-        <Route path="solicitudes" element={<EnConstruccion titulo="Solicitudes recibidas" historia="HU-3" />} />
-        <Route path="revision" element={<EnConstruccion titulo="Bandeja de revisión" historia="HU-5" />} />
-        <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
+        <Route path="asesorados" element={<MisAsesoradosPage />} />
+        <Route path="asesorados/:codigo" element={<DetalleAsesoradoPage />} />
+        <Route path="asesorados/:codigo/plan" element={<DefinirPlanPage />} />
+        <Route path="solicitudes" element={<SolicitudesRecibidasPage />} />
+        <Route path="revision" element={<RevisionLayout />}>
+          <Route index element={<BandejaRevisionPage />} />
+          <Route path="historial/:entregableId" element={<HistorialVersionesPage />} />
+          <Route path="trabajo/:codigo" element={<TrabajoConsolidadoPage />} />
+          <Route path=":id" element={<RevisionAvancePage />} />
+        </Route>
+        <Route path="ficha" element={<MiFichaPage />} />
       </Route>
 
       {/* Administrador | coordinación (HU-7) */}
@@ -79,7 +119,13 @@ export default function AppRouter() {
         <Route path="trabajos" element={<TrabajosAdmin />} />
         <Route path="carga" element={<CargaAsesores />} />
         <Route path="usuarios" element={<GestionUsuarios />} />
-        <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
+      {/* HU-6 · Sustentaciones */}
+        <Route path="sustentaciones" element={<SustentacionesPage />} />
+        <Route path="sustentaciones/programar" element={<ProgramarSustentacionPage />} />
+        <Route path="sustentaciones/programar/:codigo" element={<ProgramarSustentacionPage />} />
+        <Route path="sustentaciones/:id/reprogramar" element={<ProgramarSustentacionPage />} />
+        <Route path="sustentaciones/:id/jurado" element={<ConformarJuradoPage />} />
+        <Route path="sustentaciones/:id/acta" element={<ActaSustentacionPage />} />
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

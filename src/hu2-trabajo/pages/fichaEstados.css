@@ -457,3 +457,10 @@
       grid-template-columns: 1fr;
     }
   }
+  .fe-contenedor h1,
+.fe-contenedor h2,
+.fe-contenedor p,
+.fe-contenedor strong,
+.fe-contenedor span {
+  overflow-wrap: anywhere;
+}

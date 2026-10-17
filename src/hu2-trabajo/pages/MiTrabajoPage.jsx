@@ -1,3 +1,5 @@
+import { RevisionProvider } from '../../h5-revision-retroalimentacion/context/RevisionContext.jsx';
+import TrabajoConsolidadoPage from '../../h5-revision-retroalimentacion/pages/TrabajoConsolidadoPage.jsx';
 import { useCallback, useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import PageLayout from '../../shared/components/PageLayout.jsx';
@@ -22,7 +24,7 @@ function infoEtapa(estado) {
   return PERIODO.etapaActual;
 }
 
-export default function MiTrabajoPage() {
+export default function MiTrabajoPage({ vistaFicha = false }) {
   const { usuario } = useAuth();
   const [trabajo, setTrabajo] = useState(undefined);
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
@@ -37,6 +39,12 @@ export default function MiTrabajoPage() {
 
   const Ficha = trabajo && FICHAS[trabajo.estado];
   const puedeGestionar = Boolean(trabajo?.integrantes.some((i) => i.usuarioId === usuario.id && i.responsable));
+
+  if (trabajo?.estado === 'en_desarrollo' && !vistaFicha) return (
+    <RevisionProvider>
+      <TrabajoConsolidadoPage codigo={trabajo.codigo} />
+    </RevisionProvider>
+  );
 
   return (
     <PageLayout
