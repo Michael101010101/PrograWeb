@@ -16,11 +16,15 @@ import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
 import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
 
+// HU-2 · Registro del trabajo
+import MiTrabajoPage from '../hu2-trabajo/pages/MiTrabajoPage.jsx';
+import RegistrarTrabajoPage from '../hu2-trabajo/pages/RegistrarTrabajoPage.jsx';
+import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
+
 // HU-7 · Supervisión y métricas
 import TableroAdmin from '../hu7-supervicion/pages/TableroAdmin.jsx';
 import GestionUsuarios from '../hu7-supervicion/pages/GestionUsuarios.jsx';
 import CargaAsesores from '../hu7-supervicion/pages/CargaAsesores.jsx';
-import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 
 export default function AppRouter() {
   return (
@@ -49,7 +53,10 @@ export default function AppRouter() {
 
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
-        <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
+        <Route path="mi-trabajo" element={<MiTrabajoPage />} />
+        <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
+        <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
+        <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
         <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
         <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
         <Route path="asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
@@ -64,12 +71,20 @@ export default function AppRouter() {
         <Route path="ficha" element={<EnConstruccion titulo="Mi ficha de asesor" historia="HU-3" />} />
       </Route>
 
+<<<<<<< HEAD
       {/* Administrador | coordinación (HU-7) */}
       <Route path="/admin" element={<RutaProtegida roles={['coordinador', 'administrador', 'Administrador']} />}>
         <Route path="tablero" element={<TableroAdmin />} />
         <Route path="trabajos" element={<TrabajosAdmin />} />
+=======
+      {/* Administrador · coordinación (HU-7) */}
+      <Route path="/admin" element={<RutaProtegida roles={['coordinador']} />}>
+        <Route path="invitaciones" element={<InvitacionesPage />} />
+        <Route path="tablero" element={<TableroAdmin />} />
+        <Route path="trabajos" element={<TableroAdmin />} />
+>>>>>>> origin/main
         <Route path="carga" element={<CargaAsesores />} />
-        <Route path="usuarios" element={<GestionUsuarios />} /> 
+        <Route path="usuarios" element={<GestionUsuarios />} />
         <Route path="sustentaciones" element={<EnConstruccion titulo="Sustentaciones" historia="HU-6" />} />
       </Route>
 

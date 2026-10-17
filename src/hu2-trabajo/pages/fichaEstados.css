@@ -1,0 +1,459 @@
+.fe-contenedor {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+  
+  .fe-cabecera,
+  .fe-card {
+    background: #ffffff;
+    border: 1px solid #dedfd9;
+    border-radius: 5px;
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.04);
+  }
+  
+  .fe-cabecera {
+    padding: 22px;
+    margin-bottom: 20px;
+  }
+  
+  .fe-cabecera-superior {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  
+  .fe-estado-linea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .fe-badge {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  
+  .fe-badge-propuesta {
+    background: #f0f0eb;
+    color: #626963;
+  }
+  
+  .fe-badge-concluido {
+    background: #e4f2e9;
+    color: #267047;
+  }
+  
+  .fe-registro {
+    font-size: 11px;
+    color: #707872;
+  }
+  
+  .fe-cabecera h1 {
+    margin: 0;
+    color: #214f3d;
+    font-size: 25px;
+  }
+  
+  .fe-subtitulo {
+    margin: 8px 0 0;
+    color: #68716c;
+    font-size: 12px;
+  }
+  
+  .fe-acciones {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .fe-btn-secundario,
+  .fe-btn-editar-disabled,
+  .fe-btn-estado,
+  .fe-btn-principal {
+    padding: 11px 18px;
+    border-radius: 5px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .fe-btn-secundario {
+    background: #ffffff;
+    border: 1px solid #2c654d;
+    color: #2c654d;
+  }
+  
+  .fe-btn-secundario:hover {
+    background: #f3f8f5;
+  }
+  
+  .fe-btn-estado {
+    background: #ffffff;
+    border: 1px solid #dedfd9;
+    color: #b63838;
+  }
+  
+  .fe-btn-estado:hover {
+    background: #fff5f5;
+  }
+  
+  .fe-btn-editar-disabled {
+    background: #f7f7f4;
+    border: 1px solid #dedfd9;
+    color: #8b918d;
+  }
+  
+  .fe-btn-principal {
+    background: #2c654d;
+    border: 1px solid #2c654d;
+    color: #ffffff;
+  }
+  
+  .fe-btn-principal:hover {
+    background: #214d3b;
+  }
+  
+  .fe-avance {
+    display: grid;
+    grid-template-columns: auto minmax(200px, 1fr) auto auto;
+    align-items: center;
+    gap: 14px;
+    border-top: 1px solid #e2e4df;
+    margin-top: 20px;
+    padding-top: 17px;
+  }
+  
+  .fe-avance-label,
+  .fe-card-label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #69716c;
+    letter-spacing: 0.5px;
+  }
+  
+  .fe-barra {
+    height: 8px;
+    background: #dfe3dd;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+  
+  .fe-barra-relleno {
+    height: 100%;
+    background: #2c654d;
+    border-radius: 30px;
+  }
+  
+  .fe-avance strong {
+    font-size: 18px;
+    color: #66706a;
+  }
+  
+  .fe-avance .fe-100 {
+    color: #258153;
+  }
+  
+  .fe-avance-texto {
+    font-size: 11px;
+    color: #68716c;
+  }
+  
+  .fe-grid-propuesta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 310px;
+    gap: 20px;
+    align-items: start;
+  }
+  
+  .fe-grid-concluida {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 20px;
+    align-items: start;
+  }
+  
+  .fe-columna-principal,
+  .fe-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .fe-card {
+    padding: 18px;
+  }
+  
+  .fe-card h2 {
+    margin: 0 0 12px;
+    color: #214f3d;
+    font-size: 18px;
+  }
+  
+  .fe-sin-asesor {
+    min-height: 280px;
+    border: 1px dashed #2c654d;
+    background: #ffffff;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 25px;
+  }
+  
+  .fe-icono-mas {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e6f2ec;
+    color: #35735a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    margin-bottom: 12px;
+  }
+  
+  .fe-sin-asesor h2 {
+    margin: 0 0 10px;
+    color: #214f3d;
+    font-size: 20px;
+  }
+  
+  .fe-sin-asesor p {
+    margin: 0 0 18px;
+    color: #68716c;
+    line-height: 1.5;
+    font-size: 12px;
+  }
+  
+  .fe-resumen {
+    margin: 0;
+    color: #303631;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  
+  .fe-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  
+  .fe-chips span {
+    background: #e4efe9;
+    color: #35634f;
+    padding: 6px 10px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  
+  .fe-persona {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  
+  .fe-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e5f0ea;
+    color: #397059;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  
+  .fe-persona strong {
+    font-size: 11px;
+    color: #222925;
+  }
+  
+  .fe-persona p {
+    margin: 3px 0 0;
+    font-size: 10px;
+    color: #717872;
+  }
+  
+  .fe-btn-link {
+    border: none;
+    background: transparent;
+    color: #2c654d;
+    padding: 10px 0 0;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .fe-plazo {
+    background: #e9f3ee;
+    border-color: #3a755c;
+  }
+  
+  .fe-plazo h3 {
+    margin: 0 0 10px;
+    color: #285b45;
+    font-size: 15px;
+  }
+  
+  .fe-plazo p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #38594b;
+  }
+  
+  .fe-asesores p {
+    margin: 7px 0;
+    font-size: 10px;
+    color: #333a36;
+  }
+  
+  .fe-entregables {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  
+  .fe-entregable {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .fe-entregable-linea {
+    width: 100%;
+    height: 3px;
+    background: #258153;
+  }
+  
+  .fe-aprobado {
+    color: #258153;
+    font-size: 9px;
+    font-weight: 700;
+  }
+  
+  .fe-entregable strong {
+    font-size: 10px;
+    color: #252c28;
+  }
+  
+  .fe-entregable small {
+    font-size: 9px;
+    color: #777f79;
+  }
+  
+  .fe-nota-plan {
+    margin: 15px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid #e2e4df;
+    color: #6a726d;
+    font-size: 10px;
+  }
+  
+  .fe-resumen-concluido {
+    min-height: 180px;
+  }
+  
+  .fe-resumen-concluido > p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  
+  .fe-separador {
+    height: 1px;
+    background: #e0e2dd;
+    margin: 15px 0;
+  }
+  
+  .fe-equipo-texto {
+    margin: 5px 0 0;
+    font-size: 11px !important;
+  }
+  
+  .fe-sustentacion {
+    background: #eaf3ee;
+    border-color: #3d765e;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .fe-sustentacion h2 {
+    margin: 8px 0;
+    font-size: 20px;
+  }
+  
+  .fe-sustentacion > p {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  
+  .fe-jurado {
+    background: #ffffff;
+    border: 1px solid #5c8b76;
+    border-radius: 4px;
+    padding: 12px;
+    margin-top: 10px;
+  }
+  
+  .fe-jurado p {
+    margin: 7px 0;
+    font-size: 10px;
+  }
+  
+  .fe-jurado-persona {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    font-size: 10px;
+  }
+  
+  .fe-presidente {
+    background: #fff1d9;
+    color: #a56d14;
+    padding: 4px 7px;
+    border-radius: 3px;
+    font-size: 8px;
+  }
+  
+  .fe-indicacion {
+    margin-top: 15px;
+    color: #42564d;
+  }
+  
+  .fe-btn-abajo {
+    margin-top: auto;
+    width: 100%;
+  }
+  
+  @media (max-width: 900px) {
+    .fe-grid-propuesta,
+    .fe-grid-concluida {
+      grid-template-columns: 1fr;
+    }
+  
+    .fe-cabecera-superior {
+      flex-direction: column;
+    }
+  
+    .fe-avance {
+      grid-template-columns: 1fr;
+    }
+  
+    .fe-entregables {
+      grid-template-columns: 1fr;
+    }
+  }
