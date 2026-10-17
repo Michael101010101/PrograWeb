@@ -31,9 +31,6 @@ import TrabajosAdmin from '../hu7-supervicion/pages/TrabajosAdmin.jsx';
 import PlanEntregablesPage from '../hu4-entregables/pages/PlanEntregablesPage.jsx';
 import AlertasVencimientoPage from '../hu4-entregables/pages/AlertasVencimientoPage.jsx';
 import DefinirPlanPage from '../hu4-entregables/pages/DefinirPlanPage.jsx';
-import PlanesAsesorPage from '../hu4-entregables/pages/PlanesAsesorPage.jsx';
-
-  
 
 // HU-3 · Asesores y asignación
 import DirectorioAsesoresPage from '../hu3-asesores/pages/DirectorioAsesoresPage.jsx';
@@ -69,14 +66,12 @@ export default function AppRouter() {
 
       {/* Estudiante */}
       <Route path="/estudiante" element={<RutaProtegida roles={['estudiante']} />}>
-        <Route path="mi-trabajo" element={<EnConstruccion titulo="Mi trabajo" historia="HU-2" />} />
-        <Route path="entregables" element={<PlanEntregablesPage />} />
-        <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
         <Route path="mi-trabajo" element={<MiTrabajoPage />} />
         <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
         <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
         <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
-        <Route path="entregables" element={<EnConstruccion titulo="Plan de entregables" historia="HU-4" />} />
+        <Route path="entregables" element={<PlanEntregablesPage />} />
+        <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
         <Route path="retroalimentacion" element={<EnConstruccion titulo="Retroalimentación" historia="HU-5" />} />
         <Route path="asesores" element={<DirectorioAsesoresPage />} />
         <Route path="sustentacion" element={<EnConstruccion titulo="Mi sustentación" historia="HU-6" />} />
@@ -84,12 +79,9 @@ export default function AppRouter() {
 
       {/* Asesor */}
       <Route path="/asesor" element={<RutaProtegida roles={['asesor']} />}>
-        {/* TEMPORAL hasta integrar la HU-3: "Mis asesorados" de Christopher reemplaza a PlanesAsesorPage */}
-        <Route path="asesorados" element={<PlanesAsesorPage />} />
-        <Route path="asesorados/:codigo/plan" element={<DefinirPlanPage />} />
-        <Route path="solicitudes" element={<EnConstruccion titulo="Solicitudes recibidas" historia="HU-3" />} />
         <Route path="asesorados" element={<MisAsesoradosPage />} />
         <Route path="asesorados/:codigo" element={<DetalleAsesoradoPage />} />
+        <Route path="asesorados/:codigo/plan" element={<DefinirPlanPage />} />
         <Route path="solicitudes" element={<SolicitudesRecibidasPage />} />
         <Route path="revision" element={<EnConstruccion titulo="Bandeja de revisión" historia="HU-5" />} />
         <Route path="ficha" element={<MiFichaPage />} />
@@ -108,4 +100,4 @@ export default function AppRouter() {
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
-}
+}

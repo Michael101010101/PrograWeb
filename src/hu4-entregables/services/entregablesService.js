@@ -6,7 +6,7 @@ import { HOY, SEMESTRE, diasEntre, dentroDelSemestre } from '../utils/fechas.js'
 // (no modifican el objeto original) y lanzan un Error con un mensaje si algo no es válido.
 // En la entrega 2 estas funciones pasarán a llamar a la API con fetch.
 
-const CLAVE = 'tfc.hu4';
+const CLAVE = 'tfc.entregables';
 
 export const PESO_MIN = 5;
 export const PESO_MAX = 40;

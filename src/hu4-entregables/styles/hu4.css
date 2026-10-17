@@ -191,12 +191,6 @@
 .hu4-ampliaciones__fila { display: flex; justify-content: space-between; align-items: center; gap: 16px; color: var(--text); }
 .hu4-ampliaciones__acciones { display: flex; gap: 10px; }
 
-.hu4-planes { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-.hu4-planes__card { display: grid; gap: 10px; align-content: start; }
-.hu4-planes > .card + .card { margin-top: 0; }
-.hu4-planes__card h2 { font-size: 19px; line-height: 26px; }
-.hu4-planes__avance { display: flex; align-items: center; gap: 12px; }
-.hu4-planes__card .btn { justify-self: start; }
 
 @media (max-width: 1100px) {
   .hu4-plan-grid { grid-template-columns: 1fr; }
