@@ -15,6 +15,8 @@ import VerificarCorreoPage from '../hu1-cuenta/pages/VerificarCorreoPage.jsx';
 import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
 import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
+import ProcesoPage from '../hu1-cuenta/pages/ProcesoPage.jsx';
+import CronogramaPage from '../hu1-cuenta/pages/CronogramaPage.jsx';
 
 // Cada historia reemplaza sus <EnConstruccion /> por sus páginas reales al integrar su rama.
 export default function AppRouter() {
@@ -22,8 +24,8 @@ export default function AppRouter() {
     <Routes>
       {/* Público */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/proceso" element={<EnConstruccion titulo="El proceso" historia="HU-1 (contenido informativo)" />} />
-      <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
+      <Route path="/proceso" element={<ProcesoPage />} />
+      <Route path="/cronograma" element={<CronogramaPage />} />
       <Route path="/asesores" element={<EnConstruccion titulo="Directorio de asesores" historia="HU-3" />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
 

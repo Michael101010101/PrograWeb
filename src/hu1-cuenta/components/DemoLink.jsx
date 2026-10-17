@@ -8,7 +8,6 @@ export default function DemoLink({ to, texto = 'Abrir el enlace del correo' }) {
   if (!to) return null;
   return (
     <div className="demo-box">
-      Modo demostración: no se envían correos reales.{' '}
       <Link to={to}>{texto}</Link>
     </div>
   );
