@@ -46,7 +46,7 @@ export default function TableroAdmin() {
                             <select id="select-periodo" className="hu7-select-periodo" defaultValue={periodo}>
                                 <option value="2026-2">2026-2</option>
                                 <option value="2026-1">2026-1</option>
-                                <option value="2025-2">2025-2</option>
+
                             </select>
                         </div>
 

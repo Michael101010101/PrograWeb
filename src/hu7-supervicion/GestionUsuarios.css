@@ -1,5 +1,13 @@
 
 
+.hu7-barra-controles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+
 .hu7-header-slot-usuarios {
   display: flex;
   align-items: center;
@@ -9,39 +17,39 @@
   border-radius: 6px;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
-  color: var(--text-color);
+  color: #1A211D;
 }
 
 .hu7-header-slot-usuarios strong {
   font-weight: 700;
-  color: var(--primary-color);
+  color: #1E4534;
 }
 
-
-
-.hu7-btn-validar {
+/* boton Validar cuentas */
+.hu7-boton-validar {
   height: 40px;
   padding: 0 18px;
-  background-color: var(--surface);
-  border: 1px solid var(--primary-color);
+  background-color: #FAF6EC;
+  border: 1px solid #B08948;
   border-radius: 6px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: var(--primary-color);
+  color: #B08948;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   white-space: nowrap;
 }
 
-.hu7-btn-validar:hover {
-  background-color: var(--primary-soft);
+.hu7-boton-validar:hover {
+  background-color: #F5EFE0;
 }
 
-.hu7-btn-registrar {
+/* boton Registrar usuario */
+.hu7-boton-registrar {
   height: 40px;
   padding: 0 18px;
-  background-color: var(--primary-dark); 
+  background-color: #1E4534;
   border: none;
   border-radius: 6px;
   font-family: 'Inter', sans-serif;
@@ -49,12 +57,18 @@
   font-weight: 600;
   color: #FFFFFF;
   cursor: pointer;
-  transition: opacity 0.2s ease;
+  transition: background-color 0.2s ease;
   white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.hu7-btn-registrar:hover {
-  opacity: 0.9;
+.hu7-boton-registrar:hover {
+  background-color: #143024;
+}
+
+.hu7-boton-validar:active,
+.hu7-boton-registrar:active {
+  transform: translateY(1px);
 }
 
 
@@ -62,21 +76,24 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  background-color: var(--surface);
-  border: 1px solid var(--border);
+  background-color: #FFFFFF;
+  border: 1px solid #E1E3DC;
   border-radius: 8px;
   padding: 16px 20px;
+  flex-wrap: wrap;
 }
 
 .hu7-filtro-buscar {
   flex: 2;
+  min-width: 240px;
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.hu7-filtro-select {
+.hu7-filtro-seleccionar {
   flex: 1;
+  min-width: 150px;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -87,36 +104,37 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--muted-text-color);
+  color: #66716B;
   text-transform: uppercase;
 }
 
 .hu7-input-buscar,
-.hu7-select-filtro {
+.hu7-seleccionar-filtro {
   height: 40px;
   padding: 0 12px;
-  background-color: var(--surface);
-  border: 1px solid var(--border);
+  background-color: #FFFFFF;
+  border: 1px solid #E1E3DC;
   border-radius: 6px;
   font-family: 'Inter', sans-serif;
   font-size: 14px;
-  color: var(--text-color);
+  color: #1A211D;
   outline: none;
   width: 100%;
   box-sizing: border-box;
 }
 
 .hu7-input-buscar:focus,
-.hu7-select-filtro:focus {
-  border-color: var(--primary-color);
+.hu7-seleccionar-filtro:focus {
+  border-color: #1E4534;
 }
 
-/* TARJETA DE TABLA Y PAGINACIÓN */
+
 .hu7-tarjeta-tabla-usuarios {
-  background-color: var(--surface);
-  border: 1px solid var(--border);
+  background-color: #FFFFFF;
+  border: 1px solid #E1E3DC;
   border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
 .hu7-tabla-usuarios {
@@ -131,22 +149,114 @@
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  color: var(--muted-text-color);
+  color: #66716B;
   text-transform: uppercase;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #E1E3DC;
   background-color: #FAFAFA;
 }
 
-/* PAGINACIÓN INFERIOR */
+.hu7-tabla-usuarios tbody tr {
+  border-bottom: 1px solid #E1E3DC;
+  transition: background-color 0.15s ease;
+}
+
+.hu7-tabla-usuarios tbody tr:last-child {
+  border-bottom: none;
+}
+
+.hu7-tabla-usuarios tbody tr:hover {
+  background-color: #F8FBF9;
+}
+
+.hu7-tabla-usuarios tbody td {
+  padding: 18px 20px;
+  font-size: 14px;
+  color: #1A211D;
+  vertical-align: middle;
+}
+
+.hu7-col-usuario {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hu7-nombre-usuario {
+  font-weight: 700;
+  color: #1A211D;
+  font-size: 15px;
+}
+
+.hu7-meta-usuario {
+  font-size: 13px;
+  color: #66716B;
+}
+
+.hu7-texto-rol {
+  font-weight: 600;
+  color: #1A211D;
+}
+
+/* botonn Editar */
+.hu7-boton-editar {
+  background: transparent;
+  border: none;
+  color: #1E4534;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.hu7-boton-editar:hover {
+  background-color: #E4EFE9;
+  text-decoration: underline;
+}
+
+.hu7-tabla-vacia {
+  text-align: center;
+  padding: 30px;
+  color: #66716B;
+}
+
+
+.hu7-estado {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.estado-activo {
+  background-color: #E6F4EA;
+  color: #1E7F4D;
+}
+
+.estado-bloqueado {
+  background-color: #FCE8E6;
+  color: #B4322B;
+}
+
+.estado-pendiente {
+  background-color: #FEF3C7;
+  color: #B7791F;
+}
+
+
 .hu7-paginacion-usuarios {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid #E1E3DC;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
-  color: var(--muted-text-color);
+  color: #66716B;
 }
 
 .hu7-botones-paginacion {
@@ -155,26 +265,31 @@
   gap: 8px;
 }
 
-.hu7-btn-pag {
+.hu7-boton-pag {
   height: 32px;
   padding: 0 12px;
-  border: 1px solid var(--border);
-  background-color: var(--surface);
+  border: 1px solid #E1E3DC;
+  background-color: #FFFFFF;
   border-radius: 6px;
   font-family: 'Inter', sans-serif;
   font-size: 13px;
-  color: var(--text-color);
+  color: #1A211D;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.hu7-btn-pag.active {
-  background-color: var(--primary-color);
+.hu7-boton-pag:hover:not(:disabled) {
+  background-color: #F1F0EA;
+}
+
+.hu7-boton-pag.active {
+  background-color: #1E4534;
   color: #FFFFFF;
-  border-color: var(--primary-color);
+  border-color: #1E4534;
   font-weight: 700;
 }
 
-.hu7-btn-pag:disabled {
+.hu7-boton-pag:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }

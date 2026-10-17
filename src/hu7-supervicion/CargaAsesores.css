@@ -70,6 +70,74 @@
 }
 
 
+/* nota si sí se exporto sale*/
+.hu7-barra-controles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hu7-textito-exportado {
+  display: flex;
+  align-items: center;
+  
+  gap: 10px;
+  background-color: #E4EFE9; 
+  border: 1px solid #1E7F4D;    
+  border-radius: 8px;
+  padding:14px 14px;
+  position: relative;
+}
+
+.hu7-textito-exportar{
+  font-size: 12px;
+}
+
+.hu7-textito-icono {
+  width: 20px;
+  height: 20px;
+  background-color: #1E7F4D;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.hu7-textito-info {
+  display: flex;
+  flex-direction: column;
+  padding-right: 16px;
+}
+
+.hu7-textito-titulo {
+  font-weight: 700;
+  color: #1E7F4D;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.hu7-textito-subtitulo {
+  font-size: 13px;
+  color: #4A5568;
+}
+
+.hu7-textito-cerrar {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #4A5568;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  align-self: flex-start;
+}
+
+.hu7-textito-cerrar:hover {
+  color: #1A211D;
+}
 
 .hu7-contenedorINF {
   padding: 0 48px 48px 48px;
