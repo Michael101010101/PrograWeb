@@ -8,15 +8,15 @@ import ConfirmDialog from '../../shared/components/ConfirmDialog.jsx';
 import { PasswordField, SelectField, TextField } from '../../shared/components/FormField.jsx';
 import useFormulario from '../components/useFormulario.js';
 import * as authService from '../services/authService.js';
-import { catalogos } from '../services/localStore.js';
 import { validarRegistroAsesor } from '../utils/validators.js';
-import { CONTACTO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 
 const INICIAL = {
   nombres: '', apellidos: '', correo: '', password: '', confirmacion: '', gradoAcademico: '', departamento: '',
 };
 
 export default function RegistroAsesorPage() {
+  const { catalogos, contacto: CONTACTO } = useDatos();
   const navigate = useNavigate();
   const form = useFormulario(INICIAL, validarRegistroAsesor);
   const { props, valores } = form;

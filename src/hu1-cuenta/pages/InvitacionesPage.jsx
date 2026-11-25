@@ -10,7 +10,7 @@ import { TextField } from '../../shared/components/FormField.jsx';
 import DemoLink from '../components/DemoLink.jsx';
 import * as authService from '../services/authService.js';
 import { fechaHora } from '../../shared/utils/formato.js';
-import { PERIODO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 
 const ETIQUETA = {
   vigente: ['success', 'Vigente'],
@@ -21,6 +21,7 @@ const ETIQUETA = {
 
 /** Coordinación: invitar a otra persona a crear una cuenta de coordinador. */
 export default function InvitacionesPage() {
+  const { periodo: PERIODO } = useDatos();
   const { usuario } = useAuth();
   const { mostrar } = useToast();
   const [lista, setLista] = useState(null);
@@ -136,8 +137,8 @@ export default function InvitacionesPage() {
               <button type="submit" className="btn btn--primary btn--block" disabled={enviando}>
                 {enviando ? 'Creando…' : 'Crear invitación'}
               </button>
-              {ultima && (
-                <DemoLink to={`/registro/coordinador?invitacion=${ultima.codigo}`} texto={`Abrir la invitación de ${ultima.correo}`} />
+              {ultima?.enlaceDemo && (
+                <DemoLink to={ultima.enlaceDemo} texto={`Abrir la invitación de ${ultima.correo}`} />
               )}
             </div>
           </form>

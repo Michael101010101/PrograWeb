@@ -1,3 +1,5 @@
+// PENDIENTE (HU-2): la HU-1 ya no usa este archivo; sus datos vienen del API (shared/api.js).
+// Se mantiene solo porque HU-2 todavía guarda trabajos en localStorage. Borrar cuando HU-2 use su API.
 import seed from '../../data/seed.json';
 
 // Persistencia de la entrega 1: los datos semilla se copian a localStorage la primera vez

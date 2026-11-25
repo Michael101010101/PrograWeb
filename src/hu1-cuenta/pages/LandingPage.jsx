@@ -1,25 +1,23 @@
 import { Link } from 'react-router-dom';
 import PageLayout from '../../shared/components/PageLayout.jsx';
-import { PERIODO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import { obtenerAsesoresDestacados } from '../../shared/integraciones.js';
 
-const ETAPAS = [
-  'Registro del trabajo y del equipo',
-  'Solicitud y asignación de asesor',
-  'Plan de entregables',
-  'Revisión de avances',
-  'Sustentación y acta',
-];
-const ESTADO_ETAPA = ['cerrada', 'cerrada', 'en_curso', 'pendiente', 'pendiente'];
 const ETIQUETA_CRONO = { cerrada: 'Cerrada', en_curso: 'En curso', pendiente: '' };
 
 export default function LandingPage() {
+  const { periodo: PERIODO, textoNav } = useDatos();
+  const actual = PERIODO.etapaActual;
   const asesores = obtenerAsesoresDestacados();
   return (
-    <PageLayout navInfo={`Semestre ${PERIODO.semestre} · etapa 3 de 5 en curso`}>
+    <PageLayout navInfo={textoNav}>
       <section className="hero">
         <div>
-          <p className="text-label text-accent">Registro de propuestas abierto hasta el 28/08/2026</p>
+          {actual && (
+            <p className="text-label text-accent">
+              {actual.nombre} · hasta el {actual.fin.split('-').reverse().join('/')}
+            </p>
+          )}
           <h1>Del registro de la propuesta hasta la sustentación, en un solo lugar</h1>
           <p style={{ maxWidth: 560, marginBottom: 20 }}>
             Registra tu trabajo, solicita asesor entre quienes tienen cupo disponible, entrega tus avances y sigue la
@@ -31,12 +29,11 @@ export default function LandingPage() {
           </div>
         </div>
         <div className="card">
-          <p className="text-label" style={{ marginBottom: 12 }}>El proceso en 5 etapas</p>
+          <p className="text-label" style={{ marginBottom: 12 }}>El proceso en {PERIODO.totalEtapas} etapas</p>
           <ol className="etapas">
-            {ETAPAS.map((etapa, i) => {
-              const estado = ESTADO_ETAPA[i];
+            {PERIODO.etapas.map(({ numero, titulo: etapa, estado }) => {
               return (
-                <li key={etapa} className={estado === 'pendiente' ? 'is-pendiente' : ''}>
+                <li key={numero} className={estado === 'pendiente' ? 'is-pendiente' : ''}>
                   <span className={`etapas__punto ${estado === 'en_curso' ? 'etapas__punto--curso' : ''} ${estado === 'pendiente' ? 'etapas__punto--pendiente' : ''}`} aria-hidden="true" />
                   <span style={{ fontWeight: estado === 'en_curso' ? 600 : 400 }}>
                     {etapa}{estado === 'en_curso' && ' · etapa en curso'}
@@ -79,10 +76,10 @@ export default function LandingPage() {
         <section className="card">
           <h2 style={{ marginBottom: 14 }}>Cronograma {PERIODO.semestre}</h2>
           <ol className="cronograma">
-            {PERIODO.cronograma.map((c) => (
-              <li key={c.etapa} className={`is-${c.estado}`}>
+            {PERIODO.etapas.map((c) => (
+              <li key={c.numero} className={`is-${c.estado}`}>
                 <p className="text-label" style={{ color: c.estado === 'en_curso' ? 'var(--accent)' : undefined }}>
-                  Etapa {c.etapa}{ETIQUETA_CRONO[c.estado] && ` · ${ETIQUETA_CRONO[c.estado]}`}
+                  Etapa {c.numero}{ETIQUETA_CRONO[c.estado] && ` · ${ETIQUETA_CRONO[c.estado]}`}
                 </p>
                 <p style={{ fontSize: 14, color: c.estado === 'pendiente' ? 'var(--muted)' : undefined }}>
                   {c.nombre} · {c.rango}

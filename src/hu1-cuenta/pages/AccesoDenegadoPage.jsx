@@ -3,10 +3,11 @@ import { useAuth } from '../context/AuthContext.jsx';
 import PageLayout from '../../shared/components/PageLayout.jsx';
 import EmptyState from '../../shared/components/EmptyState.jsx';
 import { INICIO_POR_ROL, ROL_INFO } from '../../shared/config/roles.js';
-import { CONTACTO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 
 /** Se muestra cuando una sesión intenta entrar a una ruta de otro rol (1.7). */
 export default function AccesoDenegadoPage({ rutaSolicitada, rolesRequeridos = [] }) {
+  const { contacto: CONTACTO } = useDatos();
   const { usuario } = useAuth();
   const requerido = rolesRequeridos.map((r) => ROL_INFO[r].label).join(' o ');
   const actual = ROL_INFO[usuario.rol].label;

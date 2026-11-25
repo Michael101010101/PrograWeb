@@ -6,12 +6,13 @@ import { TextField } from '../../shared/components/FormField.jsx';
 import Stepper from '../components/Stepper.jsx';
 import DemoLink from '../components/DemoLink.jsx';
 import * as authService from '../services/authService.js';
-import { CONTACTO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 
 const ESPERA_REENVIO = 120; // segundos
 
 /** Recuperar contraseña · pasos 1 (correo) y 2 (enlace enviado). El paso 3 vive en /recuperar/:token. */
 export default function RecuperarPasswordPage() {
+  const { contacto: CONTACTO } = useDatos();
   const [correo, setCorreo] = useState('');
   const [error, setError] = useState(null);
   const [enviando, setEnviando] = useState(false);

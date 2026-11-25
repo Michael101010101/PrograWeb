@@ -1,5 +1,5 @@
 import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
-import { CONTACTO } from '../config/periodo.js';
+import { useDatos } from '../context/DatosContext.jsx';
 import { ROL_INFO } from '../config/roles.js';
 import { fechaHora, nombreCompleto } from '../utils/formato.js';
 
@@ -8,6 +8,7 @@ import { fechaHora, nombreCompleto } from '../utils/formato.js';
  * (con sesión, `false` omite el último ingreso). `politicaDatos` cambia el correo por la política de datos.
  */
 export default function Footer({ detalle, politicaDatos = false }) {
+  const { contacto: CONTACTO } = useDatos();
   const { usuario, ingresoAnterior } = useAuth();
 
   const izquierda = usuario

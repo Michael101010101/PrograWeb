@@ -8,7 +8,7 @@ import { PasswordField, TextField } from '../../shared/components/FormField.jsx'
 import DemoLink from '../components/DemoLink.jsx';
 import * as authService from '../services/authService.js';
 import { INICIO_POR_ROL } from '../../shared/config/roles.js';
-import { CONTACTO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 
 // Prefijos de ruta de cada rol: se usa para volver a la página pedida antes del login
 const PREFIJO_ROL = { estudiante: '/estudiante', asesor: '/asesor', coordinador: '/admin' };
@@ -20,6 +20,7 @@ const MENUS = [
 ];
 
 export default function LoginPage() {
+  const { contacto: CONTACTO } = useDatos();
   const { iniciarSesion } = useAuth();
   const { mostrar } = useToast();
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ export default function LoginPage() {
 
   const reenviar = async () => {
     try {
-      const r = await authService.reenviarVerificacion(error.datos.usuarioId);
+      const r = await authService.reenviarVerificacion(correo);
       setVerificacion(r);
       mostrar({ tipo: 'exito', titulo: 'Enlace reenviado', mensaje: `Revisa ${r.correo}.` });
     } catch (err) {

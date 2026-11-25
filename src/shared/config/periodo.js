@@ -1,3 +1,5 @@
+// PENDIENTE (HU-2 y HU-4): la HU-1 y el módulo compartido ya obtienen el periodo con useDatos() (GET /api/periodo).
+// Este archivo se mantiene solo porque HU-2 y HU-4 todavía importan PERIODO. Cambiar a useDatos() y borrarlo.
 // Datos del periodo compartidos por todas las historias.
 export const PERIODO = {
   semestre: '2026-2',
