@@ -4,8 +4,9 @@ import { useRevision } from '../hooks/useRevision.js';
 import { progresoTrabajo } from '../utils/progreso.js';
 import '../styles/hu5.css';
 
-export default function H5Page({ children, trabajo, detalle }) {
+export default function H5Page({ children, trabajo, detalle, incrustado = false }) {
   const { datos, usuario, error } = useRevision();
+  if (incrustado) return <div className="h5 h5--incrustado">{error ? <Alert>{error}</Alert> : children}</div>;
   const pendientes = datos.avances.filter((a) => a.estado === 'en_revision').length;
   const progreso = trabajo ? progresoTrabajo(datos, trabajo.codigo) : null;
   return <PageLayout footerDetalle={detalle ?? (usuario.rol === 'asesor' ? `${pendientes} avances por revisar` : 'Revisión y retroalimentación')}

@@ -24,7 +24,11 @@ function infoEtapa(estado) {
   return PERIODO.etapaActual;
 }
 
-export default function MiTrabajoPage({ vistaFicha = false }) {
+// HU-2 · "Mi trabajo": una sola página con scroll.
+//  1. Ficha del trabajo (HU-2), según su estado.
+//  2. En desarrollo: debajo, línea de tiempo de entregables (HU-4) y última retroalimentación (HU-5),
+//     con la vista consolidada de la HU-5 en modo incrustado (mockups 2.3 y 5.4).
+export default function MiTrabajoPage() {
   const { usuario } = useAuth();
   const [trabajo, setTrabajo] = useState(undefined);
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
@@ -40,12 +44,6 @@ export default function MiTrabajoPage({ vistaFicha = false }) {
   const Ficha = trabajo && FICHAS[trabajo.estado];
   const puedeGestionar = Boolean(trabajo?.integrantes.some((i) => i.usuarioId === usuario.id && i.responsable));
 
-  if (trabajo?.estado === 'en_desarrollo' && !vistaFicha) return (
-    <RevisionProvider>
-      <TrabajoConsolidadoPage codigo={trabajo.codigo} />
-    </RevisionProvider>
-  );
-
   return (
     <PageLayout
       headerSlot={<TrabajoChip />}
@@ -55,7 +53,17 @@ export default function MiTrabajoPage({ vistaFicha = false }) {
       {!trabajo ? (
         <div aria-busy="true" />
       ) : (
-        <Ficha trabajo={trabajo} puedeGestionar={puedeGestionar} onCambiarEstado={() => setCambiandoEstado(true)} />
+        <>
+          <Ficha trabajo={trabajo} puedeGestionar={puedeGestionar} onCambiarEstado={() => setCambiandoEstado(true)} />
+          {trabajo.estado === 'en_desarrollo' && (
+            <section id="avance" className="mi-trabajo-avance" aria-labelledby="titulo-avance">
+              <h2 id="titulo-avance" className="mi-trabajo-avance__titulo">Avance y retroalimentación</h2>
+              <RevisionProvider>
+                <TrabajoConsolidadoPage codigo={trabajo.codigo} incrustado />
+              </RevisionProvider>
+            </section>
+          )}
+        </>
       )}
 
       {cambiandoEstado && (

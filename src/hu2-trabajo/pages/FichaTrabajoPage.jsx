@@ -8,7 +8,7 @@ import { useToast } from '../../shared/components/ToastProvider.jsx';
 export default function FichaTrabajoPage({ trabajo, puedeGestionar, onCambiarEstado }) {
   const navigate = useNavigate();
   const { avance, asesor } = trabajo;
-   const { mostrar } = useToast();
+  const { mostrar } = useToast();
 
   const soloResponsable = (accion) => () => {
     if (puedeGestionar) return accion();
@@ -17,7 +17,7 @@ export default function FichaTrabajoPage({ trabajo, puedeGestionar, onCambiarEst
       titulo: 'Solo el responsable puede hacerlo',
       mensaje: 'Pide al responsable del equipo que haga el cambio o que te transfiera la responsabilidad.',
     });
-  }; 
+  };
 
   return (
     <div className="ficha-contenedor">
@@ -153,8 +153,8 @@ export default function FichaTrabajoPage({ trabajo, puedeGestionar, onCambiarEst
               Plan de entregables
             </button>
 
-            <button type="button" className="btn-secundario-ancho" onClick={() => navigate('/estudiante/retroalimentacion')}>
-              Retroalimentación
+            <button type="button" className="btn-secundario-ancho" onClick={() => document.getElementById('avance')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>
+              Avance y retroalimentación
             </button>
           </section>
         </aside>

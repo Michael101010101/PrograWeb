@@ -324,3 +324,6 @@
 .ficha-contenedor span {
   overflow-wrap: anywhere;
 }
+
+.mi-trabajo-avance { margin-top: 32px; scroll-margin-top: 16px; }
+.mi-trabajo-avance__titulo { font-size: 22px; margin: 0 0 16px; }
