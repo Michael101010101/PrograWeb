@@ -1,3 +1,5 @@
+// PENDIENTE (HU-2): la HU-1 ya no usa este archivo; los usuarios vienen de la base de datos vía API.
+// Se mantiene solo porque HU-2 todavía lo importa. Borrar cuando HU-2 use su API.
 import { guardarColeccion, leerColeccion } from './localStore.js';
 
 // Patrón Repository: único punto de acceso a la entidad Usuario.

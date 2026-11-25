@@ -1,7 +1,6 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import RutaProtegida from '../hu1-cuenta/guards/RutaProtegida.jsx';
 import SoloPublico from '../hu1-cuenta/guards/SoloPublico.jsx';
-import EnConstruccion from '../shared/components/EnConstruccion.jsx';
 
 // H5 · Revisión y retroalimentación
 import BandejaRevisionPage from '../h5-revision-retroalimentacion/pages/BandejaRevisionPage.jsx';
@@ -23,6 +22,8 @@ import VerificarCorreoPage from '../hu1-cuenta/pages/VerificarCorreoPage.jsx';
 import MiCuentaPage from '../hu1-cuenta/pages/MiCuentaPage.jsx';
 import InvitacionesPage from '../hu1-cuenta/pages/InvitacionesPage.jsx';
 import NotFoundPage from '../hu1-cuenta/pages/NotFoundPage.jsx';
+import ProcesoPage from '../hu1-cuenta/pages/ProcesoPage.jsx';
+import CronogramaPage from '../hu1-cuenta/pages/CronogramaPage.jsx';
 
 // HU-2 · Registro del trabajo
 import MiTrabajoPage from '../hu2-trabajo/pages/MiTrabajoPage.jsx';
@@ -59,8 +60,8 @@ export default function AppRouter() {
     <Routes>
       {/* Público */}
       <Route path="/" element={<LandingPage />} />
-      <Route path="/proceso" element={<EnConstruccion titulo="El proceso" historia="HU-1 (contenido informativo)" />} />
-      <Route path="/cronograma" element={<EnConstruccion titulo="Cronograma" historia="HU-1 (contenido informativo)" />} />
+      <Route path="/proceso" element={<ProcesoPage />} />
+      <Route path="/cronograma" element={<CronogramaPage />} />
       <Route path="/asesores" element={<DirectorioAsesoresPage />} />
       <Route path="/verificar/:token" element={<VerificarCorreoPage />} />
 
@@ -119,6 +120,8 @@ export default function AppRouter() {
         <Route path="trabajos" element={<TrabajosAdmin />} />
         <Route path="carga" element={<CargaAsesores />} />
         <Route path="usuarios" element={<GestionUsuarios />} />
+        {/* HU-1 · Invitaciones de coordinadores */}
+        <Route path="invitaciones" element={<InvitacionesPage />} />
       {/* HU-6 · Sustentaciones */}
         <Route path="sustentaciones" element={<SustentacionesPage />} />
         <Route path="sustentaciones/programar" element={<ProgramarSustentacionPage />} />

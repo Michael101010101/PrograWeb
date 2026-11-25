@@ -10,7 +10,7 @@ import { PasswordField, SelectField, TextField } from '../../shared/components/F
 import useFormulario from '../components/useFormulario.js';
 import DemoLink from '../components/DemoLink.jsx';
 import * as authService from '../services/authService.js';
-import { catalogos } from '../services/localStore.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import { validarRegistroEstudiante } from '../utils/validators.js';
 
 const INICIAL = {
@@ -19,6 +19,7 @@ const INICIAL = {
 };
 
 export default function RegistroEstudiantePage() {
+  const { catalogos } = useDatos();
   const navigate = useNavigate();
   const { mostrar } = useToast();
   const form = useFormulario(INICIAL, validarRegistroEstudiante);
@@ -39,11 +40,11 @@ export default function RegistroEstudiantePage() {
     try {
       const r = await authService.registrarEstudiante(valores);
       setCreado(r);
-      if (!r.correoEnviado) {
+      if (!r.correoEnviado && !r.enlaceDemo) {
         mostrar({
           tipo: 'aviso',
           titulo: 'No se pudo enviar el correo',
-          mensaje: 'Tu cuenta se creó. Usa el enlace de verificación que aparece abajo.',
+          mensaje: 'Tu cuenta se creó. Pide un nuevo enlace desde el inicio de sesión.',
         });
       }
     } catch (err) {
@@ -56,13 +57,13 @@ export default function RegistroEstudiantePage() {
 
   const reenviar = async () => {
     try {
-    const r = await authService.reenviarVerificacion(creado.usuario.id);
+    const r = await authService.reenviarVerificacion(creado.usuario.correo);
     setCreado((prev) => ({ ...prev, enlaceDemo: r.enlaceDemo, correoEnviado: r.correoEnviado }));
-    if (r.correoEnviado) {
+    if (r.correoEnviado || r.enlaceDemo) {
       mostrar({ tipo: 'exito', titulo: 'Correo reenviado', mensaje: `Enviamos un nuevo enlace a ${r.correo}.` });
     } else {
-      mostrar({ tipo: 'aviso', titulo: 'No se pudo enviar el correo', mensaje: 'Usa el nuevo enlace de verificación que aparece abajo.' });
-      }
+      mostrar({ tipo: 'aviso', titulo: 'No se pudo enviar el correo', mensaje: 'Intenta de nuevo en unos minutos.' });
+    }
     } catch (err) {
     mostrar({ tipo: 'error', titulo: 'No se pudo reenviar', mensaje: err.message });
     }

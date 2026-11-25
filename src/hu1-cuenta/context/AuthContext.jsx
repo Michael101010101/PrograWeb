@@ -1,54 +1,38 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as authService from '../services/authService.js';
+import { guardarSesion, leerSesion } from '../../shared/sesion.js';
 
 const AuthContext = createContext(null);
-const CLAVE_SESION = 'tfc.sesion';
-
-function leerSesion() {
-  const crudo = localStorage.getItem(CLAVE_SESION) ?? sessionStorage.getItem(CLAVE_SESION);
-  try {
-    return crudo ? JSON.parse(crudo) : null;
-  } catch {
-    return null;
-  }
-}
-
-function guardarSesion(sesion, recordar) {
-  localStorage.removeItem(CLAVE_SESION);
-  sessionStorage.removeItem(CLAVE_SESION);
-  if (sesion) (recordar ? localStorage : sessionStorage).setItem(CLAVE_SESION, JSON.stringify(sesion));
-}
 
 /**
- * Estado global de la sesión. Expone:
- *  usuario, cargando, ingresoAnterior,
- *  iniciarSesion(correo, password, recordar), cerrarSesion(), actualizarUsuario(u)
+ * Estado global de la sesión. Guarda el JWT que entrega el servidor y el usuario.
+ * Expone: usuario, cargando, ingresoAnterior, iniciarSesion, cerrarSesion, actualizarUsuario
  */
 export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [ingresoAnterior, setIngresoAnterior] = useState(null);
   const [cargando, setCargando] = useState(true);
 
+  // Al abrir la app: si hay un token guardado, se pide el usuario al servidor.
   useEffect(() => {
     const sesion = leerSesion();
-    if (!sesion) {
+    if (!sesion?.token) {
       setCargando(false);
       return;
     }
-    authService.obtenerUsuarioSesion(sesion.usuarioId).then((u) => {
-      if (u) {
+    authService
+      .obtenerUsuarioSesion()
+      .then((u) => {
         setUsuario(u);
         setIngresoAnterior(sesion.ingresoAnterior ?? null);
-      } else {
-        guardarSesion(null); // la cuenta fue bloqueada o eliminada
-      }
-      setCargando(false);
-    });
+      })
+      .catch(() => guardarSesion(null)) // token vencido o cuenta deshabilitada
+      .finally(() => setCargando(false));
   }, []);
 
   const iniciarSesion = useCallback(async (correo, password, recordar) => {
-    const { usuario: u, ingresoAnterior: previo } = await authService.iniciarSesion(correo, password);
-    guardarSesion({ usuarioId: u.id, ingresoAnterior: previo }, recordar);
+    const { token, usuario: u, ingresoAnterior: previo } = await authService.iniciarSesion(correo, password);
+    guardarSesion({ token, ingresoAnterior: previo }, recordar);
     setUsuario(u);
     setIngresoAnterior(previo);
     return u;

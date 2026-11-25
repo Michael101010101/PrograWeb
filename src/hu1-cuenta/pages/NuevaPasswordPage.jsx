@@ -8,7 +8,7 @@ import Stepper from '../components/Stepper.jsx';
 import PasswordRules from '../components/PasswordRules.jsx';
 import useFormulario from '../components/useFormulario.js';
 import * as authService from '../services/authService.js';
-import { CONTACTO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import { validarConfirmacion, validarPassword } from '../utils/validators.js';
 
 const validar = (v) =>
@@ -18,6 +18,7 @@ const validar = (v) =>
 
 /** Recuperar contraseña · paso 3: se llega desde el enlace del correo. */
 export default function NuevaPasswordPage() {
+  const { contacto: CONTACTO } = useDatos();
   const { token } = useParams();
   const navigate = useNavigate();
   const { mostrar } = useToast();

@@ -9,7 +9,7 @@ import { PasswordField, SelectField, TextField } from '../../shared/components/F
 import useFormulario from '../components/useFormulario.js';
 import PasswordRules from '../components/PasswordRules.jsx';
 import * as authService from '../services/authService.js';
-import { catalogos } from '../services/localStore.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import { validarCambioPassword, validarPerfil } from '../utils/validators.js';
 import { ROL_INFO } from '../../shared/config/roles.js';
 import { obtenerTrabajoVigente } from '../../shared/integraciones.js';
@@ -46,6 +46,7 @@ function valoresDesde(u) {
 }
 
 export default function MiCuentaPage() {
+  const { catalogos } = useDatos();
   const { usuario, actualizarUsuario } = useAuth();
   const { mostrar } = useToast();
   const [guardando, setGuardando] = useState(false);
