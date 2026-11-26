@@ -5,12 +5,16 @@ import Modal from '../../../shared/components/Modal.jsx';
 export default function ModalRechazarSolicitud({ solicitud, onConfirmar, onCerrar }) {
   const [motivo, setMotivo] = useState('');
   const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false);
 
-  const confirmar = () => {
+  // La página llama a la API; si el servidor rechaza el motivo (400), se muestra su mensaje
+  const confirmar = async () => {
+    setEnviando(true);
     try {
-      onConfirmar(motivo);
+      await onConfirmar(motivo);
     } catch (e) {
       setError(e.message);
+      setEnviando(false);
     }
   };
 
@@ -22,7 +26,9 @@ export default function ModalRechazarSolicitud({ solicitud, onConfirmar, onCerra
       acciones={
         <>
           <button className="btn btn--ghost" onClick={onCerrar}>Cancelar</button>
-          <button className="btn btn--danger" disabled={motivo.trim() === ''} onClick={confirmar}>Rechazar solicitud</button>
+          <button className="btn btn--danger" disabled={motivo.trim() === '' || enviando} onClick={confirmar}>
+            {enviando ? 'Rechazando…' : 'Rechazar solicitud'}
+          </button>
         </>
       }
     >

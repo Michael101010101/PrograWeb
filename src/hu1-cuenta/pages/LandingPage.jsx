@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
 import PageLayout from '../../shared/components/PageLayout.jsx';
 import { useDatos } from '../../shared/context/DatosContext.jsx';
-import { obtenerAsesoresDestacados } from '../../shared/integraciones.js';
+import { useAsesoresDestacados } from '../../shared/integraciones.js';
 
 const ETIQUETA_CRONO = { cerrada: 'Cerrada', en_curso: 'En curso', pendiente: '' };
 
 export default function LandingPage() {
   const { periodo: PERIODO, textoNav } = useDatos();
   const actual = PERIODO.etapaActual;
-  const asesores = obtenerAsesoresDestacados();
+  const asesores = useAsesoresDestacados();
   return (
     <PageLayout navInfo={textoNav}>
       <section className="hero">

@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import Modal from '../../../shared/components/Modal.jsx';
 import Alert from '../../../shared/components/Alert.jsx';
-import { DEPARTAMENTOS, GRADOS, LINEAS } from '../../data/datosSemilla.js';
+import { useDatos } from '../../../shared/context/DatosContext.jsx';
 
 const MAX_EXPERIENCIA = 800;
 const MAX_LINEAS = 3;
 
 /** 3.1 Editar ficha · rol Asesor (diapositiva 26). */
 export default function ModalEditarFicha({ asesor, onGuardar, onCerrar }) {
+  // Grados, departamentos y líneas vienen de la API (GET /api/catalogos)
+  const { catalogos } = useDatos();
+  const LINEAS = catalogos.lineas ?? [];
+
   // Copia local de los campos: solo se guardan al pulsar "Guardar ficha".
   const [ficha, setFicha] = useState({
     gradoAcademico: asesor.gradoAcademico,
@@ -17,6 +21,7 @@ export default function ModalEditarFicha({ asesor, onGuardar, onCerrar }) {
     cupoMaximo: asesor.cupoMaximo,
   });
   const [error, setError] = useState('');
+  const [guardando, setGuardando] = useState(false);
 
   const cambiar = (campo, valor) => {
     setFicha({ ...ficha, [campo]: valor });
@@ -28,11 +33,14 @@ export default function ModalEditarFicha({ asesor, onGuardar, onCerrar }) {
   };
   const quitarLinea = (linea) => cambiar('lineas', ficha.lineas.filter((l) => l !== linea));
 
-  const guardar = () => {
+  // Las validaciones las hace el servidor (PUT /api/asesores/me); si algo no es válido, devuelve 400 con el mensaje
+  const guardar = async () => {
+    setGuardando(true);
     try {
-      onGuardar(ficha);
+      await onGuardar(ficha);
     } catch (e) {
       setError(e.message);
+      setGuardando(false);
     }
   };
 
@@ -47,7 +55,9 @@ export default function ModalEditarFicha({ asesor, onGuardar, onCerrar }) {
       acciones={
         <>
           <button className="btn btn--ghost" onClick={onCerrar}>Cancelar</button>
-          <button className="btn btn--primary" onClick={guardar}>Guardar ficha</button>
+          <button className="btn btn--primary" onClick={guardar} disabled={guardando}>
+            {guardando ? 'Guardando…' : 'Guardar ficha'}
+          </button>
         </>
       }
     >
@@ -55,13 +65,13 @@ export default function ModalEditarFicha({ asesor, onGuardar, onCerrar }) {
         <div className="field">
           <label className="field__label" htmlFor="hu3-grado">Grado académico</label>
           <select id="hu3-grado" className="select" value={ficha.gradoAcademico} onChange={(e) => cambiar('gradoAcademico', e.target.value)}>
-            {GRADOS.map((g) => <option key={g.gradoAcademico} value={g.gradoAcademico}>{g.gradoAcademico}</option>)}
+            {catalogos.gradosAcademicos.map((g) => <option key={g} value={g}>{g}</option>)}
           </select>
         </div>
         <div className="field">
           <label className="field__label" htmlFor="hu3-depto-ficha">Departamento</label>
           <select id="hu3-depto-ficha" className="select" value={ficha.departamento} onChange={(e) => cambiar('departamento', e.target.value)}>
-            {DEPARTAMENTOS.map((d) => <option key={d} value={d}>{d}</option>)}
+            {catalogos.departamentos.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
         </div>
       </div>

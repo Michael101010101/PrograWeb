@@ -1,26 +1,21 @@
 import Alert from '../../shared/components/Alert.jsx';
-import { buscarAsesor, nombreAsesor, ultimaSolicitud, ultimoTermino } from '../services/asesoriasService.js';
-import { HOY, diasEntre, formatearFecha } from '../utils/fechas.js';
+import { diasEntre, formatearFecha, hoy } from '../utils/fechas.js';
 
 /**
  * "Mi solicitud" · rol Estudiante (arriba del directorio).
- * Muestra en qué quedó la última solicitud del trabajo: pendiente, aceptada,
- * rechazada (con el motivo que escribió el asesor) o asesoría terminada.
- * Si nunca envió una solicitud, no muestra nada.
+ * Recibe lo que devuelve GET /api/solicitudes/mia: la última solicitud del trabajo,
+ * su asesor y, si hubo, el término de la asesoría. Si nunca envió una, no muestra nada.
  */
-export default function EstadoSolicitud({ datos, trabajo, onRetirar }) {
-  const solicitud = ultimaSolicitud(datos, trabajo.codigo);
+export default function EstadoSolicitud({ trabajo, solicitud, asesor, termino, onRetirar }) {
   if (!solicitud) return null;
 
-  const asesor = buscarAsesor(datos, solicitud.asesorId);
-  const nombre = asesor ? nombreAsesor(asesor) : 'el asesor';
-  const termino = ultimoTermino(datos, trabajo.codigo);
+  const nombre = asesor?.nombre ?? 'el asesor';
 
   let contenido;
   if (solicitud.estado === 'pendiente') {
     contenido = (
       <Alert tipo="warning" titulo="Solicitud pendiente.">
-        Enviaste tu solicitud a {nombre} el {formatearFecha(solicitud.fecha)} ({diasEntre(solicitud.fecha, HOY)} días en espera).
+        Enviaste tu solicitud a {nombre} el {formatearFecha(solicitud.fecha)} ({diasEntre(solicitud.fecha, hoy())} días en espera).
         Mientras esté pendiente no puedes solicitar a otro asesor.{' '}
         <button type="button" className="link-button" style={{ fontWeight: 600 }} onClick={onRetirar}>Retirar solicitud</button>
       </Alert>

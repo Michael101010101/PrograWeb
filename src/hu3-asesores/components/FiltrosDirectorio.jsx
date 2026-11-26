@@ -1,10 +1,13 @@
-import { DEPARTAMENTOS, LINEAS } from '../data/datosSemilla.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 
 /**
  * Caja de filtros del directorio (3.2). Es un componente "controlado":
  * los valores vienen del padre en `filtros` y cada cambio se avisa con onCambiar(campo, valor).
+ * Las opciones de línea y departamento vienen de la API (GET /api/catalogos).
  */
 export default function FiltrosDirectorio({ filtros, onCambiar }) {
+  const { catalogos } = useDatos();
+
   return (
     <div className="card hu3-filtros">
       <div className="field">
@@ -23,7 +26,7 @@ export default function FiltrosDirectorio({ filtros, onCambiar }) {
         <label className="field__label" htmlFor="hu3-linea">Línea de investigación</label>
         <select id="hu3-linea" className="select" value={filtros.linea} onChange={(e) => onCambiar('linea', e.target.value)}>
           <option value="">Todas</option>
-          {LINEAS.map((linea) => <option key={linea} value={linea}>{linea}</option>)}
+          {(catalogos.lineas ?? []).map((linea) => <option key={linea} value={linea}>{linea}</option>)}
         </select>
       </div>
 
@@ -31,7 +34,7 @@ export default function FiltrosDirectorio({ filtros, onCambiar }) {
         <label className="field__label" htmlFor="hu3-depto">Departamento</label>
         <select id="hu3-depto" className="select" value={filtros.departamento} onChange={(e) => onCambiar('departamento', e.target.value)}>
           <option value="">Todos</option>
-          {DEPARTAMENTOS.map((depto) => <option key={depto} value={depto}>{depto}</option>)}
+          {catalogos.departamentos.map((depto) => <option key={depto} value={depto}>{depto}</option>)}
         </select>
       </div>
 

@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import './fichaEstados.css';
 import EstadoBadge from '../components/EstadoBadge.jsx';
 import { PERIODO } from '../../shared/config/periodo.js';
-import { obtenerAsesoresDestacados } from '../../shared/integraciones.js';
+import { useAsesoresDestacados } from '../../shared/integraciones.js';
 import { diasHasta, fecha } from '../utils/fechas.js';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 
@@ -29,7 +29,7 @@ export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarE
   const cierre = cierreAsignacion();
   const dias = diasHasta(cierre);
 
-  const destacados = obtenerAsesoresDestacados();
+  const destacados = useAsesoresDestacados();
   const deMiLinea = destacados.filter((a) => a.linea === trabajo.linea);
   const sugeridos = deMiLinea.length > 0 ? deMiLinea : destacados;
 

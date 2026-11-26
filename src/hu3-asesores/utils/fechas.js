@@ -1,9 +1,10 @@
 // Utilidades de fechas de la HU-3.
-// Las fechas se guardan como texto 'AAAA-MM-DD' (fácil de comparar y de guardar en JSON).
+// La API devuelve las fechas como texto 'AAAA-MM-DD' (columnas DATEONLY de PostgreSQL).
 
-// "Hoy" fijo para la demo: así los "días en espera" y los vencimientos
-// coinciden siempre con los mockups (semana del 06/09/2026).
-export const HOY = '2026-09-06';
+/** Fecha de hoy en Lima como 'AAAA-MM-DD' (la misma zona que usa el servidor). */
+export function hoy() {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Lima' });
+}
 
 // '2026-09-01' -> '01/09/2026'
 export function formatearFecha(iso) {
