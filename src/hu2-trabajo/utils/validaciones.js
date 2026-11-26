@@ -14,7 +14,6 @@ export function validarTitulo(valor) {
 
 export function validarLinea(valor) {
   if (!valor) return 'Debes elegir una línea de investigación';
-  if (!LINEAS_INVESTIGACION.includes(valor)) return 'La línea elegida no existe';
   return null;
 }
 

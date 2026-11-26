@@ -1,10 +1,12 @@
-import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
-import { obtenerTrabajoVigente } from '../../shared/integraciones.js';
+import useTrabajoVigente from '../hooks/useTrabajoVigente.js';
 import './estadosTrabajo.css';
 
 export default function TrabajoChip() {
-  const { usuario } = useAuth();
-  const trabajo = obtenerTrabajoVigente(usuario?.id);
+  const trabajo = useTrabajoVigente();
+
+  if (trabajo === undefined) {
+    return <span className="hu2-chip-trabajo hu2-chip-trabajo--vacio" aria-busy="true">Cargando…</span>;
+  }
 
   if (!trabajo) {
     return <span className="hu2-chip-trabajo hu2-chip-trabajo--vacio">Sin trabajo registrado</span>;

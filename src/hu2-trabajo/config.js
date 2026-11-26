@@ -1,13 +1,4 @@
 
-export const LINEAS_INVESTIGACION = [
-  'Ciencia de datos aplicada',
-  'Automatización y control',
-  'Gestión de operaciones',
-  'Innovación educativa',
-  'Ingeniería de software',
-  'Sostenibilidad urbana',
-];
-
 export const ESTADOS = {
   propuesta: { label: 'Propuesta' },
   en_desarrollo: { label: 'En desarrollo' },

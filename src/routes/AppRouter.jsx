@@ -88,6 +88,7 @@ export default function AppRouter() {
         <Route path="mi-trabajo/ficha" element={<MiTrabajoPage vistaFicha />} />
         <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
         <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
+        <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
         <Route path="mis-trabajos" element={<MisTrabajosPage />} />
         <Route path="entregables" element={<PlanEntregablesPage />} />
         <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
