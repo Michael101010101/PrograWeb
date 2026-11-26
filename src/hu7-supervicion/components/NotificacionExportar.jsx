@@ -1,4 +1,3 @@
-import React from 'react';
 import '../components/Modales.css';
 
 export default function NotificacionExportar({ 
