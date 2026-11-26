@@ -27,6 +27,7 @@ import CronogramaPage from '../hu1-cuenta/pages/CronogramaPage.jsx';
 
 // HU-2 · Registro del trabajo
 import MiTrabajoPage from '../hu2-trabajo/pages/MiTrabajoPage.jsx';
+import MisTrabajosPage from '../hu2-trabajo/pages/MisTrabajosPage.jsx';
 import RegistrarTrabajoPage from '../hu2-trabajo/pages/RegistrarTrabajoPage.jsx';
 import EquipoTrabajoPage from '../hu2-trabajo/pages/EquipoTrabajoPage.jsx';
 
@@ -88,6 +89,7 @@ export default function AppRouter() {
         <Route path="mi-trabajo/registrar" element={<RegistrarTrabajoPage key="registrar" modo="registrar" />} />
         <Route path="mi-trabajo/editar" element={<RegistrarTrabajoPage key="editar" modo="editar" />} />
         <Route path="mi-trabajo/equipo" element={<EquipoTrabajoPage />} />
+        <Route path="mis-trabajos" element={<MisTrabajosPage />} />
         <Route path="entregables" element={<PlanEntregablesPage />} />
         <Route path="entregables/alertas" element={<AlertasVencimientoPage />} />
         <Route path="retroalimentacion" element={<RevisionLayout />}>

@@ -1,4 +1,4 @@
-import { LIMITES, LINEAS_INVESTIGACION } from '../config.js';
+import { LIMITES } from '../config.js';
 
 export function limpiar(texto) {
   return String(texto ?? '').trim().replace(/\s+/g, ' ');
@@ -14,7 +14,6 @@ export function validarTitulo(valor) {
 
 export function validarLinea(valor) {
   if (!valor) return 'Debes elegir una línea de investigación';
-  if (!LINEAS_INVESTIGACION.includes(valor)) return 'La línea elegida no existe';
   return null;
 }
 

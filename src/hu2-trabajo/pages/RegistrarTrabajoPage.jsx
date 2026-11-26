@@ -8,12 +8,13 @@ import ConfirmDialog from '../../shared/components/ConfirmDialog.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
 import useFormulario from '../../hu1-cuenta/components/useFormulario.js';
-import { PERIODO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
+import useLineas from '../hooks/useLineas.js';
 import TrabajoChip from '../components/TrabajoChip.jsx';
 import ErrorRegistroModal from '../components/ErrorRegistroModal.jsx';
 import TrabajoVigenteModal from '../components/TrabajoVigenteModal.jsx';
 import * as trabajoService from '../services/trabajoService.js';
-import { LIMITES, LINEAS_INVESTIGACION } from '../config.js';
+import { LIMITES } from '../config.js';
 import { validarNuevaPalabra, validarTrabajo } from '../utils/validaciones.js';
 import { fecha, hora } from '../utils/fechas.js';
 
@@ -28,6 +29,8 @@ export default function RegistrarTrabajoPage({ modo = 'registrar' }) {
   const { usuario } = useAuth();
   const { mostrar } = useToast();
   const navigate = useNavigate();
+  const { textoNav } = useDatos();
+  const lineas = useLineas();
 
   const [borradorInicial] = useState(() => (editando ? null : trabajoService.obtenerBorrador(usuario.id)));
   const form = useFormulario(borradorInicial?.valores ?? VACIO, validarTrabajo);
@@ -48,7 +51,7 @@ export default function RegistrarTrabajoPage({ modo = 'registrar' }) {
 
   useEffect(() => {
     let activo = true;
-    trabajoService.obtenerMiTrabajo(usuario.id).then(({ trabajo: actual, ultimoDesistido: desistido }) => {
+    trabajoService.obtenerMiTrabajo().then(({ trabajo: actual, ultimoDesistido: desistido }) => {
       if (!activo) return;
       setUltimoDesistido(desistido);
       if (editando) {
@@ -66,6 +69,10 @@ export default function RegistrarTrabajoPage({ modo = 'registrar' }) {
       } else if (actual) {
         setTrabajoVigente(actual);
       }
+      setCargando(false);
+    }).catch((err) => {
+      if (!activo) return;
+      mostrar({ tipo: 'error', titulo: 'No pudimos cargar tu trabajo', mensaje: err.message });
       setCargando(false);
     });
     return () => {
@@ -182,7 +189,7 @@ export default function RegistrarTrabajoPage({ modo = 'registrar' }) {
       : 'sin trabajo registrado';
 
   return (
-    <PageLayout headerSlot={<TrabajoChip />} navInfo={PERIODO.etapaActual} footerDetalle={footerDetalle}>
+    <PageLayout headerSlot={<TrabajoChip />} navInfo={textoNav} footerDetalle={footerDetalle}>
       <div className="registro-contenedor">
         <PageHead
           migas={editando ? 'Mi trabajo · Editar ficha' : 'Mi trabajo · Nuevo registro'}
@@ -234,7 +241,7 @@ export default function RegistrarTrabajoPage({ modo = 'registrar' }) {
                     aria-invalid={Boolean(errores.linea)}
                   >
                     <option value="">Selecciona una línea</option>
-                    {LINEAS_INVESTIGACION.map((linea) => (
+                    {lineas.map((linea) => (
                       <option key={linea}>{linea}</option>
                     ))}
                   </select>

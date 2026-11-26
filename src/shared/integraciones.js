@@ -11,9 +11,10 @@ import {
 } from '../hu3-asesores/services/asesoriasService.js';
 
 /** HU-2 · Trabajo vigente del estudiante: { codigo, titulo, avance } | null */
-export function obtenerTrabajoVigente(usuarioId) {
-  return usuarioId ? resumenTrabajoVigente(usuarioId) : null;
+export function obtenerTrabajoVigente() {
+  return resumenTrabajoVigente();
 }
+
 
 /** HU-3 · Asesores con cupo para la landing pública (los 3 con más cupo disponible). */
 export function obtenerAsesoresDestacados() {
