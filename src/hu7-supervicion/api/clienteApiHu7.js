@@ -91,6 +91,17 @@ export async function cargarTodosLosAsesores(filtros) {
   return [primera, ...paginas].flatMap((p) => p.asesores);
 }
 
+/** Igual que cargarTodosLosAsesores, pero también devuelve el periodo activo que informa el API. */
+export async function cargarAsesoresConPeriodo(filtros) {
+  const primera = await listarAsesores({ ...filtros, page: 1, limit: LIMITE_ASESORES });
+  const resto = [];
+  for (let pagina = 2; pagina <= primera.paginacion.totalPaginas; pagina += 1) {
+    resto.push(listarAsesores({ ...filtros, page: pagina, limit: LIMITE_ASESORES }));
+  }
+  const paginas = await Promise.all(resto);
+  return { asesores: [primera, ...paginas].flatMap((p) => p.asesores), periodo: primera.periodo ?? null };
+}
+
 export async function obtenerAsesor(id) {
   const { asesor } = await api(`/admin/asesores/${segmento(id)}`);
   return asesor;
