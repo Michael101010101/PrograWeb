@@ -12,7 +12,7 @@ import * as authService from '../services/authService.js';
 import { useDatos } from '../../shared/context/DatosContext.jsx';
 import { validarCambioPassword, validarPerfil } from '../utils/validators.js';
 import { ROL_INFO } from '../../shared/config/roles.js';
-import { obtenerTrabajoVigente } from '../../shared/integraciones.js';
+import useTrabajoVigente from '../../hu2-trabajo/hooks/useTrabajoVigente.js';
 
 const SECCIONES = [
   ['datos-personales', 'Datos personales'],
@@ -66,7 +66,7 @@ export default function MiCuentaPage() {
 
   const form = useFormulario(valoresDesde(usuario), validar);
   const { props, valores, onChange } = form;
-  const trabajo = usuario.rol === 'estudiante' ? obtenerTrabajoVigente(usuario.id) : null;
+  const trabajo = useTrabajoVigente();
 
   const guardar = async () => {
     if (!form.validarTodo()) {

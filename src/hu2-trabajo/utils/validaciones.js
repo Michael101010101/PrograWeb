@@ -1,4 +1,4 @@
-import { LIMITES, LINEAS_INVESTIGACION } from '../config.js';
+import { LIMITES } from '../config.js';
 
 export function limpiar(texto) {
   return String(texto ?? '').trim().replace(/\s+/g, ' ');

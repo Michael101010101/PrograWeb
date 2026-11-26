@@ -1,21 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 import './fichaEstados.css';
 import EstadoBadge from '../components/EstadoBadge.jsx';
-import { PERIODO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import { obtenerAsesoresDestacados } from '../../shared/integraciones.js';
 import { diasHasta, fecha } from '../utils/fechas.js';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 
-function cierreAsignacion() {
-  const etapa = PERIODO.cronograma.find((e) => e.etapa === 2);
-  const [dia, mes] = etapa.rango.split('–')[1].trim().split('/');
-  const anio = PERIODO.semestre.split('-')[0];
-  return new Date(`${anio}-${mes}-${dia}T23:59:59`);
+function cierreAsignacion(periodo) {
+  const etapa = periodo.etapas.find((e) => e.numero === 2);
+  return etapa ? new Date(`${etapa.fin}T23:59:59`) : null;
 }
 
 export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarEstado }) {
   const navigate = useNavigate();
-    const { mostrar } = useToast();
+  const { mostrar } = useToast();
 
   const soloResponsable = (accion) => () => {
     if (puedeGestionar) return accion();
@@ -26,8 +24,9 @@ export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarE
     });
   };
 
-  const cierre = cierreAsignacion();
-  const dias = diasHasta(cierre);
+  const { periodo } = useDatos();
+  const cierre = cierreAsignacion(periodo);
+  const dias = cierre ? diasHasta(cierre) : null;
 
   const destacados = obtenerAsesoresDestacados();
   const deMiLinea = destacados.filter((a) => a.linea === trabajo.linea);
@@ -135,7 +134,9 @@ export default function FichaPropuestaPage({ trabajo, puedeGestionar, onCambiarE
           <section className="fe-card fe-plazo">
             <h3>Plazo de la etapa 2</h3>
 
-            {dias >= 0 ? (
+            {cierre === null ? (
+              <p>Cargando el cronograma…</p>
+            ) : dias >= 0 ? (
               <p>
                 La asignación de asesores cierra el {fecha(cierre.toISOString())}.
                 <br />

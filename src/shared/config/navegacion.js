@@ -19,6 +19,7 @@ export const NAV_POR_ROL = {
   ],
   estudiante: [
     { to: '/estudiante/mi-trabajo', label: 'Mi trabajo' },
+    { to: '/estudiante/mis-trabajos', label: 'Mis trabajos' },
     { to: '/estudiante/entregables', label: 'Entregables' },
     { to: '/estudiante/retroalimentacion', label: 'Retroalimentación' },
     { to: '/estudiante/asesores', label: 'Directorio de asesores' },
