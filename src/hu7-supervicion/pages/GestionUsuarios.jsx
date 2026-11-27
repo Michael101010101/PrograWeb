@@ -1,407 +1,280 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PageLayout from '../../shared/components/PageLayout.jsx';
+import ConfirmDialog from '../../shared/components/ConfirmDialog.jsx';
+import { useToast } from '../../shared/components/ToastProvider.jsx';
+import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
+import EstadoVista from '../components/EstadoVista.jsx';
 import ModalBloquearUsuario from '../components/ModalBloquearUsuario.jsx';
 import ModalValidarAsesor from '../components/ModalValidarAsesor.jsx';
+import { usePeticion } from '../hooks/usePeticion.js';
+import { useRetardo } from '../hooks/useRetardo.js';
+import {
+  bloquearUsuario,
+  contarUsuarios,
+  desbloquearUsuario,
+  listarUsuarios,
+  validarAsesor,
+} from '../api/clienteApiHu7.js';
+import { ETIQUETA_ESTADO_USUARIO, ETIQUETA_ROL } from '../utils/formatoHu7.js';
 import '../hu7.css';
 import '../GestionUsuarios.css';
 
-const usuariosIniciales = [
-  {
-    id: 1,
-    nombre: "Jorge Luis Tapia Bendezú",
-    correo: "jtapia@aloe.ulima.edu.pe",
-    codigo: "20211357",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería Industrial",
-    estado: "Activo"
-  },
-  {
-    id: 2,
-    nombre: "Diego Alonso Ramírez Puente",
-    correo: "dramirez@aloe.ulima.edu.pe",
-    codigo: "20210984",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería Industrial",
-    estado: "Activo"
-  },
-  {
-    id: 3,
-    nombre: "Dra. Mariela Quispe Ramos",
-    correo: "mquispe@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Ingeniería de Sistemas",
-    estado: "Activo"
-  },
-  {
-    id: 4,
-    nombre: "Ing. Luis Fernando Ocampo Salas",
-    correo: "locampo@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Estudios Generales",
-    estado: "Activo"
-  },
-  {
-    id: 5,
-    nombre: "Mg. Andrés Chávez Ninahuanca",
-    correo: "achavez@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Departamento de Ingeniería Industrial",
-    estado: "Por validar"
-  },
-  {
-    id: 6,
-    nombre: "Mg. Julio Vargas Aliaga",
-    correo: "jvargas@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Ingeniería Industrial",
-    estado: "Por validar"
-  },
-  {
-    id: 7,
-    nombre: "Coordinación TFC General",
-    correo: "tfc@ulima.edu.pe",
-    codigo: "",
-    rol: "Administrador",
-    carreraDepartamento: "Coordinación TFC",
-    estado: "Activo"
-  },
-  {
-    id: 8,
-    nombre: "Carlos Eduardo Ynga Solis",
-    correo: "cynga@aloe.ulima.edu.pe",
-    codigo: "20201122",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería Civil",
-    estado: "Bloqueado"
-  },
-  {
-    id: 9,
-    nombre: "Rosa Elena Quispe Mendoza",
-    correo: "rquispe@aloe.ulima.edu.pe",
-    codigo: "20211358",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería de Sistemas",
-    estado: "Activo"
-  },
-  {
-    id: 10,
-    nombre: "Dr. Pedro Salazar Huamán",
-    correo: "psalazar@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Ingeniería de Sistemas",
-    estado: "Activo"
-  },
+const USUARIOS_POR_PAGINA = 10;
+const FILTROS_INICIALES = { rol: '', estado: '' };
+const PENDIENTES = { rol: 'asesor', estado: 'pendiente_validacion' };
 
+const AVISO_REGISTRAR = 'Disponible cuando HU-1 publique el registro por coordinación.';
+const AVISO_CARRERA = 'El servidor aún no filtra por carrera o departamento.';
 
-  {
-    id: 11,
-    nombre: "Dra. Gabriela Torres Anchante",
-    correo: "gtorres@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Estudios Generales",
-    estado: "Activo"
-  },
-  {
-    id: 12,
-    nombre: "Mg. Sandra Bustamante Ríos",
-    correo: "sbustamante@ulima.edu.pe",
-    codigo: "",
-    rol: "Asesor",
-    carreraDepartamento: "Ingeniería Industrial",
-    estado: "Activo"
-  },
-  {
-    id: 13,
-    nombre: "Andrea Sofía Ferreyra Palomino",
-    correo: "aferreyra@aloe.ulima.edu.pe",
-    codigo: "20213045",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería de Sistemas",
-    estado: "Activo"
-  },
-  {
-    id: 14,
-    nombre: "Carmen Rosa Velásquez Ayala",
-    correo: "cvelasquez@ulima.edu.pe",
-    codigo: "",
-    rol: "Administrador",
-    carreraDepartamento: "Coordinación TFC",
-    estado: "Activo"
-  },
-  {
-    id: 15,
-    nombre: "Luis Alberto Mendoza Loza",
-    correo: "lmendoza@aloe.ulima.edu.pe",
-    codigo: "20204512",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería Civil",
-    estado: "Activo"
-  },
-  {
-    id: 16,
-    nombre: "Valeria Nicole Rojas Ttito",
-    correo: "vrojas@aloe.ulima.edu.pe",
-    codigo: "20210089",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería Industrial",
-    estado: "Bloqueado"
-  },
-  {
-    id: 17,
-    nombre: "Mateo Sebastián Aguirre Cárdenas",
-    correo: "maguirre@aloe.ulima.edu.pe",
-    codigo: "20212211",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería de Sistemas",
-    estado: "Activo"
-  },
-  {
-    id: 18,
-    nombre: "Claudia María Solis Ccahuana",
-    correo: "csolis@aloe.ulima.edu.pe",
-    codigo: "20208834",
-    rol: "Estudiante",
-    carreraDepartamento: "Ingeniería Industrial",
-    estado: "Bloqueado"
-  }
-];
+// Clase CSS de cada estado de la base
+const CLASE_ESTADO = {
+  activo: 'estado-activo',
+  bloqueado: 'estado-bloqueado',
+  pendiente_validacion: 'estado-pendiente',
+};
+
+/** Conteos del subtítulo y del botón de validación. */
+async function cargarConteos() {
+  const [total, estudiantes, asesores, coordinadores, bloqueados, pendientes] = await Promise.all([
+    contarUsuarios({}),
+    contarUsuarios({ rol: 'estudiante' }),
+    contarUsuarios({ rol: 'asesor' }),
+    contarUsuarios({ rol: 'coordinador' }),
+    contarUsuarios({ estado: 'bloqueado' }),
+    contarUsuarios(PENDIENTES),
+  ]);
+  return { total, estudiantes, asesores, coordinadores, bloqueados, pendientes };
+}
 
 export default function GestionUsuarios() {
-  // estado para almacenar la lista de usuarios (permite modificar estados en vivo)
-  const [listaUsuarios, setListaUsuarios] = useState(usuariosIniciales);
+  const { usuario: usuarioSesion } = useAuth();
+  const { mostrar } = useToast();
 
-  // filtros de búsqueda
+  // filtros de búsqueda (se aplican en el servidor)
+  const [filtros, setFiltros] = useState(FILTROS_INICIALES);
   const [busqueda, setBusqueda] = useState('');
-  const [filtroRol, setFiltroRol] = useState('Todos');
-  const [filtroEstado, setFiltroEstado] = useState('Todos');
-  const [filtroCarrera, setFiltroCarrera] = useState('Todos');
+  const busquedaRetardada = useRetardo(busqueda.trim(), 400);
 
-  // estado para la paginacion dinamica (cambiamos a 10 elementos por pagina)
-  const [paginaActual, setPaginaActual] = useState(1);
-  const elementosPorPagina = 10; // aca definimos 10 por vista para que salgan 10 en la pag 1 y 8 en la pag 2
+  // La página se guarda junto con los filtros con los que se eligió:
+  // si cambia cualquier filtro o la búsqueda, se vuelve a la página 1.
+  const claveFiltros = JSON.stringify({ ...filtros, q: busquedaRetardada });
+  const [paginaElegida, setPaginaElegida] = useState({ clave: claveFiltros, numero: 1 });
+  const paginaActual = paginaElegida.clave === claveFiltros ? paginaElegida.numero : 1;
+  const irAPagina = (numero) => setPaginaElegida({ clave: claveFiltros, numero });
 
   // estados para controlar las ventanas emergentes (modales)
-  const [modalBloquearAbierto, setModalBloquearAbierto] = useState(false);
   const [usuarioABloquear, setUsuarioABloquear] = useState(null);
-
-  const [modalValidarAbierto, setModalValidarAbierto] = useState(false);
   const [asesorAValidar, setAsesorAValidar] = useState(null);
+  const [usuarioADesbloquear, setUsuarioADesbloquear] = useState(null);
+  const [desbloqueando, setDesbloqueando] = useState(false);
+  const [buscandoPendiente, setBuscandoPendiente] = useState(false);
 
-  // estado para el modal de registrar nuevo usuario
-  const [modalRegistrarAbierto, setModalRegistrarAbierto] = useState(false);
-  const [nuevoNombre, setNuevoNombre] = useState('');
-  const [nuevoCorreo, setNuevoCorreo] = useState('');
-  const [nuevoCodigo, setNuevoCodigo] = useState('');
-  const [nuevoRol, setNuevoRol] = useState('Estudiante');
-  const [nuevaCarrera, setNuevaCarrera] = useState('Ingeniería de Sistemas');
+  const peticionLista = usePeticion(
+    () => listarUsuarios({ ...filtros, q: busquedaRetardada, page: paginaActual, limit: USUARIOS_POR_PAGINA }),
+    [claveFiltros, paginaActual]
+  );
+  const usuarios = peticionLista.datos?.usuarios ?? [];
+  const paginacion = peticionLista.datos?.paginacion ?? { pagina: 1, total: 0, totalPaginas: 0 };
 
-  // logica de filtrado en tiempo real
-  const usuariosFiltrados = listaUsuarios.filter((u) => {
-    const coincideTexto = 
-      u.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-      u.correo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      u.codigo.toLowerCase().includes(busqueda.toLowerCase());
+  const peticionConteos = usePeticion(() => cargarConteos(), []);
+  const conteos = peticionConteos.datos;
 
-    const coincideRol = filtroRol === 'Todos' || u.rol === filtroRol;
-    const coincideEstado = filtroEstado === 'Todos' || u.estado === filtroEstado;
-    const coincideCarrera = filtroCarrera === 'Todos' || u.carreraDepartamento === filtroCarrera;
+  const cambiarFiltro = (campo) => (e) => setFiltros((previos) => ({ ...previos, [campo]: e.target.value }));
 
-    return coincideTexto && coincideRol && coincideEstado && coincideCarrera;
-  });
+  // recarga la página actual y los conteos después de cada acción
+  const recargar = () => {
+    peticionLista.reintentar();
+    peticionConteos.reintentar();
+  };
 
-  // calculo de usuarios paginados
-  const totalPaginas = Math.ceil(usuariosFiltrados.length / elementosPorPagina) || 1;
-  const indiceInicio = (paginaActual - 1) * elementosPorPagina;
-  const usuariosPaginados = usuariosFiltrados.slice(indiceInicio, indiceInicio + elementosPorPagina);
-
-  // Helper para asignar clase CSS a las etiquetas de estado
-  const obtenerClaseEstado = (estado) => {
-    switch (estado) {
-      case 'Activo': return 'estado-activo';
-      case 'Bloqueado': return 'estado-bloqueado';
-      case 'Por validar': return 'estado-pendiente';
-      default: return '';
+  // abrir ventana para validar: un asesor específico o el primer pendiente según el servidor
+  const abrirValidarAsesores = async (asesorEspecifico = null) => {
+    if (asesorEspecifico) {
+      setAsesorAValidar(asesorEspecifico);
+      return;
+    }
+    setBuscandoPendiente(true);
+    try {
+      const { usuarios: pendientes } = await listarUsuarios({ ...PENDIENTES, page: 1, limit: 1 });
+      if (pendientes.length) setAsesorAValidar(pendientes[0]);
+      else mostrar({ tipo: 'aviso', titulo: 'Sin pendientes', mensaje: 'No hay cuentas de asesor por validar.' });
+    } catch (error) {
+      mostrar({ tipo: 'error', titulo: 'No se pudo cargar', mensaje: error.message });
+    } finally {
+      setBuscandoPendiente(false);
     }
   };
 
-  // abrir ventana para validar el primer asesor pendiente
-  const abrirValidarAsesores = (asesorEspecifico = null) => {
-    const candidato = asesorEspecifico || listaUsuarios.find((u) => u.estado === 'Por validar') || listaUsuarios[4];
-    setAsesorAValidar(candidato);
-    setModalValidarAbierto(true);
+  // bloquea al usuario; si el servidor responde con error, el modal lo muestra
+  const confirmarBloqueo = async (motivo) => {
+    const { usuario } = await bloquearUsuario(usuarioABloquear.id, motivo);
+    setUsuarioABloquear(null);
+    mostrar({ tipo: 'exito', titulo: 'Usuario bloqueado', mensaje: `${usuario.nombreCompleto} ya no puede ingresar.` });
+    recargar();
   };
 
-  // abrir ventana para bloquear un usuario específico
-  const abrirBloquearUsuario = (usuario) => {
-    setUsuarioABloquear(usuario);
-    setModalBloquearAbierto(true);
+  // desbloquea después de la confirmación
+  const confirmarDesbloqueo = async () => {
+    setDesbloqueando(true);
+    try {
+      const { usuario } = await desbloquearUsuario(usuarioADesbloquear.id);
+      mostrar({ tipo: 'exito', titulo: 'Usuario desbloqueado', mensaje: `${usuario.nombreCompleto} puede volver a ingresar.` });
+      recargar();
+    } catch (error) {
+      mostrar({ tipo: 'error', titulo: 'No se pudo desbloquear', mensaje: error.message });
+    } finally {
+      setDesbloqueando(false);
+      setUsuarioADesbloquear(null);
+    }
   };
 
-  // Desbloquea un usuario directamente en la lista
-  const desbloquearUsuario = (id) => {
-    setListaUsuarios((prev) =>
-      prev.map((u) => u.id === id ? { ...u, estado: 'Activo' } : u)
-    );
+  // valida la cuenta del asesor con su cupo; si el servidor responde con error, el modal lo muestra
+  const confirmarValidacion = async (cupoMaximo) => {
+    const { usuario, cupo } = await validarAsesor(asesorAValidar.id, cupoMaximo);
+    setAsesorAValidar(null);
+    mostrar({
+      tipo: 'exito',
+      titulo: 'Asesor validado',
+      mensaje: `${usuario.nombreCompleto} ya está activo con un cupo de ${cupo?.cupoMaximo ?? cupoMaximo}.`,
+    });
+    recargar();
   };
 
-  // Abre el modal para registrar nuevo usuario
-  const registrarNuevoUsuario = () => {
-    setModalRegistrarAbierto(true);
-  };
+  const hayFiltros = Boolean(busquedaRetardada || filtros.rol || filtros.estado);
+  const primeraFila = paginacion.total ? (paginacion.pagina - 1) * USUARIOS_POR_PAGINA + 1 : 0;
+  const ultimaFila = primeraFila ? primeraFila + usuarios.length - 1 : 0;
 
-  // Guarda el nuevo usuario registrado
-  const handleGuardarNuevoUsuario = (e) => {
-    e.preventDefault();
-    const nuevo = {
-      id: Date.now(),
-      nombre: nuevoNombre,
-      correo: nuevoCorreo,
-      codigo: nuevoCodigo,
-      rol: nuevoRol,
-      carreraDepartamento: nuevaCarrera,
-      estado: "Activo"
-    };
-    setListaUsuarios([nuevo, ...listaUsuarios]);
-    setModalRegistrarAbierto(false);
-    setNuevoNombre('');
-    setNuevoCorreo('');
-    setNuevoCodigo('');
-  };
-
-  // cambia el estado del usuario a "Bloqueado" en la tabla
-  const confirmarBloqueo = (id, motivo) => {
-    setListaUsuarios((usuariosPrevios) =>
-      usuariosPrevios.map((u) =>
-        u.id === id ? { ...u, estado: 'Bloqueado', motivoBloqueo: motivo } : u
-      )   );
-    setModalBloquearAbierto(false);
-  };
-
-  // valida la cuenta del asesor, asigna rol y pasa su estado a "Activo"
-  const confirmarValidacion = (id, cupoMaximo, rolAsignado) => {
-    setListaUsuarios((usuariosPrevios) =>
-      usuariosPrevios.map((u) =>
-        u.id === id 
-          ? { ...u, estado: 'Activo', rol: rolAsignado, cupoMaximo: cupoMaximo } 
-          : u
-      )   );
-    setModalValidarAbierto(false);
+  // acción de cada fila según su estado
+  const accionDeFila = (u) => {
+    if (u.id === usuarioSesion?.id) return <span className="hu7-texto-tu-cuenta">Tu cuenta</span>;
+    if (u.estado === 'pendiente_validacion' && u.rol === 'asesor') {
+      return (
+        <button type="button" className="hu7-boton-validar-tabla" onClick={() => abrirValidarAsesores(u)}>
+          Validar cuenta
+        </button>
+      );
+    }
+    if (u.estado === 'bloqueado') {
+      return (
+        <button type="button" className="hu7-boton-desbloquear" onClick={() => setUsuarioADesbloquear(u)}>
+          Desbloquear
+        </button>
+      );
+    }
+    if (u.estado === 'activo') {
+      return (
+        <button type="button" className="hu7-boton-editar" onClick={() => setUsuarioABloquear(u)}>
+          Bloquear
+        </button>
+      );
+    }
+    return null; // sin_verificar: no hay acción hasta que verifique su correo
   };
 
   return (
     <PageLayout>
       <main className="hu7-contenido-principal">
-        
+
         <div className="hu7-contenedorSUP">
           <div className="hu7-titulo-seccion">
             <h6 className="hu7-subtitulo-pantalla">Inicio · Usuarios</h6>
             <h1 className="hu7-titulo-pantalla">Gestión de usuarios</h1>
             <h6 className="hu7-subtitulo-pantalla2">
-              {listaUsuarios.length} usuarios · {listaUsuarios.filter(u=>u.rol==='Estudiante').length} estudiantes · {listaUsuarios.filter(u=>u.rol==='Asesor').length} asesores · {listaUsuarios.filter(u=>u.rol==='Administrador').length} administradores · {listaUsuarios.filter(u=>u.estado==='Bloqueado').length} bloqueados
+              {conteos
+                ? `${conteos.total} usuarios · ${conteos.estudiantes} estudiantes · ${conteos.asesores} asesores · ${conteos.coordinadores} administradores · ${conteos.bloqueados} bloqueados`
+                : peticionConteos.cargando ? 'Cargando…' : ''}
             </h6>
           </div>
 
           <div className="hu7-barra-controles">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="hu7-boton-validar"
+              disabled={!conteos?.pendientes || buscandoPendiente}
               onClick={() => abrirValidarAsesores()}   >
-              Validar cuentas de asesor ({listaUsuarios.filter(u => u.estado === 'Por validar').length})
+              Validar cuentas de asesor ({conteos?.pendientes ?? '…'})
             </button>
-            <button 
-              type="button" 
-              className="hu7-boton-registrar"
-              onClick={registrarNuevoUsuario}   >
-              Registrar usuario
-            </button>
+            <span title={AVISO_REGISTRAR}>
+              <button
+                type="button"
+                className="hu7-boton-registrar"
+                disabled
+                aria-describedby="aviso-registrar"   >
+                Registrar usuario
+              </button>
+            </span>
+            <span id="aviso-registrar" hidden>{AVISO_REGISTRAR}</span>
           </div>
         </div>
 
         {/* Sección Inferior */}
         <div className="hu7-contenedorINF">
-          
+
           {/* Barra de Filtros */}
           <div className="hu7-barra-filtros-usuarios">
             <div className="hu7-filtro-buscar">
               <label htmlFor="input-buscar-usuario">BUSCAR</label>
-              <input 
-                id="input-buscar-usuario" 
-                type="text" 
-                placeholder="Nombre, correo o código..." 
+              <input
+                id="input-buscar-usuario"
+                type="text"
+                placeholder="Nombre, correo o código..."
                 className="hu7-input-buscar"
+                maxLength={100}
                 value={busqueda}
-                onChange={(e) => {
-                  setBusqueda(e.target.value);
-                  setPaginaActual(1);
-                }}/>
+                onChange={(e) => setBusqueda(e.target.value)}/>
             </div>
 
             <div className="hu7-filtro-seleccionar">
               <label htmlFor="seleccionar-rol">ROL</label>
-              <select 
-                id="seleccionar-rol" 
-                value={filtroRol}
-                onChange={(e) => {
-                  setFiltroRol(e.target.value);
-                  setPaginaActual(1);
-                }}
+              <select
+                id="seleccionar-rol"
+                value={filtros.rol}
+                onChange={cambiarFiltro('rol')}
                 className="hu7-seleccionar-filtro">
 
-                <option value="Todos">Todos</option>
-                <option value="Estudiante">Estudiante</option>
-                <option value="Asesor">Asesor</option>
-                <option value="Administrador">Administrador</option>
+                <option value="">Todos</option>
+                {Object.entries(ETIQUETA_ROL).map(([valor, etiqueta]) => (
+                  <option key={valor} value={valor}>{etiqueta}</option>
+                ))}
               </select>
             </div>
 
             <div className="hu7-filtro-seleccionar">
               <label htmlFor="seleccionar-estado-usuario">ESTADO</label>
-              <select 
-                id="seleccionar-estado-usuario" 
-                value={filtroEstado}
-                onChange={(e) => {
-                  setFiltroEstado(e.target.value);
-                  setPaginaActual(1);
-                }}
+              <select
+                id="seleccionar-estado-usuario"
+                value={filtros.estado}
+                onChange={cambiarFiltro('estado')}
                 className="hu7-seleccionar-filtro">
 
-                <option value="Todos">Todos</option>
-                <option value="Activo">Activo</option>
-                <option value="Bloqueado">Bloqueado</option>
-                <option value="Por validar">Por validar</option>
+                <option value="">Todos</option>
+                {Object.entries(ETIQUETA_ESTADO_USUARIO).map(([valor, etiqueta]) => (
+                  <option key={valor} value={valor}>{etiqueta}</option>
+                ))}
               </select>
             </div>
 
-            <div className="hu7-filtro-seleccionar">
+            <div className="hu7-filtro-seleccionar" title={AVISO_CARRERA}>
               <label htmlFor="seleccionar-carrera-dpto">CARRERA / DEPARTAMENTO</label>
-              <select 
-                id="seleccionar-carrera-dpto" 
-                value={filtroCarrera}
-                onChange={(e) => {
-                  setFiltroCarrera(e.target.value);
-                  setPaginaActual(1);
-                }}
+              <select
+                id="seleccionar-carrera-dpto"
+                value=""
+                disabled
+                aria-describedby="aviso-carrera"
                 className="hu7-seleccionar-filtro">
-                  
-                <option value="Todos">Todos</option>
-                <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
-                <option value="Ingeniería Industrial">Ingeniería Industrial</option>
-                <option value="Ingeniería Civil">Ingeniería Civil</option>
-                <option value="Estudios Generales">Estudios Generales</option>
-                <option value="Coordinación TFC">Coordinación TFC</option>
+                <option value="">Todos</option>
               </select>
+              <span id="aviso-carrera" hidden>{AVISO_CARRERA}</span>
             </div>
           </div>
 
           {/* Tabla de Usuarios */}
           <div className="hu7-tarjeta-tabla-usuarios">
-            <table className="hu7-tabla-usuarios">
+            <EstadoVista
+              cargando={peticionLista.cargando && !peticionLista.datos}
+              error={peticionLista.error}
+              alReintentar={peticionLista.reintentar}>
+            <table className="hu7-tabla-usuarios" aria-busy={peticionLista.cargando}>
               <thead>
                 <tr>
                   <th>USUARIO</th>
@@ -412,185 +285,109 @@ export default function GestionUsuarios() {
                 </tr>
               </thead>
               <tbody>
-                {usuariosPaginados.length > 0 ? (
-                  usuariosPaginados.map((u) => (
+                {usuarios.length > 0 ? (
+                  usuarios.map((u) => (
                     <tr key={u.id}>
                       <td className="hu7-col-usuario">
-                        <div className="hu7-nombre-usuario">{u.nombre}</div>
+                        <div className="hu7-nombre-usuario">{u.nombreCompleto}</div>
                         <div className="hu7-meta-usuario">
                           {u.correo} {u.codigo ? `· ${u.codigo}` : ''}
                         </div>
                       </td>
 
                       <td>
-                        <span className="hu7-texto-rol">{u.rol}</span>
+                        <span className="hu7-texto-rol">{ETIQUETA_ROL[u.rol] ?? u.rol}</span>
                       </td>
 
-                      <td>{u.carreraDepartamento}</td>
+                      <td>{u.carreraDepartamento ?? '—'}</td>
 
                       <td>
-                        <span className={`hu7-estado ${obtenerClaseEstado(u.estado)}`}>
-                          {u.estado}
+                        <span className={`hu7-estado ${CLASE_ESTADO[u.estado] ?? ''}`}>
+                          {ETIQUETA_ESTADO_USUARIO[u.estado] ?? u.estado}
                         </span>
                       </td>
 
-                      <td>
-                        {u.rol === 'Administrador' ? (
-                          <span className="hu7-texto-tu-cuenta">Tu cuenta</span>
-                        ) : u.estado === 'Por validar' ? (
-                          <button 
-                            type="button" 
-                            className="hu7-boton-validar-tabla"
-                            onClick={() => abrirValidarAsesores(u)}    >
-                            Validar cuenta
-                          </button>
-                        ) : u.estado === 'Bloqueado' ? (
-                          <button 
-                            type="button" 
-                            className="hu7-boton-desbloquear"
-                            onClick={() => desbloquearUsuario(u.id)}  >
-                            Desbloquear
-                          </button>
-                        ) : (
-                          <button 
-                            type="button" 
-                            className="hu7-boton-editar"
-                            onClick={() => abrirBloquearUsuario(u)}  >
-                            Bloquear
-                          </button>
-                        )}
-                      </td>
+                      <td>{accionDeFila(u)}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
                     <td colSpan="5" className="hu7-tabla-vacia">
-                      No se encontraron usuarios con los criterios seleccionados.
+                      {hayFiltros
+                        ? 'No se encontraron usuarios con los criterios seleccionados.'
+                        : 'Aún no hay usuarios registrados.'}
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
 
-            {/* Paginación */}
+            {/* Paginación del servidor */}
             <div className="hu7-paginacion-usuarios">
               <span>
-                Mostrando {usuariosFiltrados.length > 0 ? `${indiceInicio + 1}-${Math.min(indiceInicio + elementosPorPagina, usuariosFiltrados.length)}` : '0'} de {usuariosFiltrados.length}
+                Mostrando {primeraFila ? `${primeraFila}-${ultimaFila}` : '0'} de {paginacion.total}
               </span>
               <div className="hu7-botones-paginacion">
-                <button 
-                  type="button" 
-                  className="hu7-boton-pag" 
-                  disabled={paginaActual === 1}
-                  onClick={() => setPaginaActual(prev => prev - 1)}  >
+                <button
+                  type="button"
+                  className="hu7-boton-pag"
+                  disabled={paginaActual <= 1 || peticionLista.cargando}
+                  onClick={() => irAPagina(paginaActual - 1)}  >
                   Anterior
                 </button>
-                
-                {Array.from({ length: totalPaginas }, (_, index) => (
-                  <button 
+
+                {Array.from({ length: paginacion.totalPaginas }, (_, index) => (
+                  <button
                     key={index + 1}
-                    type="button" 
+                    type="button"
                     className={`hu7-boton-pag ${paginaActual === index + 1 ? 'active' : ''}`}
-                    onClick={() => setPaginaActual(index + 1)}     >
+                    disabled={peticionLista.cargando}
+                    onClick={() => irAPagina(index + 1)}     >
                     {index + 1}
                   </button>
                 ))}
 
-                <button 
-                  type="button" 
-                  className="hu7-boton-pag" 
-                  disabled={paginaActual === totalPaginas}
-                  onClick={() => setPaginaActual(prev => prev + 1)}     >
+                <button
+                  type="button"
+                  className="hu7-boton-pag"
+                  disabled={paginaActual >= paginacion.totalPaginas || peticionLista.cargando}
+                  onClick={() => irAPagina(paginaActual + 1)}     >
                   Siguiente
                 </button>
               </div>
             </div>
+            </EstadoVista>
 
           </div>
 
         </div>
 
-        {/* Mregistrar Nuevo Usuario */}
-        {modalRegistrarAbierto && (
-          <div className="hu7-modal-overlay">
-            <div className="hu7-modal-contenido">
-              <div className="hu7-modal-header">
-                <h3>Registrar Nuevo Usuario</h3>
-                <button type="button" className="hu7-modal-cerrar" onClick={() => setModalRegistrarAbierto(false)}>×</button>
-              </div>
-              <form onSubmit={handleGuardarNuevoUsuario}>
-                <div className="hu7-modal-body hu7-form-registrar">
-                  <div className="hu7-campo-form">
-                    <label>Nombre Completo:</label>
-                    <input 
-                      type="text" 
-                      required 
-                      placeholder="Ej. Ana María Torres" 
-                      value={nuevoNombre}
-                      onChange={(e) => setNuevoNombre(e.target.value)}    />
-                  </div>
-                  <div className="hu7-campo-form">
-                    <label>Correo Institucional:</label>
-                    <input 
-                      type="email" 
-                      required 
-                      placeholder="ejemplo@ulima.edu.pe" 
-                      value={nuevoCorreo}
-                      onChange={(e) => setNuevoCorreo(e.target.value)}   />
-                  </div>
-                  <div className="hu7-campo-form">
-                    <label>Código (opcional):</label>
-                    <input 
-                      type="text" 
-                      placeholder="Ej. 20214589" 
-                      value={nuevoCodigo}
-                      onChange={(e) => setNuevoCodigo(e.target.value)}   />
-                  </div>
-                  <div className="hu7-campo-form">
-                    <label>Rol:</label>
-                    <select value={nuevoRol} onChange={(e) => setNuevoRol(e.target.value)}>
-                      <option value="Estudiante">Estudiante</option>
-                      <option value="Asesor">Asesor</option>
-                      <option value="Administrador">Administrador</option>
-                    </select>
-                  </div>
-                  <div className="hu7-campo-form">
-                    <label>Carrera / Departamento:</label>
-                    <select value={nuevaCarrera} onChange={(e) => setNuevaCarrera(e.target.value)}>
-                      <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
-                      <option value="Ingeniería Industrial">Ingeniería Industrial</option>
-                      <option value="Ingeniería Civil">Ingeniería Civil</option>
-                      <option value="Estudios Generales">Estudios Generales</option>
-                      <option value="Coordinación TFC">Coordinación TFC</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="hu7-modal-footer-botones">
-                  <button type="button" className="hu7-boton-cancelar" onClick={() => setModalRegistrarAbierto(false)}>
-                    Cancelar
-                  </button>
-                  <button type="submit" className="hu7-boton-registrar">
-                    Guardar usuario
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+        {/* Ventanas Emergentes (con key para que empiecen vacías en cada apertura) */}
+        {usuarioABloquear && (
+          <ModalBloquearUsuario
+            key={usuarioABloquear.id}
+            usuario={usuarioABloquear}
+            alCerrar={() => setUsuarioABloquear(null)}
+            alConfirmar={confirmarBloqueo} />
         )}
 
-        {/* Ventanas Emergentes */}
-        <ModalBloquearUsuario
-          isOpen={modalBloquearAbierto}
-          onClose={() => setModalBloquearAbierto(false)}
-          usuario={usuarioABloquear}
-          onConfirmarBloqueo={confirmarBloqueo}  />
+        {asesorAValidar && (
+          <ModalValidarAsesor
+            key={asesorAValidar.id}
+            asesor={asesorAValidar}
+            alCerrar={() => setAsesorAValidar(null)}
+            alConfirmar={confirmarValidacion} />
+        )}
 
-        <ModalValidarAsesor
-          isOpen={modalValidarAbierto}
-          onClose={() => setModalValidarAbierto(false)}
-          asesor={asesorAValidar}
-          onConfirmarValidacion={confirmarValidacion}
-          onRechazar={() => setModalValidarAbierto(false)}/>
+        <ConfirmDialog
+          abierto={Boolean(usuarioADesbloquear)}
+          titulo="Desbloquear usuario"
+          mensaje={usuarioADesbloquear ? `¿Desbloquear a ${usuarioADesbloquear.nombreCompleto}? Podrá volver a ingresar de inmediato.` : ''}
+          textoConfirmar="Desbloquear"
+          variante="primario"
+          procesando={desbloqueando}
+          onConfirmar={confirmarDesbloqueo}
+          onCancelar={() => setUsuarioADesbloquear(null)} />
 
       </main>
     </PageLayout>
