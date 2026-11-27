@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../../shared/components/PageLayout.jsx';
 import PageHead from '../../shared/components/PageHead.jsx';
@@ -6,6 +6,7 @@ import EmptyState from '../../shared/components/EmptyState.jsx';
 import Alert from '../../shared/components/Alert.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 import useSustentaciones from '../hooks/useSustentaciones.js';
+import EstadoConexion from '../components/EstadoConexion.jsx';
 import { buscarSustentacion, buscarTrabajo, notaFinal, revisarActa } from '../services/sustentacionesService.js';
 import { CRITERIOS, RESULTADOS } from '../data/datosSemilla.js';
 import { formatearFecha } from '../utils/fechas.js';
@@ -27,13 +28,19 @@ export default function ActaSustentacionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { mostrar } = useToast();
-  const { datos, guardarBorrador, registrarActa } = useSustentaciones();
+  const { datos, guardarBorrador, registrarActa, cargando, errorCarga } = useSustentaciones();
   const sustentacion = buscarSustentacion(datos, id);
 
   // Copia local del acta (empieza desde el borrador guardado, si existe)
   const [acta, setActa] = useState(() => ({ ...ACTA_VACIA, ...sustentacion?.acta }));
   const [error, setError] = useState('');
   const [confirmando, setConfirmando] = useState(false);
+
+  useEffect(() => {
+    if (!cargando && !errorCarga) setActa({ ...ACTA_VACIA, ...sustentacion?.acta });
+  }, [cargando, errorCarga, id]);
+
+  if (cargando || errorCarga) return <EstadoConexion cargando={cargando} error={errorCarga} />;
 
   if (!sustentacion) {
     return (
@@ -62,9 +69,9 @@ export default function ActaSustentacionPage() {
     setError('');
   };
 
-  const guardar = () => {
+  const guardar = async () => {
     try {
-      guardarBorrador(id, acta);
+      await guardarBorrador(id, acta);
       mostrar({ tipo: 'exito', titulo: 'Borrador guardado', mensaje: 'Puedes completar el acta más tarde.' });
     } catch (e) {
       setError(e.message);
@@ -81,11 +88,11 @@ export default function ActaSustentacionPage() {
     }
   };
 
-  const registrar = () => {
+  const registrar = async () => {
     try {
-      registrarActa(id, acta);
+      await registrarActa(id, acta);
       setConfirmando(false);
-      mostrar({ tipo: 'exito', titulo: 'Acta registrada', mensaje: 'El equipo ya puede ver su resultado.' });
+      mostrar({ tipo: 'exito', titulo: 'Acta registrada', mensaje: 'El equipo ya puede consultar el resultado registrado.' });
       navigate('/admin/sustentaciones');
     } catch (e) {
       setConfirmando(false);
@@ -190,7 +197,7 @@ export default function ActaSustentacionPage() {
               <li style={{ display: 'block' }}><strong>Asesor</strong> {trabajo.asesor}</li>
               <li style={{ display: 'block' }}><strong>Línea</strong> {trabajo.linea}</li>
               <li style={{ display: 'block' }}>
-                <strong>Avance del plan</strong> {Math.round((trabajo.entregables.aprobados / trabajo.entregables.total) * 100)}% · {trabajo.entregables.aprobados} de {trabajo.entregables.total} aprobados
+                <strong>Avance del plan</strong> {trabajo.entregables.total ? Math.round(100 * trabajo.entregables.aprobados / trabajo.entregables.total) + "%" : "Sin plan"} · {trabajo.entregables.aprobados} de {trabajo.entregables.total} aprobados
               </li>
             </ul>
           </section>

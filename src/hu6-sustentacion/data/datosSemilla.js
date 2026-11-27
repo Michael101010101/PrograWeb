@@ -1,5 +1,5 @@
 // Datos semilla de la HU-6 · Sustentación.
-// Se copian a localStorage la primera vez (ver services/sustentacionesService.js).
+// Referencia para el cargador SQL del servidor y constantes de la interfaz. Ya no se guardan en localStorage.
 // Los usuarioId ('u-004', 'u-101', …) son los del seed.json de la HU-1.
 
 // Ventana de sustentaciones del periodo 2026-2

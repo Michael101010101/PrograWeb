@@ -2,6 +2,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import EmptyState from '../../shared/components/EmptyState.jsx';
 import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
 import useSustentaciones from '../hooks/useSustentaciones.js';
+import EstadoConexion from '../components/EstadoConexion.jsx';
 import { buscarDocente, buscarSustentacion, buscarTrabajo, nombreDocente, notaFinal } from '../services/sustentacionesService.js';
 import { CRITERIOS } from '../data/datosSemilla.js';
 import { formatearFecha } from '../utils/fechas.js';
@@ -16,12 +17,14 @@ export default function ActaImpresionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { usuario } = useAuth();
-  const { datos } = useSustentaciones();
+  const { datos, cargando, errorCarga } = useSustentaciones();
 
   const sustentacion = buscarSustentacion(datos, id);
   const trabajo = sustentacion ? buscarTrabajo(datos, sustentacion.trabajoCodigo) : null;
   const esDelEquipo = trabajo?.equipo.some((i) => i.usuarioId === usuario.id);
   const puedeVer = sustentacion?.acta && (usuario.rol === 'coordinador' || (esDelEquipo && sustentacion.acta.registrada));
+
+  if (cargando || errorCarga) return <EstadoConexion cargando={cargando} error={errorCarga} />;
 
   if (!puedeVer) {
     return (

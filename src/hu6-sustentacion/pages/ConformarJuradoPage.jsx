@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../../shared/components/PageLayout.jsx';
 import PageHead from '../../shared/components/PageHead.jsx';
@@ -6,6 +6,7 @@ import EmptyState from '../../shared/components/EmptyState.jsx';
 import Alert from '../../shared/components/Alert.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 import useSustentaciones from '../hooks/useSustentaciones.js';
+import EstadoConexion from '../components/EstadoConexion.jsx';
 import {
   buscarDocente,
   buscarSustentacion,
@@ -25,12 +26,18 @@ export default function ConformarJuradoPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { mostrar } = useToast();
-  const { datos, guardarJurado } = useSustentaciones();
+  const { datos, guardarJurado, cargando, errorCarga } = useSustentaciones();
   const sustentacion = buscarSustentacion(datos, id);
 
   // Copia local del jurado: solo se guarda al pulsar "Confirmar jurado"
   const [jurado, setJurado] = useState(sustentacion?.jurado ?? []);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!cargando && !errorCarga) setJurado(sustentacion?.jurado ?? []);
+  }, [cargando, errorCarga, id]);
+
+  if (cargando || errorCarga) return <EstadoConexion cargando={cargando} error={errorCarga} />;
 
   if (!sustentacion) {
     return (
@@ -64,24 +71,28 @@ export default function ConformarJuradoPage() {
   const agregar = (docenteId) => {
     if (jurado.length >= 3) return;
     // El primero que se agrega queda como presidente (se puede cambiar después)
-    setJurado([...jurado, { docenteId, presidente: jurado.length === 0 }]);
+    setJurado([...jurado, { docenteId, presidente: !jurado.some((m) => m.presidente) && docenteId !== trabajo.asesorId }]);
     setError('');
   };
   const quitar = (docenteId) => {
     const resto = jurado.filter((m) => m.docenteId !== docenteId);
     // Si se quitó al presidente, el primero que queda pasa a serlo
-    if (resto.length > 0 && !resto.some((m) => m.presidente)) resto[0] = { ...resto[0], presidente: true };
+    if (resto.length > 0 && !resto.some((m) => m.presidente)) {
+      const index = resto.findIndex((m) => m.docenteId !== trabajo.asesorId);
+      if (index >= 0) resto[index] = { ...resto[index], presidente: true };
+    }
     setJurado(resto);
     setError('');
   };
   const designarPresidente = (docenteId) => {
+    if (docenteId === trabajo.asesorId) return;
     setJurado(jurado.map((m) => ({ ...m, presidente: m.docenteId === docenteId })));
   };
 
-  const confirmar = () => {
+  const confirmar = async () => {
     try {
-      guardarJurado(id, jurado);
-      mostrar({ tipo: 'exito', titulo: 'Jurado confirmado', mensaje: 'Se notificó a los tres miembros, al equipo y al asesor.' });
+      await guardarJurado(id, jurado);
+      mostrar({ tipo: 'exito', titulo: 'Jurado confirmado', mensaje: 'Los integrantes del jurado quedaron guardados en PostgreSQL.' });
       navigate('/admin/sustentaciones');
     } catch (e) {
       setError(e.message);
@@ -90,7 +101,7 @@ export default function ConformarJuradoPage() {
 
   // Texto de la advertencia superior (asesor y posibles conflictos)
   const advertencias = [
-    asesor && `El ${nombreDocente(asesor)} es el asesor del trabajo: no puede integrar el jurado.`,
+    asesor && `El ${nombreDocente(asesor)} es el asesor del trabajo: puede ser miembro, pero no presidente.`,
     ...trabajo.conflictos.map((c) => {
       const d = buscarDocente(datos, c.docenteId);
       return `${d.titulo === 'Dra.' ? 'La' : 'El'} ${nombreDocente(d)} ${c.motivo}; revisa el posible conflicto antes de agregarl${d.titulo === 'Dra.' ? 'a' : 'o'}.`;
@@ -99,19 +110,16 @@ export default function ConformarJuradoPage() {
 
   // Botón de cada docente según su situación
   const botonDocente = (d) => {
-    if (d.id === trabajo.asesorId || miembrosOcupados(datos, [{ docenteId: d.id }], sustentacion.fecha, sustentacion.hora, id).length > 0) {
+    if (conflictoDe(d.id) || miembrosOcupados(datos, [{ docenteId: d.id }], sustentacion.fecha, sustentacion.hora, id).length > 0) {
       return <button className="btn hu6-btn-gris hu6-btn-chico" disabled>No disponible</button>;
     }
     if (estaEnJurado(d.id)) return <button className="btn hu6-btn-gris hu6-btn-chico" disabled>Agregado</button>;
     const lleno = jurado.length >= 3 || !editable;
-    if (conflictoDe(d.id)) {
-      return <button className="btn hu6-btn-aviso hu6-btn-chico" disabled={lleno} onClick={() => agregar(d.id)}>Agregar de todos modos</button>;
-    }
     return <button className="btn btn--outline hu6-btn-chico" disabled={lleno} onClick={() => agregar(d.id)}>Agregar</button>;
   };
 
   const metaDocente = (d) => {
-    if (d.id === trabajo.asesorId) return 'Asesor del trabajo · no elegible por reglamento';
+    if (d.id === trabajo.asesorId) return 'Asesor del trabajo · no puede ser presidente';
     if (miembrosOcupados(datos, [{ docenteId: d.id }], sustentacion.fecha, sustentacion.hora, id).length > 0) {
       return 'Tiene otra sustentación en ese bloque';
     }
@@ -122,7 +130,7 @@ export default function ConformarJuradoPage() {
   };
 
   const claseDocente = (d) => {
-    if (d.id === trabajo.asesorId) return 'hu6-docente--bloqueado';
+    if (d.id === trabajo.asesorId) return '';
     if (conflictoDe(d.id) && !estaEnJurado(d.id)) return 'hu6-docente--conflicto';
     return '';
   };
@@ -186,7 +194,7 @@ export default function ConformarJuradoPage() {
                 </div>
                 <div className="hu6-miembro__fila">
                   <span className="text-muted text-aux">{d.departamento} · {d.grado}</span>
-                  {editable && !m.presidente && (
+                  {editable && !m.presidente && m.docenteId !== trabajo.asesorId && (
                     <button className="link-button" style={{ fontWeight: 600 }} onClick={() => designarPresidente(m.docenteId)}>Designar presidente</button>
                   )}
                   {editable && m.presidente && (
@@ -209,7 +217,7 @@ export default function ConformarJuradoPage() {
                 Confirmar jurado
               </button>
               <p className="text-muted text-aux" style={{ textAlign: 'center', marginTop: 8 }}>
-                Se notificará a los tres miembros, al equipo y al asesor
+                La asignación del jurado se guardará en PostgreSQL
               </p>
             </div>
           )}

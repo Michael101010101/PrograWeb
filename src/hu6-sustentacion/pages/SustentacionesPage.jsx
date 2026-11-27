@@ -3,6 +3,7 @@ import PageLayout from '../../shared/components/PageLayout.jsx';
 import PageHead from '../../shared/components/PageHead.jsx';
 import EmptyState from '../../shared/components/EmptyState.jsx';
 import useSustentaciones from '../hooks/useSustentaciones.js';
+import EstadoConexion from '../components/EstadoConexion.jsx';
 import {
   buscarTrabajo,
   estaPendiente,
@@ -23,11 +24,13 @@ const BADGE_ESTADO = {
 
 /** Listado de sustentaciones del periodo · rol Administrador. */
 export default function SustentacionesPage() {
-  const { datos } = useSustentaciones();
+  const { datos, cargando, errorCarga } = useSustentaciones();
   const resumen = resumenPeriodo(datos);
   const porProgramar = trabajosPorProgramar(datos);
   // Copia ordenada por fecha y hora (sort modifica el arreglo, por eso se copia)
   const lista = [...datos.sustentaciones].sort((a, b) => `${a.fecha} ${a.hora}`.localeCompare(`${b.fecha} ${b.hora}`));
+
+  if (cargando || errorCarga) return <EstadoConexion cargando={cargando} error={errorCarga} />;
 
   return (
     <PageLayout

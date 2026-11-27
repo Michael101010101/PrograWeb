@@ -1,30 +1,10 @@
-import { CRITERIOS, DATOS_SEMILLA, HORAS, MODALIDADES, NOTA_APROBATORIA, SALAS, VENTANA } from '../data/datosSemilla.js';
+import { CRITERIOS, HORAS, MODALIDADES, NOTA_APROBATORIA, SALAS, VENTANA } from '../data/datosSemilla.js';
 import { HOY, diaSemana, formatearFecha, horaActual } from '../utils/fechas.js';
 
 // Servicio de la HU-6: toda la lógica y las validaciones viven aquí, no en los componentes.
 // Las funciones que modifican algo reciben los datos actuales y DEVUELVEN datos nuevos
 // (sin modificar el original) o lanzan un Error con el mensaje para el usuario.
-// En la entrega 2 estas funciones pasarán a llamar a la API con fetch.
-
-const CLAVE = 'tfc.hu6';
-
-// ─────────── Persistencia en localStorage ───────────
-
-export function cargarDatos() {
-  try {
-    const guardado = JSON.parse(localStorage.getItem(CLAVE));
-    if (guardado) return guardado;
-  } catch {
-    /* dato corrupto: se vuelve a la semilla */
-  }
-  const iniciales = structuredClone(DATOS_SEMILLA);
-  guardarDatos(iniciales);
-  return iniciales;
-}
-
-export function guardarDatos(datos) {
-  localStorage.setItem(CLAVE, JSON.stringify(datos));
-}
+// HU-6 usa la API (desde hooks/useSustentaciones.js); estas funciones son helpers de la interfaz.
 
 // ─────────── Consultas (no modifican nada) ───────────
 
@@ -53,7 +33,8 @@ export function trabajoDeEstudiante(datos, usuarioId) {
 
 // Trabajos concluidos que aún no tienen sustentación.
 export function trabajosPorProgramar(datos) {
-  return datos.trabajos.filter((t) => !sustentacionDeTrabajo(datos, t.codigo));
+  return datos.trabajos.filter((t) => (t.estado == null || t.estado === 'concluido') &&
+    t.entregables?.total > 0 && t.entregables.aprobados === t.entregables?.total && !sustentacionDeTrabajo(datos, t.codigo));
 }
 
 // Números de la tarjeta "Sustentaciones del periodo".
@@ -69,7 +50,7 @@ export function resumenPeriodo(datos) {
 // idIgnorar: la sustentación que se está reprogramando (no choca consigo misma).
 export function ocupanteDeSala(datos, { salaId, fecha, hora }, idIgnorar = null) {
   const sustentacion = datos.sustentaciones.find(
-    (s) => s.id !== idIgnorar && estaPendiente(s) && s.salaId === salaId && s.fecha === fecha && s.hora === hora
+    (s) => s.id !== idIgnorar && s.salaId === salaId && s.fecha === fecha && s.hora === hora
   );
   if (sustentacion) return `«${buscarTrabajo(datos, sustentacion.trabajoCodigo).titulo}»`;
   const reserva = datos.reservas.find((r) => r.salaId === salaId && r.fecha === fecha && r.hora === hora);
@@ -96,7 +77,7 @@ export function miembrosOcupados(datos, jurado, fecha, hora, idIgnorar) {
   return jurado
     .filter((m) =>
       datos.sustentaciones.some(
-        (s) => s.id !== idIgnorar && estaPendiente(s) && s.fecha === fecha && s.hora === hora &&
+        (s) => s.id !== idIgnorar && s.fecha === fecha && s.hora === hora &&
           s.jurado.some((j) => j.docenteId === m.docenteId)
       )
     )
@@ -113,13 +94,20 @@ export function cargaJurado(datos, docenteId) {
 // Reglas del jurado. Devuelve los errores (vacío = válido) y el resumen de requisitos.
 export function evaluarJurado(datos, trabajo, jurado) {
   const miembros = jurado.map((m) => buscarDocente(datos, m.docenteId));
-  const doctores = miembros.filter((d) => d.grado === 'doctor').length;
-  const delDepartamento = miembros.filter((d) => d.departamento === trabajo.departamento).length;
+  const doctores = miembros.filter((d) => d?.grado === 'doctor').length;
+  const delDepartamento = miembros.filter((d) => d?.departamento === trabajo.departamento).length;
   const presidentes = jurado.filter((m) => m.presidente);
 
   const errores = [];
+  if (miembros.some((d) => !d)) errores.push('Uno de los docentes seleccionados no existe.');
+  if (new Set(jurado.map((m) => m.docenteId)).size !== jurado.length) errores.push('No se puede repetir un docente en el jurado.');
+  for (const m of jurado) {
+    const conflicto = trabajo.conflictos?.find((c) => c.docenteId === m.docenteId);
+    if (conflicto) errores.push(`El docente ${m.docenteId} tiene conflicto de interés con el equipo: ${conflicto.motivo}.`);
+  }
+  if (jurado.some((m) => typeof m.presidente !== 'boolean')) errores.push('Cada miembro debe indicar si es presidente.');
   if (jurado.length !== 3) errores.push(`El jurado debe tener 3 miembros (tiene ${jurado.length}).`);
-  if (jurado.some((m) => m.docenteId === trabajo.asesorId)) errores.push('El asesor del trabajo no puede integrar el jurado.');
+  if (jurado.some((m) => m.docenteId === trabajo.asesorId && m.presidente)) errores.push('El asesor del trabajo no puede presidir el jurado.');
   if (doctores === 0) errores.push('Al menos un miembro debe tener grado de doctor.');
   if (delDepartamento === 0) errores.push(`Al menos un miembro debe ser del departamento de ${trabajo.departamento}.`);
   if (presidentes.length !== 1) errores.push('Designa a un presidente del jurado.');
@@ -139,7 +127,8 @@ export function notaFinal(notas) {
 // ─────────── Validaciones internas ───────────
 
 function validarProgramacion(datos, { fecha, hora, salaId, modalidad }, jurado, idIgnorar) {
-  if (!fecha) throw new Error('Elige la fecha de la sustentación.');
+  if (typeof fecha !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(fecha) ||
+      Number.isNaN(new Date(`${fecha}T12:00:00`).getTime())) throw new Error('Elige una fecha válida de la sustentación.');
   if (fecha < VENTANA.inicio || fecha > VENTANA.fin) {
     throw new Error(`La fecha debe estar dentro de la ventana ${formatearFecha(VENTANA.inicio)} – ${formatearFecha(VENTANA.fin)}.`);
   }
@@ -205,6 +194,8 @@ export function guardarJurado(datos, id, jurado) {
 
 // Valida notas (0–20) y resultado. `definitiva` = al registrar (no en el borrador).
 function validarActa(acta, definitiva) {
+  if (!acta || !acta.notas || typeof acta.notas !== 'object' ||
+      typeof acta.observaciones !== 'string') throw new Error('Completa el acta y sus calificaciones.');
   for (const c of CRITERIOS) {
     const nota = acta.notas[c.id];
     if (nota === '' || nota === null || nota === undefined) {
@@ -217,7 +208,7 @@ function validarActa(acta, definitiva) {
   if (!definitiva) return;
 
   const final = notaFinal(acta.notas);
-  if (!acta.resultado) throw new Error('Elige el resultado.');
+  if (!['Aprobado', 'Aprobado con observaciones', 'Desaprobado'].includes(acta.resultado)) throw new Error('Elige un resultado válido.');
   if (final < NOTA_APROBATORIA && acta.resultado !== 'Desaprobado') {
     throw new Error(`Con nota final ${final} el resultado debe ser Desaprobado.`);
   }
