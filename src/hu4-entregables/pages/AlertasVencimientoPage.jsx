@@ -4,10 +4,10 @@ import PageLayout from '../../shared/components/PageLayout.jsx';
 import PageHead from '../../shared/components/PageHead.jsx';
 import EmptyState from '../../shared/components/EmptyState.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
-import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
-import { PERIODO } from '../../shared/config/periodo.js';
+import Alert from '../../shared/components/Alert.jsx';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import useEntregables from '../hooks/useEntregables.js';
-import { DIAS_ALERTA, alertasDe, detallePlan, trabajoDeEstudiante } from '../services/entregablesService.js';
+import { DIAS_ALERTA } from '../services/entregablesService.js';
 import { HOY, formatearFecha, textoDias } from '../utils/fechas.js';
 import { capitalizar, plural, unirConY } from '../utils/texto.js';
 import SlotTrabajo from '../components/SlotTrabajo.jsx';
@@ -19,21 +19,20 @@ import '../styles/hu4.css';
 
 /** Pantalla 4.4 · Alertas de vencimiento (rol Estudiante). Ruta: /estudiante/entregables/alertas */
 export default function AlertasVencimientoPage() {
-  const { usuario } = useAuth();
   const { mostrar } = useToast();
-  const { datos, registrarAvance, solicitarAmpliacion } = useEntregables();
+  const { textoNav } = useDatos();
+  const { plan, cargando, error, registrarAvance, solicitarAmpliacion } = useEntregables();
   // Modal abierto: { tipo: 'avance' | 'ampliacion' | 'requisitos', item } o null
   const [modal, setModal] = useState(null);
 
-  const trabajo = trabajoDeEstudiante(datos, usuario.id);
-  const plan = trabajo ? detallePlan(datos, trabajo.codigo) : null;
-  const avance = plan?.avance.porcentaje ?? 0;
+  const trabajo = plan?.trabajo ?? null;
+  const avance = plan?.avance?.porcentaje ?? 0;
   const hoy = formatearFecha(HOY);
 
   const layout = (contenido) => (
     <PageLayout
       headerSlot={<SlotTrabajo trabajo={trabajo} avance={avance} />}
-      navInfo={PERIODO.etapaActual}
+      navInfo={textoNav}
       footerDetalle={`alertas calculadas al ${hoy}`}
     >
       {contenido}
@@ -41,6 +40,9 @@ export default function AlertasVencimientoPage() {
   );
 
   const botonPlan = (texto) => <Link to="/estudiante/entregables" className="btn btn--outline">{texto}</Link>;
+
+  if (cargando) return layout(<p className="text-muted">Cargando alertas…</p>);
+  if (error) return layout(<Alert tipo="error">{error}</Alert>);
 
   if (!trabajo || plan.items.length === 0) {
     return layout(
@@ -52,7 +54,7 @@ export default function AlertasVencimientoPage() {
     );
   }
 
-  const { vencidos, proximos, aprobados, pendientes } = alertasDe(datos, trabajo.codigo);
+  const { vencidos, proximos, aprobados, pendientes } = plan.alertas;
   const trato = trabajo.asesor.trato;
 
   const head = (
@@ -78,14 +80,14 @@ export default function AlertasVencimientoPage() {
     );
   }
 
-  const confirmarAvance = (valores) => {
-    registrarAvance(modal.item.id, valores);
+  const confirmarAvance = async (valores) => {
+    await registrarAvance(modal.item.id, valores);
     mostrar({ tipo: 'exito', titulo: 'Avance registrado', mensaje: `${modal.item.nombre} pasó a revisión de ${trato}.` });
     setModal(null);
   };
 
-  const confirmarAmpliacion = (valores) => {
-    solicitarAmpliacion(modal.item.id, valores);
+  const confirmarAmpliacion = async (valores) => {
+    await solicitarAmpliacion(modal.item.id, valores);
     mostrar({ tipo: 'exito', titulo: 'Solicitud enviada', mensaje: `${capitalizar(trato)} verá tu pedido de ampliación.` });
     setModal(null);
   };

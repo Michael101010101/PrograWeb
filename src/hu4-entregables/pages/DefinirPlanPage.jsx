@@ -6,9 +6,8 @@ import EmptyState from '../../shared/components/EmptyState.jsx';
 import Alert from '../../shared/components/Alert.jsx';
 import ConfirmDialog from '../../shared/components/ConfirmDialog.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
-import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
 import useEntregables from '../hooks/useEntregables.js';
-import { buscarTrabajo, detallePlan, simularSuma, sumaPesos } from '../services/entregablesService.js';
+import { simularSuma } from '../services/entregablesService.js';
 import { formatearFecha } from '../utils/fechas.js';
 import FormularioEntregable from '../components/FormularioEntregable.jsx';
 import TablaPlan from '../components/TablaPlan.jsx';
@@ -21,10 +20,11 @@ const acortar = (texto, maximo = 32) => (texto.length > maximo ? `${texto.slice(
 
 /** Pantalla 4.2 · Definir el plan de entregables (rol Asesor). Ruta: /asesor/asesorados/:codigo/plan */
 export default function DefinirPlanPage() {
-  const { codigo } = useParams();
-  const { usuario } = useAuth();
+  const { codigo: trabajoId } = useParams(); // 'TFC-2026-2-047' (enlace de la HU-3) o 't-047'
   const { mostrar } = useToast();
-  const { datos, guardarEntregable, eliminarEntregable, aplicarPlantilla, responderAmpliacion } = useEntregables();
+  // GET /api/planes/:trabajoId. El servidor responde 404 si el trabajo no es de esta asesora.
+  const { plan, cargando, error: errorCarga, guardarEntregable, eliminarEntregable, aplicarPlantilla, responderAmpliacion } =
+    useEntregables(trabajoId);
 
   const [valores, setValores] = useState(VACIO); // lo que está escrito en el formulario
   const [editandoId, setEditandoId] = useState(null); // null = entregable nuevo
@@ -32,30 +32,31 @@ export default function DefinirPlanPage() {
   const [modalPesos, setModalPesos] = useState(false);
   const [porEliminar, setPorEliminar] = useState(null);
 
-  const trabajo = buscarTrabajo(datos, codigo);
-  const esSuyo = trabajo?.asesor?.usuarioId === usuario.id;
+  const trabajo = plan?.trabajo ?? null;
 
   const layout = (contenido) => (
-    <PageLayout footerDetalle={`editando el plan de ${codigo}`}>{contenido}</PageLayout>
+    <PageLayout footerDetalle={`editando el plan de ${trabajo?.codigo ?? trabajoId}`}>{contenido}</PageLayout>
   );
 
-  // Solo la asesora a cargo puede ver y editar el plan.
-  if (!trabajo || !esSuyo) {
+  if (cargando) return layout(<p className="text-muted">Cargando el plan…</p>);
+
+  // Solo la asesora a cargo puede ver y editar el plan (lo verifica el servidor).
+  if (errorCarga || !trabajo) {
     return layout(
       <div className="card hu4-vacio">
-        <EmptyState icono="?" titulo="Trabajo no encontrado" texto={`El trabajo ${codigo} no está a tu cargo.`}>
+        <EmptyState icono="?" titulo="Trabajo no encontrado" texto={errorCarga || `El trabajo ${trabajoId} no está a tu cargo.`}>
           <Link to="/asesor/asesorados" className="btn btn--outline">Volver a Mis asesorados</Link>
         </EmptyState>
       </div>
     );
   }
 
-  const { items } = detallePlan(datos, codigo);
+  const { items } = plan;
   const soloLectura = trabajo.estado === 'concluido';
   const editando = items.find((e) => e.id === editandoId) ?? null;
 
   // Suma "en vivo": el plan actual sin el entregable en edición + lo que está escrito en el formulario.
-  const { suma } = simularSuma(datos, codigo, valores, editandoId);
+  const { suma } = simularSuma(items, valores, editandoId);
   // Pesos que se muestran sumados ("15 + 20 + …"), en el orden del plan y con el valor del formulario.
   const pesoFormulario = valores.obligatorio ? Number(valores.peso) || 0 : 0;
   const pesosVisibles = items
@@ -63,10 +64,7 @@ export default function DefinirPlanPage() {
     .concat(editandoId ? [] : [pesoFormulario])
     .filter((peso) => peso > 0);
 
-  const ampliaciones = datos.ampliaciones
-    .filter((a) => a.estado === 'pendiente')
-    .map((a) => ({ ...a, entregable: items.find((e) => e.id === a.entregableId) }))
-    .filter((a) => a.entregable);
+  const ampliaciones = plan.ampliacionesPendientes;
 
   const limpiar = () => {
     setValores(VACIO);
@@ -82,10 +80,10 @@ export default function DefinirPlanPage() {
     setError('');
   };
 
-  // Llama al servicio; si valida, avisa con un toast y limpia el formulario.
-  const guardar = (formulario) => {
+  // Llama a la API; si el servidor valida, avisa con un toast y limpia el formulario.
+  const guardar = async (formulario) => {
     try {
-      guardarEntregable(codigo, formulario, editandoId);
+      await guardarEntregable(formulario, editandoId);
       const cambioFecha = editando && editando.fechaLimite !== formulario.fechaLimite;
       mostrar({
         tipo: 'exito',
@@ -106,9 +104,9 @@ export default function DefinirPlanPage() {
     else guardar(valores);
   };
 
-  const confirmarEliminar = () => {
+  const confirmarEliminar = async () => {
     try {
-      eliminarEntregable(porEliminar.id);
+      await eliminarEntregable(porEliminar.id);
       mostrar({ tipo: 'exito', titulo: 'Entregable eliminado', mensaje: `${porEliminar.nombre} se quitó del plan.` });
       if (porEliminar.id === editandoId) limpiar();
     } catch (err) {
@@ -117,13 +115,22 @@ export default function DefinirPlanPage() {
     setPorEliminar(null);
   };
 
-  const usarPlantilla = () => {
-    aplicarPlantilla(codigo);
-    mostrar({ tipo: 'exito', titulo: 'Plantilla aplicada', mensaje: 'Se crearon 5 entregables que suman 100. Ajusta las fechas si lo necesitas.' });
+  const usarPlantilla = async () => {
+    try {
+      await aplicarPlantilla();
+      mostrar({ tipo: 'exito', titulo: 'Plantilla aplicada', mensaje: 'Se crearon 5 entregables que suman 100. Ajusta las fechas si lo necesitas.' });
+    } catch (err) {
+      mostrar({ tipo: 'error', titulo: 'No se pudo aplicar la plantilla', mensaje: err.message });
+    }
   };
 
-  const responder = (solicitud, aceptar) => {
-    responderAmpliacion(solicitud.id, aceptar);
+  const responder = async (solicitud, aceptar) => {
+    try {
+      await responderAmpliacion(solicitud.id, aceptar);
+    } catch (err) {
+      mostrar({ tipo: 'error', titulo: 'No se pudo responder', mensaje: err.message });
+      return;
+    }
     mostrar({
       tipo: aceptar ? 'exito' : 'aviso',
       titulo: aceptar ? 'Ampliación aceptada' : 'Ampliación rechazada',
@@ -170,7 +177,7 @@ export default function DefinirPlanPage() {
 
         <TablaPlan
           items={items}
-          suma={sumaPesos(items)}
+          suma={plan.suma}
           editandoId={editandoId}
           soloLectura={soloLectura}
           puedeUsarPlantilla={!soloLectura && items.length === 0}

@@ -1,7 +1,8 @@
 import Alert from '../../shared/components/Alert.jsx';
 import BarraPesos from './BarraPesos.jsx';
 import { PESO_MAX, PESO_MIN } from '../services/entregablesService.js';
-import { SEMESTRE } from '../utils/fechas.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
+import { semestreDe } from '../utils/fechas.js';
 
 /**
  * Formulario "Nuevo entregable" / "Editar entregable" de la pantalla 4.2.
@@ -9,6 +10,7 @@ import { SEMESTRE } from '../utils/fechas.js';
  * se avisa con `onCambiar(campo, valor)`. Así la página puede recalcular la suma en vivo.
  */
 export default function FormularioEntregable({ valores, editando, error, suma, pesos, onCambiar, onGuardar, onCancelar }) {
+  const semestre = semestreDe(useDatos().periodo); // límites del semestre desde la API (HU-1)
   const cambiar = (campo) => (evento) =>
     onCambiar(campo, evento.target.type === 'checkbox' ? evento.target.checked : evento.target.value);
 
@@ -40,12 +42,12 @@ export default function FormularioEntregable({ valores, editando, error, suma, p
             id="ent-fecha"
             className="input"
             type="date"
-            min={SEMESTRE.inicio}
-            max={SEMESTRE.fin}
+            min={semestre.inicio}
+            max={semestre.fin}
             value={valores.fechaLimite}
             onChange={cambiar('fechaLimite')}
           />
-          <span className="field__hint">Debe caer dentro del semestre {SEMESTRE.nombre}</span>
+          <span className="field__hint">Debe caer dentro del semestre {semestre.nombre}</span>
         </div>
         <div className="field">
           <label className="field__label" htmlFor="ent-peso">Peso</label>
