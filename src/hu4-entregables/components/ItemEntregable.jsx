@@ -12,7 +12,7 @@ function detalle(e) {
     case 'vencido':
       return `${limite} · ${textoDias(-e.diasParaVencer)} de retraso · sin avances registrados`;
     case 'entregado':
-    case 'con_retraso': {
+    case 'entregado_con_retraso': {
       const retraso = ultimo.diasRetraso > 0 ? ` · ${textoDias(ultimo.diasRetraso)} de retraso` : '';
       return `${limite} · versión ${ultimo.version} entregada el ${formatearFecha(ultimo.fecha)}${retraso} · en revisión`;
     }

@@ -4,10 +4,8 @@ import PageLayout from '../../shared/components/PageLayout.jsx';
 import EmptyState from '../../shared/components/EmptyState.jsx';
 import Alert from '../../shared/components/Alert.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
-import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
-import { PERIODO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import useEntregables from '../hooks/useEntregables.js';
-import { alertasDe, detallePlan, trabajoDeEstudiante, ultimaRetroalimentacion } from '../services/entregablesService.js';
 import { formatearFecha } from '../utils/fechas.js';
 import { capitalizar, unirConY } from '../utils/texto.js';
 import SlotTrabajo from '../components/SlotTrabajo.jsx';
@@ -20,25 +18,28 @@ import '../styles/hu4.css';
 
 /** Pantalla 4.1 · Plan de entregables (rol Estudiante). Ruta: /estudiante/entregables */
 export default function PlanEntregablesPage() {
-  const { usuario } = useAuth();
   const { mostrar } = useToast();
-  const { datos, registrarAvance, solicitarAmpliacion } = useEntregables();
+  const { textoNav } = useDatos();
+  // El plan llega de la API (GET /api/entregables/mi-plan) ya calculado: estados, avance y alertas.
+  const { plan, cargando, error, registrarAvance, solicitarAmpliacion } = useEntregables();
   // Qué modal está abierto: { tipo: 'avance' | 'ampliacion', entregable } o null
   const [modal, setModal] = useState(null);
 
-  const trabajo = trabajoDeEstudiante(datos, usuario.id);
-  const plan = trabajo ? detallePlan(datos, trabajo.codigo) : null;
-  const avance = plan?.avance.porcentaje ?? 0;
+  const trabajo = plan?.trabajo ?? null;
+  const avance = plan?.avance?.porcentaje ?? 0;
 
   const layout = (contenido) => (
     <PageLayout
       headerSlot={<SlotTrabajo trabajo={trabajo} avance={avance} />}
-      navInfo={PERIODO.etapaActual}
+      navInfo={textoNav}
       footerDetalle={trabajo ? `${trabajo.codigo} · avance ${avance}%` : undefined}
     >
       {contenido}
     </PageLayout>
   );
+
+  if (cargando) return layout(<p className="text-muted">Cargando el plan de entregables…</p>);
+  if (error) return layout(<Alert tipo="error">{error}</Alert>);
 
   // Sin trabajo con asesor: el plan todavía no existe.
   if (!trabajo) {
@@ -71,19 +72,21 @@ export default function PlanEntregablesPage() {
 
   const concluido = trabajo.estado === 'concluido';
   const aprobados = plan.avance.aprobados;
-  const alertas = alertasDe(datos, trabajo.codigo);
+  const { alertas } = plan;
   // Próximo entregable por presentar (pendiente u observado), para el texto de la alerta.
   const siguiente = items.find((e) => ['pendiente', 'observado'].includes(e.estado));
-  const retro = ultimaRetroalimentacion(datos, trabajo.codigo);
+  const retro = plan.ultimaRetroalimentacion;
 
-  const confirmarAvance = (valores) => {
-    registrarAvance(modal.entregable.id, valores); // si hay error, el modal lo muestra
+  // async/await: se espera la respuesta del servidor. Si responde un error, la línea del await
+  // lanza el error, las siguientes no se ejecutan y el modal muestra el mensaje.
+  const confirmarAvance = async (valores) => {
+    await registrarAvance(modal.entregable.id, valores);
     mostrar({ tipo: 'exito', titulo: 'Avance registrado', mensaje: `${modal.entregable.nombre} pasó a revisión de ${trato}.` });
     setModal(null);
   };
 
-  const confirmarAmpliacion = (valores) => {
-    solicitarAmpliacion(modal.entregable.id, valores);
+  const confirmarAmpliacion = async (valores) => {
+    await solicitarAmpliacion(modal.entregable.id, valores);
     mostrar({ tipo: 'exito', titulo: 'Solicitud enviada', mensaje: `${capitalizar(trato)} verá tu pedido de ampliación.` });
     setModal(null);
   };

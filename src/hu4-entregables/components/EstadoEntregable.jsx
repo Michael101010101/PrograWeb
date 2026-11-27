@@ -1,12 +1,4 @@
-// Etiqueta y punto de color de cada estado del entregable (lámina "Estados del entregable").
-export const ESTADOS = {
-  pendiente: { texto: 'Pendiente', tono: 'neutral' },
-  entregado: { texto: 'Entregado', tono: 'info' },
-  con_retraso: { texto: 'Con retraso', tono: 'warning' },
-  observado: { texto: 'Observado', tono: 'accent' },
-  aprobado: { texto: 'Aprobado', tono: 'success' },
-  vencido: { texto: 'Vencido sin presentar', tono: 'danger' },
-};
+import { ESTADOS } from '../utils/estados.js';
 
 /** Chip con el nombre del estado: <EstadoBadge estado="aprobado" /> */
 export function EstadoBadge({ estado }) {
