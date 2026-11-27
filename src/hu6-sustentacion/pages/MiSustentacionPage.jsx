@@ -6,6 +6,7 @@ import EmptyState from '../../shared/components/EmptyState.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
 import useSustentaciones from '../hooks/useSustentaciones.js';
+import EstadoConexion from '../components/EstadoConexion.jsx';
 import {
   buscarSala,
   estaPendiente,
@@ -26,11 +27,13 @@ export default function MiSustentacionPage() {
   const { usuario } = useAuth();
   const { mostrar } = useToast();
   const navigate = useNavigate();
-  const { datos } = useSustentaciones();
+  const { datos, cargando, errorCarga } = useSustentaciones();
   const [verRequisitos, setVerRequisitos] = useState(false);
 
   const trabajo = trabajoDeEstudiante(datos, usuario.id);
   const sustentacion = trabajo ? sustentacionDeTrabajo(datos, trabajo.codigo) : null;
+
+  if (cargando || errorCarga) return <EstadoConexion cargando={cargando} error={errorCarga} />;
 
   // ─── Estado vacío: todavía sin fecha (diapositiva 47) ───
   if (!sustentacion) {
@@ -211,7 +214,7 @@ export default function MiSustentacionPage() {
             <p className="text-label">Documentos</p>
             <div className="hu6-documentos">
               <button className="btn btn--primary btn--lg" onClick={() => navigate(`/sustentaciones/${sustentacion.id}/impresion`)}>
-                Descargar acta firmada (PDF)
+                Ver acta para imprimir
               </button>
               <button
                 className="btn btn--outline btn--lg"
