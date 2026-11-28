@@ -7,7 +7,6 @@ import { versionesDe } from '../services/revisionService.js';
 import { progresoTrabajo } from '../utils/progreso.js';
 import { fecha, hoy } from '../utils/fechas.js';
 import { baseHu5 } from '../utils/rutas.js';
-import usuariosSeed from '../../data/seed.json';
 
 function Miembro({ nombre, detalle }) {
   const iniciales = nombre.replace(/^(Dra?\.|Mg\.)\s*/i, '').split(/\s+/).slice(0, 2).map((parte) => parte[0]).join('');
@@ -40,7 +39,7 @@ export default function TrabajoConsolidadoPage({ codigo: codigoProp, incrustado 
       {!codigoProp && <details className="h5-eventos"><summary>Revisiones y retroalimentación ({eventos.length} eventos)</summary><ol>{eventos.map((e, i) => <li key={`${e.avance.id}-${i}`}><time dateTime={e.fecha}>{fecha(e.fecha)}</time><strong>{datos.entregables.find((d) => d.id === e.avance.entregableId)?.nombre} · v{e.avance.version}</strong><p>{e.texto}</p></li>)}</ol></details>}
     </section><aside className="h5-stack"><section className="h5-panel"><h3>Última retroalimentación</h3>{ultima ? <><div className="h5-panel-head"><strong>{datos.entregables.find((e) => e.id === ultima.avance.entregableId)?.nombre} · v{ultima.avance.version}</strong><Estado estado={ultima.avance.estado} /></div><blockquote>{ultima.texto}</blockquote><p className="text-muted">{ultima.autor} · {fecha(ultima.fecha)}</p><Link className="btn btn--outline h5-enlace-historial" to={`${base}/historial/${ultima.avance.entregableId}`}>Ver todas las revisiones</Link></> : <p className="text-muted">Aún no hay retroalimentación.</p>}</section>
       {vencidos.length > 0 && <section className="h5-panel h5-panel--aviso"><h3>Tienes {vencidos.length} entregable{vencidos.length > 1 ? 's' : ''} vencido{vencidos.length > 1 ? 's' : ''}</h3>{vencidos.map((e) => <p key={e.id}>{e.nombre} vencía el {fecha(e.fechaLimite)}.</p>)}{usuario.rol === 'estudiante' && <Link className="btn btn--primary h5-enlace-historial" to="/estudiante/entregables">Registrar avance ahora</Link>}</section>}
-      <section className="h5-panel"><h3>Equipo y asesor</h3><ul className="h5-equipo"><Miembro nombre={trabajo.asesor?.nombre || 'Sin asesor asignado'} detalle={trabajo.asesor?.diasRespuesta ? `Asesoría · responde en ${trabajo.asesor.diasRespuesta} días` : 'Asesoría'} />{trabajo.integrantes.map((id) => { const u = id === usuario.id ? usuario : usuariosSeed.usuarios.find((item) => item.id === id); return <Miembro key={id} nombre={u ? `${u.nombres} ${u.apellidos}` : 'Integrante del equipo'} detalle={trabajo.responsableId === id ? 'Responsable' : 'Integrante'} />; })}</ul></section>
+      <section className="h5-panel"><h3>Equipo y asesor</h3><ul className="h5-equipo"><Miembro nombre={trabajo.asesor?.nombre || 'Sin asesor asignado'} detalle={trabajo.asesor?.diasRespuesta ? `Asesoría · responde en ${trabajo.asesor.diasRespuesta} días` : 'Asesoría'} />{(trabajo.equipo ?? []).map((i) => <Miembro key={i.usuarioId} nombre={i.nombre || 'Integrante del equipo'} detalle={i.responsable ? 'Responsable' : 'Integrante'} />)}</ul></section>
     </aside></div>
   </H5Page>;
 }
