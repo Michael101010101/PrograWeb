@@ -1,5 +1,4 @@
 import '../styles/hu3.css';
-import { cupoDisponible } from '../services/asesoriasService.js';
 
 // Dato del centro de la cabecera, según el rol (se pasa a PageLayout como headerSlot).
 
@@ -8,7 +7,7 @@ export function SlotCupo({ asesor }) {
   if (!asesor) return null;
   return (
     <div className="hu3-slot hu3-slot--cupo">
-      Cupo disponible <strong>{cupoDisponible(asesor)} de {asesor.cupoMaximo}</strong>
+      Cupo disponible <strong>{asesor.cupoDisponible} de {asesor.cupoMaximo}</strong>
     </div>
   );
 }

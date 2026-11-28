@@ -1,4 +1,3 @@
-import { cupoDisponible, inicialesAsesor, nombreAsesor } from '../services/asesoriasService.js';
 import { formatearFecha } from '../utils/fechas.js';
 
 /**
@@ -7,15 +6,15 @@ import { formatearFecha } from '../utils/fechas.js';
  * En modo lectura (visitante sin sesión) no se muestra el botón.
  */
 export default function AsesorCard({ asesor, onSolicitar, modoLectura = false }) {
-  const disponible = cupoDisponible(asesor);
+  const disponible = asesor.cupoDisponible; // lo calcula la API (cupoMaximo − cupoOcupado)
   const sinCupo = disponible === 0;
 
   return (
     <article className={`card hu3-asesor ${sinCupo ? 'hu3-asesor--sin-cupo' : ''}`}>
       <div className="hu3-asesor__head">
-        <span className="avatar avatar--soft" aria-hidden="true">{inicialesAsesor(asesor)}</span>
+        <span className="avatar avatar--soft" aria-hidden="true">{asesor.iniciales}</span>
         <div>
-          <p className="hu3-asesor__nombre">{nombreAsesor(asesor)}</p>
+          <p className="hu3-asesor__nombre">{asesor.nombre}</p>
           <p className="hu3-asesor__depto">{asesor.departamento}</p>
         </div>
       </div>

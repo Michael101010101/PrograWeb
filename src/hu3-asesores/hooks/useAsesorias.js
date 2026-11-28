@@ -1,28 +1,39 @@
-import { useState } from 'react';
+import useCarga from './useCarga.js';
 import * as servicio from '../services/asesoriasService.js';
 
-/**
- * Hook propio de la HU-3: guarda los datos en un useState y expone las acciones.
- * Cada acción llama al servicio (que valida y devuelve datos nuevos),
- * los guarda en localStorage y actualiza el estado para que React vuelva a pintar.
- * Si el servicio lanza un Error, se propaga para que la página muestre el mensaje.
- */
-export default function useAsesorias() {
-  const [datos, setDatos] = useState(() => servicio.cargarDatos());
+// Hooks de la HU-3: cada página pide a la API solo los datos que muestra.
+// Todos devuelven { datos, cargando, error, recargar } (ver useCarga.js).
 
-  const ejecutar = (accion) => {
-    const nuevos = accion(datos);
-    servicio.guardarDatos(nuevos);
-    setDatos(nuevos);
-  };
+/** Directorio paginado; se vuelve a pedir al cambiar los filtros, el orden o la página. */
+export function useDirectorio(filtros, orden, pagina, porPagina) {
+  const { texto, linea, departamento, soloConCupo } = filtros;
+  return useCarga(
+    () => servicio.listarAsesores(filtros, orden, pagina, porPagina),
+    [texto, linea, departamento, soloConCupo, orden, pagina, porPagina]
+  );
+}
 
-  return {
-    datos,
-    solicitar: (solicitud) => ejecutar((d) => servicio.solicitarAsesoria(d, solicitud)),
-    retirar: (solicitudId) => ejecutar((d) => servicio.retirarSolicitud(d, solicitudId)),
-    aceptar: (solicitudId) => ejecutar((d) => servicio.aceptarSolicitud(d, solicitudId)),
-    rechazar: (solicitudId, motivo) => ejecutar((d) => servicio.rechazarSolicitud(d, solicitudId, motivo)),
-    terminar: (codigoTrabajo, motivo) => ejecutar((d) => servicio.terminarAsesoria(d, codigoTrabajo, motivo)),
-    guardarFicha: (asesorId, ficha) => ejecutar((d) => servicio.guardarFicha(d, asesorId, ficha)),
-  };
+/** Trabajo del estudiante, su última solicitud, el asesor y el término (solo con rol estudiante). */
+export function useMiSolicitud(activo) {
+  return useCarga(() => servicio.obtenerMiSolicitud(), [], activo);
+}
+
+/** Ficha del asesor que inició sesión y el resumen de su rol (cupo, pendientes, por revisar). */
+export function useMiFicha() {
+  return useCarga(() => servicio.obtenerMiFicha(), []);
+}
+
+/** Bandeja de solicitudes del asesor (pendientes y resueltas). */
+export function useBandeja() {
+  return useCarga(() => servicio.obtenerBandeja(), []);
+}
+
+/** Trabajos a cargo del asesor y sus vencimientos. */
+export function useAsesorados() {
+  return useCarga(() => servicio.obtenerAsesorados(), []);
+}
+
+/** Un trabajo a cargo (detalle); se vuelve a pedir si cambia el código de la URL. */
+export function useAsesorado(codigo) {
+  return useCarga(() => servicio.obtenerAsesorado(codigo), [codigo]);
 }

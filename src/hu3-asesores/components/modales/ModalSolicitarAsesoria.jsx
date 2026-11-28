@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Modal from '../../../shared/components/Modal.jsx';
 import Alert from '../../../shared/components/Alert.jsx';
-import { cupoDisponible, nombreAsesor } from '../../services/asesoriasService.js';
 
 const MAXIMO = 600;
 
@@ -9,12 +8,16 @@ const MAXIMO = 600;
 export default function ModalSolicitarAsesoria({ asesor, trabajo, onEnviar, onCerrar }) {
   const [mensaje, setMensaje] = useState('');
   const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false);
 
-  const enviar = () => {
+  // La página envía la solicitud a la API; si el servidor la rechaza (400/409), se muestra su mensaje
+  const enviar = async () => {
+    setEnviando(true);
     try {
-      onEnviar(mensaje); // si el servicio rechaza la solicitud, lanza un Error
+      await onEnviar(mensaje);
     } catch (e) {
       setError(e.message);
+      setEnviando(false);
     }
   };
 
@@ -27,19 +30,21 @@ export default function ModalSolicitarAsesoria({ asesor, trabajo, onEnviar, onCe
       acciones={
         <>
           <button className="btn btn--ghost" onClick={onCerrar}>Cancelar</button>
-          <button className="btn btn--primary" onClick={enviar} disabled={mensaje.trim() === ''}>Enviar solicitud</button>
+          <button className="btn btn--primary" onClick={enviar} disabled={mensaje.trim() === '' || enviando}>
+            {enviando ? 'Enviando…' : 'Enviar solicitud'}
+          </button>
         </>
       }
     >
       <p className="hu3-subtitulo-modal">
-        {nombreAsesor(asesor)} · cupo {cupoDisponible(asesor)} de {asesor.cupoMaximo}
+        {asesor.nombre} · cupo {asesor.cupoDisponible} de {asesor.cupoMaximo}
       </p>
 
       <div className="hu3-caja">
         <p className="text-label">Tu trabajo</p>
         <p className="hu3-caja__titulo">{trabajo.titulo}</p>
         <p className="text-muted text-aux">
-          {trabajo.linea} · {trabajo.carrera} · equipo de {trabajo.integrantes.length} integrantes
+          {trabajo.linea}{trabajo.carrera && ` · ${trabajo.carrera}`} · equipo de {trabajo.integrantes.length} integrantes
         </p>
       </div>
 

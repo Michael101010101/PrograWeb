@@ -6,12 +6,16 @@ import Alert from '../../../shared/components/Alert.jsx';
 export default function ModalTerminarAsesoria({ trabajo, cupo, onConfirmar, onCerrar }) {
   const [motivo, setMotivo] = useState('');
   const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false);
 
-  const confirmar = () => {
+  // La página llama a la API; si el servidor rechaza el motivo (400), se muestra su mensaje
+  const confirmar = async () => {
+    setEnviando(true);
     try {
-      onConfirmar(motivo);
+      await onConfirmar(motivo);
     } catch (e) {
       setError(e.message);
+      setEnviando(false);
     }
   };
 
@@ -23,7 +27,9 @@ export default function ModalTerminarAsesoria({ trabajo, cupo, onConfirmar, onCe
       acciones={
         <>
           <button className="btn btn--ghost" onClick={onCerrar}>Cancelar</button>
-          <button className="btn btn--danger" disabled={motivo.trim() === ''} onClick={confirmar}>Terminar asesoría</button>
+          <button className="btn btn--danger" disabled={motivo.trim() === '' || enviando} onClick={confirmar}>
+            {enviando ? 'Terminando…' : 'Terminar asesoría'}
+          </button>
         </>
       }
     >
