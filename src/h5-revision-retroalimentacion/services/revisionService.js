@@ -34,17 +34,3 @@ export function validarAccion(datos, usuario, { tipo, avanceId, texto = '', resp
       || !d.avance.comentarios.some((c) => c.id === respuestaA && c.rol === 'asesor'))) throw new Error('Selecciona un comentario del asesor para responder.');
   }
 }
-export function aplicarEventos(base, eventos) {
-  const datos = structuredClone(base);
-  for (const evento of [...eventos].sort((a, b) => a.fecha.localeCompare(b.fecha) || a.id.localeCompare(b.id))) {
-    const avance = datos.avances.find((a) => a.id === evento.avanceId);
-    if (!avance) continue;
-    if (['aprobado', 'observado'].includes(evento.tipo)) {
-      if (avance.estado !== 'en_revision') continue;
-      avance.estado = evento.tipo;
-      avance.revision = { fecha: evento.fecha, comentario: evento.texto, revisor: evento.autor, revisorId: evento.autorId };
-    }
-    if (evento.texto) avance.comentarios.push({ ...evento });
-  }
-  return datos;
-}

@@ -1,4 +1,3 @@
-// Lectura del contrato de origin/Michael-h4. Nunca escribe en tfc.hu4.
 export function adaptarHu4(datos) {
   if (!datos || !['trabajos', 'entregables', 'avances'].every((k) => Array.isArray(datos[k]))) throw new Error('Catálogo de HU-4 incompatible.');
   const trabajos = datos.trabajos.map((t) => ({ ...t,
