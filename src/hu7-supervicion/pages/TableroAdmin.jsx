@@ -1,130 +1,195 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PageLayout from '../../shared/components/PageLayout.jsx';
+import EstadoVista from '../components/EstadoVista.jsx';
+import ModalSinDatos from '../components/ModalSinDatos.jsx';
+import { usePeticion } from '../hooks/usePeticion.js';
+import {
+    cargarTodosLosAsesores,
+    contarTrabajos,
+    contarUsuarios,
+    obtenerDistribucion,
+    obtenerFiltrosTrabajos,
+    obtenerTablero,
+} from '../api/clienteApiHu7.js';
+import {
+    ETIQUETA_ESTADO_SUSTENTACION,
+    MESES,
+    fechaLocal,
+    formatearFecha,
+    formatearHora,
+    proporcion,
+    textoONulo,
+} from '../utils/formatoHu7.js';
 import "../hu7.css";
 import "../TableroAdmin.css";
 
+const DIAS_SEMANA = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+
+/** "1 TRABAJO SIN ASESOR" / "3 TRABAJOS SIN ASESOR". */
+const plural = (n, singular, varios) => `${n} ${n === 1 ? singular : varios}`;
+
+/** Total de un estado dentro de [{ valor, total }]. */
+const totalDe = (lista, valor) => lista.find((e) => e.valor === valor)?.total ?? 0;
+
+/** Arma las celdas del mes de `fecha` (con relleno inicial) y marca los días con sustentación. */
+function armarCalendario(proximas) {
+    if (!proximas.length) return null;
+    const primera = fechaLocal(proximas[0].fecha);
+    const anio = primera.getFullYear();
+    const mes = primera.getMonth();
+    const diasConSustentacion = new Set(
+        proximas
+            .map((s) => fechaLocal(s.fecha))
+            .filter((d) => d.getFullYear() === anio && d.getMonth() === mes)
+            .map((d) => d.getDate())
+    );
+    const relleno = new Date(anio, mes, 1).getDay();
+    const diasDelMes = new Date(anio, mes + 1, 0).getDate();
+    const dias = Array.from({ length: diasDelMes }, (_, i) => ({
+        numero: i + 1,
+        marcado: diasConSustentacion.has(i + 1),
+    }));
+    return { titulo: `${MESES[mes]} ${anio}`, relleno, dias };
+}
+
+/** Pide al API todo lo que muestra el tablero para un periodo. */
+async function cargarTablero(periodoId) {
+    const [tablero, sinAsesor, asesores, bloqueados] = await Promise.all([
+        obtenerTablero({ periodoId }),
+        contarTrabajos({ periodoId, asesorId: 'sin_asesor' }),
+        cargarTodosLosAsesores({ estado: 'activo' }),
+        contarUsuarios({ estado: 'bloqueado' }),
+    ]);
+    const cupoCompleto = asesores
+        .filter((a) => a.cupoDisponible === 0)
+        .sort((a, b) => b.avancesPorRevisar - a.avancesPorRevisar);
+    return { tablero, sinAsesor, cupoCompleto, bloqueados };
+}
+
 export default function TableroAdmin() {
-    // aca agregamos el estado para cambiar de periodo (2026-2 o 2026-1)
-    const [periodo, setPeriodo] = useState("2026-2");
+    // periodo elegido en el selector (null = el periodo activo)
+    const [periodoId, setPeriodoId] = useState(null);
+
+    // rango de fechas para la distribución (AAAA-MM-DD)
+    const [desde, setDesde] = useState('');
+    const [hasta, setHasta] = useState('');
 
     // esto es para abrir las ventanas emergentes al dar clic en ver detalle o ver calendario
     const [modalVencidos, setModalVencidos] = useState(false);
     const [modalCalendario, setModalCalendario] = useState(false);
 
-    // datos simulados dinámicos por periodo para que el dropdown funcione
-    const datosPorPeriodo = {
-        "2026-2": {
-            totalTrabajos: 12,
-            Propuesta: 3,
-            EnDesarrollo: 6,
-            Concluido: 2,
-            Desistido: 1,
-            avancePromedio: 42,
-            entregablesVencidos: 7,
-            sustentacionesCount: 2,
-            trabajosCienciadeDatos: 33, 
-            trabajosGestionOperaciones: 25,
-            trabajosAutomatizacionControl: 17,
-            trabajosInnovacionEducativa: 17,
-            trabajosSostenibilidadUrbana: 8,
-            trabajosIngenieriaSoftware: 0,
-            carreras: {
-                sistemasCount: 5,
-                industrialCount: 4,
-                civilCount: 3
-            },
-            avancepromIngSistemas: 48,
-            avancepromIngIndustrial: 39,
-            avancepromIngCivil: 35,
-            fechacierre: "11/09/2026",
-            fechalimite: "19/12/2026"
-        },
-        "2026-1": {
-            totalTrabajos: 15,
-            Propuesta: 1,
-            EnDesarrollo: 8,
-            Concluido: 5,
-            Desistido: 1,
-            avancePromedio: 68,
-            entregablesVencidos: 3,
-            sustentacionesCount: 5,
-            trabajosCienciadeDatos: 27, 
-            trabajosGestionOperaciones: 33,
-            trabajosAutomatizacionControl: 20,
-            trabajosInnovacionEducativa: 13,
-            trabajosSostenibilidadUrbana: 7,
-            trabajosIngenieriaSoftware: 0,
-            carreras: {
-                sistemasCount: 6,
-                industrialCount: 5,
-                civilCount: 4
-            },
-            avancepromIngSistemas: 72,
-            avancepromIngIndustrial: 65,
-            avancepromIngCivil: 58,
-            fechacierre: "15/03/2026",
-            fechalimite: "20/07/2026"
-        }
-    };
+    const peticionFiltros = usePeticion(() => obtenerFiltrosTrabajos(), []);
+    const periodos = peticionFiltros.datos?.periodos ?? [];
+    const periodoActivo = periodos.find((p) => p.activo) ?? null;
+    const periodoElegido = periodoId ?? periodoActivo?.id;
+    const filtrosListos = Boolean(peticionFiltros.datos);
 
-    const datosActuales = datosPorPeriodo[periodo] || datosPorPeriodo["2026-2"];
+    const peticionTablero = usePeticion(
+        () => (filtrosListos ? cargarTablero(periodoElegido) : undefined),
+        [filtrosListos, periodoElegido]
+    );
 
-    const totalTrabajos = datosActuales.totalTrabajos;
-    const Propuesta = datosActuales.Propuesta;
-    const EnDesarrollo = datosActuales.EnDesarrollo;
-    const Concluido = datosActuales.Concluido;
-    const Desistido = datosActuales.Desistido;
+    // validación del rango en el cliente (el servidor la repite)
+    const errorRangoCliente = desde && hasta && desde > hasta ? 'Debe ser igual o posterior a la fecha de inicio.' : null;
 
-    const trabajosCienciadeDatos = datosActuales.trabajosCienciadeDatos; 
-    const trabajosGestionOperaciones = datosActuales.trabajosGestionOperaciones;
-    const trabajosAutomatizacionControl = datosActuales.trabajosAutomatizacionControl;
-    const trabajosInnovacionEducativa = datosActuales.trabajosInnovacionEducativa;
-    const trabajosSostenibilidadUrbana = datosActuales.trabajosSostenibilidadUrbana;
-    const trabajosIngenieriaSoftware = datosActuales.trabajosIngenieriaSoftware;
-
-    const avancePromedio = datosActuales.avancePromedio;
-    const entregablesVencidos = datosActuales.entregablesVencidos;
-    const avancepromIngSistemas = datosActuales.avancepromIngSistemas;
-    const avancepromIngIndustrial = datosActuales.avancepromIngIndustrial;
-    const avancepromIngCivil = datosActuales.avancepromIngCivil;
-
-    const fechacierre = datosActuales.fechacierre;
-    const fechalimite = datosActuales.fechalimite;
+    const peticionDistribucion = usePeticion(
+        () =>
+            filtrosListos && !errorRangoCliente
+                ? obtenerDistribucion({ desde, hasta, periodoId: periodoElegido })
+                : undefined,
+        [filtrosListos, periodoElegido, desde, hasta, errorRangoCliente]
+    );
+    const camposRango = peticionDistribucion.error?.status === 400 ? peticionDistribucion.error.campos ?? {} : {};
+    const errorDesde = camposRango.desde;
+    const errorHasta = errorRangoCliente ?? camposRango.hasta;
 
     // funcion para imprimir / descargar el reporte en pdf usando la funcion nativa del navegador
     const handleExportarPDF = () => {
         window.print();
     };
 
+    const cargando = peticionFiltros.cargando || peticionTablero.cargando;
+    const error = peticionFiltros.error ?? peticionTablero.error;
+    const reintentar = peticionFiltros.error ? peticionFiltros.reintentar : peticionTablero.reintentar;
+
+    // 409 = no hay periodo activo: es un estado vacío, no un error
+    const sinPeriodo = !peticionFiltros.error && (periodos.length === 0 || peticionTablero.error?.status === 409);
+
+    const datos = peticionTablero.datos;
+    const tablero = datos?.tablero;
+    const porEstado = tablero?.trabajosPorEstado ?? [];
+    const totalTrabajos = porEstado.reduce((suma, e) => suma + e.total, 0);
+    const enDesarrollo = totalDe(porEstado, 'en_desarrollo');
+    const avancePromedio = tablero?.avancePromedio ?? null;
+    const vencidos = tablero?.entregablesVencidos ?? { total: 0, lista: [] };
+    const sustentaciones = tablero?.sustentaciones ?? { porEstado: [], programadas: 0, realizadas: 0, proximas: [] };
+    const totalSustentaciones = sustentaciones.porEstado.reduce((suma, e) => suma + e.total, 0);
+    const calendario = armarCalendario(sustentaciones.proximas);
+
+    const periodoVacio = Boolean(tablero) && totalTrabajos === 0;
+    const esPeriodoActivo = periodoElegido === periodoActivo?.id;
+    const semestre = tablero?.periodo?.semestre ?? periodos.find((p) => p.id === periodoElegido)?.semestre ?? '';
+
+    const distribucion = peticionDistribucion.datos;
+
     return (
-        <PageLayout> 
+        <PageLayout>
             <main className="hu7-contenido-principal">
                 <div className="hu7-contenedorSUP">
                     <div className="hu7-titulo-seccion">
                         <h6 className="hu7-subtitulo-pantalla">Inicio · Tablero</h6>
                         <h1 className="hu7-titulo-pantalla">Tablero del Periodo</h1>
                         <h6 className="hu7-subtitulo-pantalla2">
-                            Semestre {periodo} · datos al {new Date().toLocaleDateString()}
+                            {semestre ? `Semestre ${semestre} · ` : ''}datos al {new Date().toLocaleDateString('es-PE')}
                         </h6>
                     </div>
 
                     <div className="hu7-barra-controles">
                         <div className="hu7-campo-periodo">
                             <label htmlFor="select-periodo">PERIODO</label>
-                            <select 
-                                id="select-periodo" 
-                                className="hu7-select-periodo" 
-                                value={periodo}
-                                onChange={(e) => setPeriodo(e.target.value)}>
-                                    
-                                <option value="2026-2">2026-2</option>
-                                <option value="2026-1">2026-1</option>
+                            <select
+                                id="select-periodo"
+                                className="hu7-select-periodo"
+                                value={periodoElegido ?? ''}
+                                disabled={!periodos.length}
+                                onChange={(e) => setPeriodoId(Number(e.target.value))}>
+
+                                {periodos.map((p) => (
+                                    <option key={p.id} value={p.id}>{p.semestre}</option>
+                                ))}
                             </select>
                         </div>
 
-                        <button 
-                            type="button" 
+                        <div className="hu7-campo-periodo">
+                            <label htmlFor="input-desde">DESDE</label>
+                            <input
+                                id="input-desde"
+                                type="date"
+                                className="hu7-select-periodo"
+                                value={desde}
+                                max={hasta || undefined}
+                                aria-invalid={Boolean(errorDesde)}
+                                onChange={(e) => setDesde(e.target.value)} />
+                            {errorDesde && <span className="field__error" role="alert">{errorDesde}</span>}
+                        </div>
+
+                        <div className="hu7-campo-periodo">
+                            <label htmlFor="input-hasta">HASTA</label>
+                            <input
+                                id="input-hasta"
+                                type="date"
+                                className="hu7-select-periodo"
+                                value={hasta}
+                                min={desde || undefined}
+                                aria-invalid={Boolean(errorHasta)}
+                                onChange={(e) => setHasta(e.target.value)} />
+                            {errorHasta && <span className="field__error" role="alert">{errorHasta}</span>}
+                        </div>
+
+                        <button
+                            type="button"
                             className="hu7-btn-exportar"
+                            disabled={!tablero}
                             onClick={handleExportarPDF}>
                             Exportar reporte
                         </button>
@@ -132,40 +197,58 @@ export default function TableroAdmin() {
                 </div>
 
                 <div className="hu7-contenedorINF">
-
+                  <EstadoVista
+                    cargando={cargando}
+                    error={sinPeriodo ? null : error}
+                    alReintentar={reintentar}
+                    vacio={sinPeriodo || (periodoVacio && esPeriodoActivo)}
+                    tituloVacio={sinPeriodo ? 'No hay un periodo activo' : `Sin datos para ${semestre}`}
+                    textoVacio={
+                        sinPeriodo
+                            ? 'Cuando la coordinación active un periodo, aquí verás sus métricas.'
+                            : 'El periodo aún no tiene trabajos registrados. Las métricas se activan con el primer registro de propuesta.'
+                    }>
+                  {tablero && (
+                  <>
                     {/* FILA SUP DE 4 CAJAS */}
                     <div className="hu7-kpi-fila-superior">
-                    
+
                         {/* Trabajos por Estado */}
                         <div className="hu7-tarjeta-kpi-TrabajoEstado">
                             <h6>TRABAJOS POR ESTADO</h6>
                             <p className="numero">{totalTrabajos}</p>
                             <div className="hu7-lista-estados">
-                                <div className="hu7-item-estado"><span className="hu7-lista-Propuesta">Propuesta</span> <strong className="Numeronegrita">{Propuesta}</strong></div>
-                                <div className="hu7-item-estado"><span className="hu7-lista-EnDesarrollo">En Desarrollo</span> <strong className="Numeronegrita">{EnDesarrollo}</strong></div>
-                                <div className="hu7-item-estado"><span className="hu7-lista-Concluido">Concluido</span> <strong className="Numeronegrita">{Concluido}</strong></div>
-                                <div className="hu7-item-estado"><span className="hu7-lista-Desistido">Desistido</span> <strong className="Numeronegrita">{Desistido}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-Propuesta">Propuesta</span> <strong className="Numeronegrita">{totalDe(porEstado, 'propuesta')}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-EnDesarrollo">En Desarrollo</span> <strong className="Numeronegrita">{enDesarrollo}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-Concluido">Concluido</span> <strong className="Numeronegrita">{totalDe(porEstado, 'concluido')}</strong></div>
+                                <div className="hu7-item-estado"><span className="hu7-lista-Desistido">Desistido</span> <strong className="Numeronegrita">{totalDe(porEstado, 'desistido')}</strong></div>
                             </div>
                         </div>
 
                         {/* Avance Promedio */}
                         <div className="hu7-tarjeta-kpi-AvancePromedio">
                             <h6>AVANCE PROMEDIO</h6>
-                            <p className="numero">{avancePromedio}%</p>
+                            <p className="numero">{textoONulo(avancePromedio, '%')}</p>
                             <div className="hu7-barra-contenedor">
-                                <div className="hu7-barra-relleno verde" style={{ width: `${avancePromedio}%` }}></div>
+                                <div className="hu7-barra-relleno verde" style={{ width: `${avancePromedio ?? 0}%` }}></div>
                             </div>
-                            <div className="descripcion">De los 9 trabajos activos · +7 puntos frente a agosto</div>
+                            <div className="descripcion">
+                                {plural(enDesarrollo, 'trabajo en desarrollo', 'trabajos en desarrollo')}
+                            </div>
                         </div>
 
                         {/* Entregables Vencidos */}
                         <div className="hu7-tarjeta-kpi-EntregablesVencidos">
                             <h6>ENTREGABLES VENCIDOS</h6>
-                            <p className="numeroVencido">{entregablesVencidos}</p>
-                            <div className="descripcion">En 5 trabajos · el más antiguo con 14 días de retraso</div>
-                            
-                            <button type="button" 
-                                className="hu7-boton-texto" 
+                            <p className="numeroVencido">{vencidos.total}</p>
+                            {vencidos.lista.length > 0 && (
+                                <div className="descripcion">
+                                    El más antiguo con {plural(vencidos.lista[0].diasVencido, 'día', 'días')} de retraso
+                                </div>
+                            )}
+
+                            <button type="button"
+                                className="hu7-boton-texto"
                                 onClick={() => setModalVencidos(true)}>
                                 Ver detalle
                             </button>
@@ -174,11 +257,13 @@ export default function TableroAdmin() {
                         {/* Sustentaciones */}
                         <div className="hu7-tarjeta-kpi-Sustentaciones">
                             <h6>SUSTENTACIONES</h6>
-                            <p className="numero">{datosActuales.sustentacionesCount}</p>
-                            <div className="descripcion">1 programada · realizada · nota promedio 17</div>
+                            <p className="numero">{totalSustentaciones}</p>
+                            <div className="descripcion">
+                                {plural(sustentaciones.programadas, 'programada', 'programadas')} · {plural(sustentaciones.realizadas, 'realizada', 'realizadas')}
+                            </div>
 
-                            <button type="button" 
-                                className="hu7-boton-texto" 
+                            <button type="button"
+                                className="hu7-boton-texto"
                                 onClick={() => setModalCalendario(true)}>
                                 Ver calendario
                             </button>
@@ -192,76 +277,41 @@ export default function TableroAdmin() {
                         {/* Trabajos por Línea de Investigación */}
                         <div className="hu7-tarjeta-kpi-TrabajosLineaInvestigacion">
                             <h6>TRABAJOS POR LÍNEA DE INVESTIGACIÓN</h6>
-                            <div className="hu7-lista-lineas">
-                                <div className="hu7-item-linea"><span>Ciencia de datos aplicada</span> <strong className="Numeronegrita">4</strong></div>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno verde" style={{ width: `${trabajosCienciadeDatos}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-lista-lineas">
-                                <div className="hu7-item-linea"><span>Gestión de operaciones</span> <strong className="Numeronegrita">3</strong></div>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno verde" style={{ width: `${trabajosGestionOperaciones}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-lista-lineas">
-                                <div className="hu7-item-linea"><span>Automatización y control</span> <strong className="Numeronegrita">2</strong></div>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno verde" style={{ width: `${trabajosAutomatizacionControl}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-lista-lineas">
-                                <div className="hu7-item-linea"><span>Innovación educativa</span> <strong className="Numeronegrita">2</strong></div>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno verde" style={{ width: `${trabajosInnovacionEducativa}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-lista-lineas">
-                                <div className="hu7-item-linea"><span>Sostenibilidad urbana</span> <strong className="Numeronegrita">1</strong></div>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno verde" style={{ width: `${trabajosSostenibilidadUrbana}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-lista-lineas">
-                                <div className="hu7-item-linea"><span>Ingeniería de software</span> <strong className="Numeronegrita">0</strong></div>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno verde" style={{ width: `${trabajosIngenieriaSoftware}%` }}></div>
-                                </div>
-                            </div>
+                            <EstadoVista
+                                cargando={peticionDistribucion.cargando}
+                                error={peticionDistribucion.error}
+                                alReintentar={peticionDistribucion.reintentar}
+                                vacio={!errorRangoCliente && Boolean(distribucion) && distribucion.porLinea.length === 0}
+                                tituloVacio="Sin líneas de investigación">
+                                {distribucion?.porLinea.map((l) => (
+                                    <div className="hu7-lista-lineas" key={l.lineaId}>
+                                        <div className="hu7-item-linea"><span>{l.nombre}</span> <strong className="Numeronegrita">{l.total}</strong></div>
+                                        <div className="hu7-barra-contenedor">
+                                            <div className="hu7-barra-relleno verde" style={{ width: `${proporcion(l.total, distribucion.totalTrabajos)}%` }}></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </EstadoVista>
                         </div>
 
                         {/* Trabajos por Carrera */}
                         <div className="hu7-tarjeta-kpi-TrabajosCarrera">
                             <h6>TRABAJOS POR CARRERA</h6>
-
-                            <div className="hu7-carrera-bloque">
-                                <div className="hu7-item-carrera"><span><strong>Ingeniería de Sistemas</strong></span> <strong>{datosActuales.carreras.sistemasCount}</strong></div>
-                                <p className="avancepromedio">Avance promedio {avancepromIngSistemas}%</p>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngSistemas}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-carrera-bloque">
-                                <div className="hu7-item-carrera"><span><strong>Ingeniería Industrial</strong></span> <strong>{datosActuales.carreras.industrialCount}</strong></div>
-                                <p className="avancepromedio">Avance promedio {avancepromIngIndustrial}%</p>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngIndustrial}%` }}></div>
-                                </div>
-                            </div>
-
-                            <div className="hu7-carrera-bloque">
-                                <div className="hu7-item-carrera"><span><strong>Ingeniería Civil</strong></span> <strong>{datosActuales.carreras.civilCount}</strong></div>
-                                <p className="avancepromedio">Avance promedio {avancepromIngCivil}%</p>
-                                <div className="hu7-barra-contenedor">
-                                    <div className="hu7-barra-relleno marron" style={{ width: `${avancepromIngCivil}%` }}></div>
-                                </div>
-                            </div>
+                            <EstadoVista
+                                cargando={peticionDistribucion.cargando}
+                                error={peticionDistribucion.error}
+                                alReintentar={peticionDistribucion.reintentar}
+                                vacio={!errorRangoCliente && Boolean(distribucion) && distribucion.porCarrera.length === 0}
+                                tituloVacio="Sin carreras">
+                                {distribucion?.porCarrera.map((c) => (
+                                    <div className="hu7-carrera-bloque" key={c.carrera}>
+                                        <div className="hu7-item-carrera"><span><strong>{c.carrera}</strong></span> <strong>{c.total}</strong></div>
+                                        <div className="hu7-barra-contenedor">
+                                            <div className="hu7-barra-relleno marron" style={{ width: `${proporcion(c.total, distribucion.totalTrabajos)}%` }}></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </EstadoVista>
                         </div>
 
                         {/* Requiere Atención */}
@@ -269,107 +319,76 @@ export default function TableroAdmin() {
                             <h6>REQUIERE ATENCIÓN</h6>
 
                             <div className="hu7-tarjeta-kpi-RequiereAtencion-rojo">
-                                <h6>2 TRABAJOS SIN ASESOR</h6>
-                                <p className="descripcion">La etapa de asignación cierra el {fechacierre}</p>
+                                <h6>{plural(datos.sinAsesor, 'TRABAJO SIN ASESOR', 'TRABAJOS SIN ASESOR')}</h6>
                             </div>
 
                             <div className="hu7-tarjeta-kpi-RequiereAtencion-amarillo1">
-                                <h6>1 ASESOR CON CUPO COMPLETO</h6>
-                                <p className="descripcion">Ing. Ocampo Salas · 3 avances en espera hace más de 5 días</p>
-                            </div>
-
-                            <div className="hu7-tarjeta-kpi-RequiereAtencion-amarillo2">
-                                <h6>7 TRABAJOS CONCLUIDOS SIN SUSTENTACIÓN</h6>
-                                <p className="descripcion">Programar antes de fecha límite {fechalimite}</p>
+                                <h6>{plural(datos.cupoCompleto.length, 'ASESOR CON CUPO COMPLETO', 'ASESORES CON CUPO COMPLETO')}</h6>
+                                {datos.cupoCompleto.length > 0 && (
+                                    <p className="descripcion">
+                                        {datos.cupoCompleto[0].nombreCompleto} · {plural(datos.cupoCompleto[0].avancesPorRevisar, 'avance por revisar', 'avances por revisar')}
+                                    </p>
+                                )}
                             </div>
 
                             <div className="hu7-tarjeta-kpi-CuentasBloqueadas">
-                                <h6>3 CUENTAS BLOQUEADAS</h6>
-                                <p className="descripcion">Por retiro del semestre o solicitud de Secretaría</p>
+                                <h6>{plural(datos.bloqueados, 'CUENTA BLOQUEADA', 'CUENTAS BLOQUEADAS')}</h6>
                             </div>
                         </div>
 
                     </div>
-
+                  </>
+                  )}
+                  </EstadoVista>
                 </div>
 
-                {/* Modal para ver la lista de los 7 entregables vencidos */}
+                {/* Periodo elegido sin trabajos: ofrece volver al periodo activo */}
+                <ModalSinDatos
+                    estaAbierto={periodoVacio && !esPeriodoActivo && Boolean(periodoActivo)}
+                    alCerrar={() => setPeriodoId(periodoActivo.id)}
+                    periodo={semestre}
+                    periodoAnterior={periodoActivo?.semestre} />
+
+                {/* Modal para ver la lista de entregables vencidos */}
                 {modalVencidos && (
                     <div className="hu7-modal-overlay">
                         <div className="hu7-modal-contenido">
                             <div className="hu7-modal-header">
-                                <h3>Entregables Vencidos ({entregablesVencidos})</h3>
+                                <h3>Entregables Vencidos ({vencidos.total})</h3>
                                 <button type="button" className="hu7-modal-cerrar" onClick={() => setModalVencidos(false)}>×</button>
                             </div>
                             <div className="hu7-modal-body">
-                                <table className="hu7-tabla-modal">
-                                    <thead>
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Entregable</th>
-                                            <th>Asesor</th>
-                                            <th>Retraso</th>
-                                            <th>Límite</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>TFC-010</td>
-                                            <td>Avance 2 - Arquitectura</td>
-                                            <td>Ing. Luis Ocampo</td>
-                                            <td><span className="badge-vencido">14 días</span></td>
-                                            <td>03/10/2026</td>
-                                        </tr>
-                                        <tr>
-                                            <td>TFC-004</td>
-                                            <td>Plan de Entregables</td>
-                                            <td>Mg. Sandra Bustamante</td>
-                                            <td><span className="badge-vencido">10 días</span></td>
-                                            <td>07/10/2026</td>
-                                        </tr>
-                                        <tr>
-                                            <td>TFC-012</td>
-                                            <td>Estado del Arte</td>
-                                            <td>Dra. Mariela Quispe</td>
-                                            <td><span className="badge-vencido">8 días</span></td>
-                                            <td>09/10/2026</td>
-                                        </tr>
-                                        <tr>
-                                            <td>TFC-008</td>
-                                            <td>Avance 1 - Diagramas</td>
-                                            <td>Dr. Pedro Salazar</td>
-                                            <td><span className="badge-vencido">6 días</span></td>
-                                            <td>11/10/2026</td>
-                                        </tr>
-                                        <tr>
-                                            <td>TFC-015</td>
-                                            <td>Pruebas de Software</td>
-                                            <td>Mg. Julio Vargas</td>
-                                            <td><span className="badge-vencido">5 días</span></td>
-                                            <td>12/10/2026</td>
-                                        </tr>
-                                        <tr>
-                                            <td>TFC-003</td>
-                                            <td>Informe Final Borrador</td>
-                                            <td>Ing. Luis Ocampo</td>
-                                            <td><span className="badge-vencido">3 días</span></td>
-                                            <td>14/10/2026</td>
-                                        </tr>
-                                        <tr>
-                                            <td>TFC-019</td>
-                                            <td>Marco Teórico</td>
-                                            <td>Dra. Gabriela Torres</td>
-                                            <td><span className="badge-vencido">1 día</span></td>
-                                            <td>16/10/2026</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <EstadoVista vacio={vencidos.lista.length === 0} tituloVacio="No hay entregables vencidos">
+                                    <table className="hu7-tabla-modal">
+                                        <thead>
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Entregable</th>
+                                                <th>Retraso</th>
+                                                <th>Límite</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {vencidos.lista.map((e) => (
+                                                <tr key={e.id}>
+                                                    <td>{e.trabajo.codigo}</td>
+                                                    <td>{e.nombre}</td>
+                                                    <td><span className="badge-vencido">{plural(e.diasVencido, 'día', 'días')}</span></td>
+                                                    <td>{formatearFecha(e.fechaLimite)}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    {vencidos.total > vencidos.lista.length && (
+                                        <p className="descripcion">Se muestran los {vencidos.lista.length} más antiguos.</p>
+                                    )}
+                                </EstadoVista>
                             </div>
                         </div>
                     </div>
                 )}
 
-                {/* Modal para ver el calendario con las sustentaciones programadas */}
+                {/* Modal para ver el calendario con las próximas sustentaciones */}
                 {modalCalendario && (
                     <div className="hu7-modal-overlay">
                         <div className="hu7-modal-contenido">
@@ -378,63 +397,36 @@ export default function TableroAdmin() {
                                 <button type="button" className="hu7-modal-cerrar" onClick={() => setModalCalendario(false)}>×</button>
                             </div>
                             <div className="hu7-modal-body">
-                                <div className="hu7-calendario-header">Octubre 2026</div>
-                                <div className="hu7-calendario-grid">
-                                    <div className="dia-header">Dom</div>
-                                    <div className="dia-header">Lun</div>
-                                    <div className="dia-header">Mar</div>
-                                    <div className="dia-header">Mié</div>
-                                    <div className="dia-header">Jue</div>
-                                    <div className="dia-header">Vie</div>
-                                    <div className="dia-header">Sáb</div>
+                                <EstadoVista vacio={!calendario} tituloVacio="No hay sustentaciones próximas">
+                                    {calendario && (
+                                        <>
+                                            <div className="hu7-calendario-header">{calendario.titulo}</div>
+                                            <div className="hu7-calendario-grid">
+                                                {DIAS_SEMANA.map((d) => (
+                                                    <div className="dia-header" key={d}>{d}</div>
+                                                ))}
 
-                                    {/* Días previos de relleno */}
-                                    <div className="dia vacio"></div>
-                                    <div className="dia vacio"></div>
-                                    <div className="dia vacio"></div>
-                                    <div className="dia vacio"></div>
-                                    <div className="dia">1</div>
-                                    <div className="dia">2</div>
-                                    <div className="dia">3</div>
-                                    <div className="dia">4</div>
-                                    <div className="dia">5</div>
-                                    <div className="dia">6</div>
-                                    <div className="dia">7</div>
-                                    <div className="dia">8</div>
-                                    <div className="dia">9</div>
-                                    <div className="dia">10</div>
-                                    <div className="dia">11</div>
-                                    <div className="dia">12</div>
-                                    <div className="dia">13</div>
-                                    <div className="dia">14</div>
-                                    <div className="dia">15</div>
-                                    <div className="dia">16</div>
-                                    <div className="dia">17</div>
-                                    <div className="dia">18</div>
-                                    <div className="dia">19</div>
-                                    <div className="dia">20</div>
-                                    <div className="dia">21</div>
-                                    <div className="dia marcado">22</div>
-                                    <div className="dia">23</div>
-                                    <div className="dia">24</div>
-                                    <div className="dia">25</div>
-                                    <div className="dia">26</div>
-                                    <div className="dia">27</div>
-                                    <div className="dia marcado">28</div>
-                                    <div className="dia">29</div>
-                                    <div className="dia">30</div>
-                                    <div className="dia">31</div>
-                                </div>
-                                <div className="hu7-calendario-leyenda">
-                                    <div className="leyenda-item">
-                                        <span className="dot marcado"></span>
-                                        <span>22 Oct: Sustentación TFC-001 (Realizada - Nota 17)</span>
-                                    </div>
-                                    <div className="leyenda-item">
-                                        <span className="dot marcado"></span>
-                                        <span>28 Oct: Sustentación TFC-005 (Programada - 10:00 AM)</span>
-                                    </div>
-                                </div>
+                                                {/* Días previos de relleno */}
+                                                {Array.from({ length: calendario.relleno }, (_, i) => (
+                                                    <div className="dia vacio" key={`vacio-${i}`}></div>
+                                                ))}
+                                                {calendario.dias.map((d) => (
+                                                    <div className={d.marcado ? 'dia marcado' : 'dia'} key={d.numero}>{d.numero}</div>
+                                                ))}
+                                            </div>
+                                            <div className="hu7-calendario-leyenda">
+                                                {sustentaciones.proximas.map((s) => (
+                                                    <div className="leyenda-item" key={s.id}>
+                                                        <span className="dot marcado"></span>
+                                                        <span>
+                                                            {formatearFecha(s.fecha)}: Sustentación {s.trabajo.codigo} ({ETIQUETA_ESTADO_SUSTENTACION[s.estado] ?? s.estado} - {formatearHora(s.hora)} · {s.lugar ?? (s.modalidad === 'virtual' ? 'Virtual' : '—')})
+                                                        </span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+                                </EstadoVista>
                             </div>
                         </div>
                     </div>

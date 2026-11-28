@@ -1,0 +1,21 @@
+.mt-contenedor { max-width: 880px; margin: 0 auto; }
+.mt-filtros { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 20px; }
+.mt-filtro {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text, inherit);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.mt-filtro:hover { border-color: var(--primary); }
+.mt-filtro--activo { background: var(--primary); border-color: var(--primary); color: #fff; }
+.mt-lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.mt-lista .card + .card { margin-top: 0; }
+.mt-item__cabecera { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.mt-item__codigo { font-size: 12px; color: var(--muted); font-weight: 600; letter-spacing: 0.02em; }
+.mt-item__titulo { font-size: 17px; margin: 8px 0 6px; overflow-wrap: anywhere; }
+.mt-item__meta { font-size: 13px; color: var(--muted); margin: 2px 0; }
+.mt-item__accion { margin-top: 12px; }

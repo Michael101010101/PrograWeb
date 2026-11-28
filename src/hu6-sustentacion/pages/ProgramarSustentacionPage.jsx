@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../../shared/components/PageLayout.jsx';
 import PageHead from '../../shared/components/PageHead.jsx';
@@ -6,6 +6,7 @@ import EmptyState from '../../shared/components/EmptyState.jsx';
 import Alert from '../../shared/components/Alert.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 import useSustentaciones from '../hooks/useSustentaciones.js';
+import EstadoConexion from '../components/EstadoConexion.jsx';
 import {
   alternativasLibres,
   bloquesDeSala,
@@ -37,7 +38,7 @@ export default function ProgramarSustentacionPage() {
   const { codigo, id } = useParams();
   const navigate = useNavigate();
   const { mostrar } = useToast();
-  const { datos, programar, reprogramar } = useSustentaciones();
+  const { datos, programar, reprogramar, cargando, errorCarga } = useSustentaciones();
 
   const actual = id ? buscarSustentacion(datos, id) : null; // solo al reprogramar
   const esReprogramacion = Boolean(id);
@@ -55,6 +56,16 @@ export default function ProgramarSustentacionPage() {
   const [error, setError] = useState('');
   const [modalAbierto, setModalAbierto] = useState(false);
 
+  // Al cargar la API, sincronizar el formulario con el registro verdadero.
+  useEffect(() => {
+    if (cargando || errorCarga) return;
+    const persistida = id ? datos.sustentaciones.find((x) => x.id === id) : null;
+    const primero = datos.trabajos.find((t) => !datos.sustentaciones.some((x) => x.trabajoCodigo === t.codigo));
+    setForm((prev) => ({ ...prev, trabajoCodigo: persistida?.trabajoCodigo ?? codigo ?? primero?.codigo ?? '',
+      fecha: persistida?.fecha ?? prev.fecha, hora: persistida?.hora ?? prev.hora,
+      salaId: persistida?.salaId ?? prev.salaId, modalidad: persistida?.modalidad ?? prev.modalidad }));
+  }, [cargando, errorCarga, id, codigo]);
+
   const cambiar = (campo, valor) => {
     setForm({ ...form, [campo]: valor });
     setError('');
@@ -69,6 +80,8 @@ export default function ProgramarSustentacionPage() {
       {contenido}
     </PageLayout>
   );
+
+  if (cargando || errorCarga) return <EstadoConexion cargando={cargando} error={errorCarga} />;
 
   // Casos sin formulario
   if (esReprogramacion && (!actual || !estaPendiente(actual))) {
@@ -118,7 +131,7 @@ export default function ProgramarSustentacionPage() {
     );
   }
 
-  const enviar = () => {
+  const enviar = async () => {
     // Si la sala está ocupada se muestra el modal con alternativas (diapositiva 47)
     if (ocupante) {
       setModalAbierto(true);
@@ -126,12 +139,12 @@ export default function ProgramarSustentacionPage() {
     }
     try {
       if (esReprogramacion) {
-        reprogramar(id, form);
-        mostrar({ tipo: 'exito', titulo: 'Sustentación reprogramada', mensaje: 'Se notificó al equipo, al asesor y al jurado.' });
+        await reprogramar(id, form);
+        mostrar({ tipo: 'exito', titulo: 'Sustentación reprogramada', mensaje: 'La nueva fecha quedó guardada en PostgreSQL.' });
         navigate('/admin/sustentaciones');
       } else {
-        const nuevaId = programar(form);
-        mostrar({ tipo: 'exito', titulo: 'Sustentación programada', mensaje: 'Ahora conforma el jurado (paso 2 de 3).' });
+        const nuevaId = await programar(form);
+        mostrar({ tipo: 'exito', titulo: 'Sustentación programada', mensaje: 'La fecha quedó guardada en PostgreSQL. Ahora conforma el jurado (paso 2 de 3).' });
         navigate(`/admin/sustentaciones/${nuevaId}/jurado`);
       }
     } catch (e) {

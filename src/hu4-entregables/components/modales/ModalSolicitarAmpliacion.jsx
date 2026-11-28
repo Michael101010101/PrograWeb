@@ -1,20 +1,25 @@
 import { useState } from 'react';
 import Modal from '../../../shared/components/Modal.jsx';
 import Alert from '../../../shared/components/Alert.jsx';
-import { HOY, SEMESTRE, formatearFecha } from '../../utils/fechas.js';
+import { useDatos } from '../../../shared/context/DatosContext.jsx';
+import { HOY, formatearFecha, semestreDe } from '../../utils/fechas.js';
 
 /** Modal "Solicitar ampliación": el estudiante propone una nueva fecha límite y explica el motivo. */
 export default function ModalSolicitarAmpliacion({ entregable, trato, onConfirmar, onCerrar }) {
   const [nuevaFecha, setNuevaFecha] = useState('');
   const [motivo, setMotivo] = useState('');
   const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  const semestre = semestreDe(useDatos().periodo); // límites del semestre desde la API (HU-1)
 
-  const enviar = (evento) => {
+  const enviar = async (evento) => {
     evento.preventDefault();
+    setEnviando(true);
     try {
-      onConfirmar({ nuevaFecha, motivo });
+      await onConfirmar({ nuevaFecha, motivo });
     } catch (err) {
       setError(err.message);
+      setEnviando(false);
     }
   };
 
@@ -43,7 +48,7 @@ export default function ModalSolicitarAmpliacion({ entregable, trato, onConfirma
             className="input"
             type="date"
             min={HOY}
-            max={SEMESTRE.fin}
+            max={semestre.fin}
             value={nuevaFecha}
             onChange={(e) => setNuevaFecha(e.target.value)}
           />
@@ -64,7 +69,7 @@ export default function ModalSolicitarAmpliacion({ entregable, trato, onConfirma
 
         <div className="modal__actions">
           <button type="button" className="btn btn--ghost" onClick={onCerrar}>Cancelar</button>
-          <button type="submit" className="btn btn--primary">Enviar solicitud</button>
+          <button type="submit" className="btn btn--primary" disabled={enviando}>{enviando ? 'Enviando…' : 'Enviar solicitud'}</button>
         </div>
       </form>
     </Modal>

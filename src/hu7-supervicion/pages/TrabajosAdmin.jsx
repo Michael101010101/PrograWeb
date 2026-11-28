@@ -1,191 +1,131 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PageLayout from '../../shared/components/PageLayout.jsx';
+import { useToast } from '../../shared/components/ToastProvider.jsx';
 import * as XLSX from 'xlsx';
+import EstadoVista from '../components/EstadoVista.jsx';
+import ModalFichaTrabajo from '../components/ModalFichaTrabajo.jsx';
+import { usePeticion } from '../hooks/usePeticion.js';
+import { useRetardo } from '../hooks/useRetardo.js';
+import {
+  cargarTodosLosTrabajos,
+  contarTrabajos,
+  listarTrabajos,
+  obtenerFiltrosTrabajos,
+} from '../api/clienteApiHu7.js';
+import { CLASE_ESTADO_TRABAJO } from '../utils/formatoHu7.js';
 import '../hu7.css';
 import '../TrabajosAdmin.css';
 
-const trabajosData = [
-  {
-    codigo: "TFC-2026-2-047",
-    titulo: "Modelo predictivo de deserción en estudiantes de primer ciclo",
-    linea: "Ciencia de datos",
-    equipo: "Quispe, Ramirez",
-    asesor: "Quispe Ramos",
-    avance: 55,
-    estado: "En desarrollo",
-    carrera: "Ingeniería de Sistemas"
-  },
-  {
-    codigo: "TFC-2026-2-012",
-    titulo: "Optimización de rutas de reparto para comercios de Lima Metropolitana",
-    linea: "Gestión de operaciones",
-    equipo: "Rojas, Tapia",
-    asesor: "Vargas Aliaga",
-    avance: 100,
-    estado: "Concluido",
-    carrera: "Ingeniería Industrial"
-  },
-  {
-    codigo: "TFC-2026-2-051",
-    titulo: "Automatización del control de calidad en líneas de envasado de conservas",
-    linea: "Automatización y control",
-    equipo: "Tapia, Ferreyra",
-    asesor: "Sin asesor",
-    avance: 0,
-    estado: "Propuesta",
-    carrera: "Ingeniería Industrial"
-  },
-  {
-    codigo: "TFC-2026-2-029",
-    titulo: "Detección temprana de fallas en bombas de agua mediante señales de vibración",
-    linea: "Ciencia de datos",
-    equipo: "Aguirre, Palomino",
-    asesor: "Salazar Huamán",
-    avance: 15,
-    estado: "En desarrollo",
-    carrera: "Ingeniería de Sistemas"
-  },
-  {
-    codigo: "TFC-2026-2-018",
-    titulo: "Plataforma de tutoría entre pares para cursos de matemática básica",
-    linea: "Innovación educativa",
-    equipo: "Ccahuana",
-    asesor: "Quispe Ramos",
-    avance: 55,
-    estado: "En desarrollo",
-    carrera: "Ingeniería de Sistemas"
-  },
-  {
-    codigo: "TFC-2026-2-006",
-    titulo: "Clasificación automática de reclamos ciudadanos en municipalidades distritales",
-    linea: "Ciencia de datos",
-    equipo: "Palomino, Ferreyra",
-    asesor: "Quispe Ramos",
-    avance: 100,
-    estado: "Concluido",
-    carrera: "Ingeniería de Sistemas"
-  },
-  {
-    codigo: "TFC-2026-2-033",
-    titulo: "Tablero de indicadores de asistencia para colegios públicos de Lima Sur",
-    linea: "Innovación educativa",
-    equipo: "Ferreyra",
-    asesor: "Torres Anchante",
-    avance: 35,
-    estado: "En desarrollo",
-    carrera: "Ingeniería Industrial"
-  },
-  {
-    codigo: "TFC-2026-2-021",
-    titulo: "Evaluación de techos verdes en la reducción de isla de calor en San Isidro",
-    linea: "Sostenibilidad urbana",
-    equipo: "Mendoza, Ynga",
-    asesor: "Ocampo Salas",
-    avance: 35,
-    estado: "En desarrollo",
-    carrera: "Ingeniería Civil"
-  },
-  {
-    codigo: "TFC-2026-2-040",
-    titulo: "Reducción de mermas en almacenes de productos perecibles en Lima Norte",
-    linea: "Gestión de operaciones",
-    equipo: "Bustamante, Solis",
-    asesor: "Vargas Aliaga",
-    avance: 75,
-    estado: "En desarrollo",
-    carrera: "Ingeniería Industrial"
-  },
-  {
-    codigo: "TFC-2026-2-055",
-    titulo: "Monitoreo de calidad del aire con sensores de bajo costo en Ate",
-    linea: "Automatización y control",
-    equipo: "Ninahuanca",
-    asesor: "Sin asesor",
-    avance: 0,
-    estado: "Propuesta",
-    carrera: "Ingeniería Industrial"
-  },
-  {
-    codigo: "TFC-2026-2-024",
-    titulo: "Programación de turnos en policlínicos municipales con simulación discreta",
-    linea: "Gestión de operaciones",
-    equipo: "Ttito, Cárcamo",
-    asesor: "Bustamante Ríos",
-    avance: 20,
-    estado: "Propuesta",
-    carrera: "Ingeniería Industrial"
-  },
-  {
-    codigo: "TFC-2026-2-009",
-    titulo: "Refuerzo estructural de viviendas autoconstruidas en laderas de Carabayllo",
-    linea: "Sostenibilidad urbana",
-    equipo: "Ocampo, Loza",
-    asesor: "Cárdenas Loayza",
-    avance: 15,
-    estado: "Desistido",
-    carrera: "Ingeniería Civil"
-  }
-];
+const TRABAJOS_POR_PAGINA = 20;
+const SIN_ASESOR = 'sin_asesor';
+const FILTROS_INICIALES = { estado: '', lineaId: '', asesorId: '', carrera: '' };
+
+/** Pide los conteos del subtítulo (sin filtrar por periodo: se ven todos los trabajos). */
+async function cargarConteos() {
+  const [total, activos, sinAsesor] = await Promise.all([
+    contarTrabajos({}),
+    contarTrabajos({ estado: 'en_desarrollo' }),
+    contarTrabajos({ asesorId: SIN_ASESOR }),
+  ]);
+  return { total, activos, sinAsesor };
+}
+
+/** Nombre del archivo de Excel con la fecha de hoy (AAAA-MM-DD). */
+function nombreArchivoExcel() {
+  const hoy = new Date();
+  const dd = (n) => String(n).padStart(2, '0');
+  return `Trabajos-${hoy.getFullYear()}-${dd(hoy.getMonth() + 1)}-${dd(hoy.getDate())}.xlsx`;
+}
 
 export default function TrabajosAdmin() {
-  // Estados para controlar filtros 
+  const { mostrar } = useToast();
+
+  // Estados para controlar filtros (se envían al servidor)
+  const [filtros, setFiltros] = useState(FILTROS_INICIALES);
   const [busqueda, setBusqueda] = useState('');
-  const [filtroEstado, setFiltroEstado] = useState('Todos');
-  const [filtroLinea, setFiltroLinea] = useState('Todas');
-  const [filtroAsesor, setFiltroAsesor] = useState('Todos');
-  const [filtroCarrera, setFiltroCarrera] = useState('Todas');
+  const busquedaRetardada = useRetardo(busqueda.trim(), 400);
 
-  // estado para mostrar la notificacion cuando se descargue el excel
-  const [exportado, setExportado] = useState(false);
-  const periodo = "2026-2";
+  // La página se guarda junto con los filtros con los que se eligió:
+  // si cambia cualquier filtro o la búsqueda, se vuelve a la página 1 sin efectos extra.
+  const claveFiltros = JSON.stringify({ ...filtros, q: busquedaRetardada });
+  const [paginaElegida, setPaginaElegida] = useState({ clave: claveFiltros, numero: 1 });
+  const pagina = paginaElegida.clave === claveFiltros ? paginaElegida.numero : 1;
+  const irAPagina = (numero) => setPaginaElegida({ clave: claveFiltros, numero });
 
-  // logica del filtrado dinámico
-  const trabajosFiltrados = trabajosData.filter((item) => {
-    const coincideTexto = 
-      item.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      item.codigo.toLowerCase().includes(busqueda.toLowerCase()) ||
-      item.equipo.toLowerCase().includes(busqueda.toLowerCase());
+  // trabajo abierto en la ficha de detalle
+  const [trabajoAbierto, setTrabajoAbierto] = useState(null);
 
-    const coincideEstado = filtroEstado === 'Todos' || item.estado === filtroEstado;
-    const coincideLinea = filtroLinea === 'Todas' || item.linea === filtroLinea;
-    const coincideAsesor = filtroAsesor === 'Todos' || item.asesor === filtroAsesor;
-    const coincideCarrera = filtroCarrera === 'Todas' || item.carrera === filtroCarrera;
+  // estado de la exportación a Excel
+  const [exportando, setExportando] = useState(false);
+  const [exportado, setExportado] = useState(null);
 
-    return coincideTexto && coincideEstado && coincideLinea && coincideAsesor && coincideCarrera;
-  });
+  const peticionFiltros = usePeticion(() => obtenerFiltrosTrabajos(), []);
+  const opciones = peticionFiltros.datos;
+  const filtrosListos = Boolean(opciones);
 
-  // Función para exportar a Excel (tiene js)
-  const handleExportarExcel = () => {
-    const datosExcel = trabajosFiltrados.map((item) => ({
-      "CÓDIGO": item.codigo,
-      "TÍTULO": item.titulo,
-      "LÍNEA": item.linea,
-      "CARRERA": item.carrera,
-      "EQUIPO": item.equipo,
-      "ASESOR": item.asesor,
-      "AVANCE (%)": `${item.avance}%`,
-      "ESTADO": item.estado
-    }));
+  const peticionConteos = usePeticion(() => cargarConteos(), []);
+  const conteos = peticionConteos.datos;
 
-    const worksheet = XLSX.utils.json_to_sheet(datosExcel);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Trabajos de periodo");
+  const peticionLista = usePeticion(
+    () => listarTrabajos({ ...filtros, q: busquedaRetardada, page: pagina, limit: TRABAJOS_POR_PAGINA }),
+    [claveFiltros, pagina]
+  );
+  const trabajos = peticionLista.datos?.trabajos ?? [];
+  const paginacion = peticionLista.datos?.paginacion ?? { pagina: 1, total: 0, totalPaginas: 0 };
 
-    XLSX.writeFile(workbook, `${periodo}-TrabajosdePeriodo.xlsx`);
-    
-    // activa la banderita de exportado
-    setExportado(true);
-  };
+  const cambiarFiltro = (campo) => (e) => setFiltros((previos) => ({ ...previos, [campo]: e.target.value }));
 
-  const getClaseEstado = (estado) => {
-    switch (estado) {
-      case 'Propuesta': return 'estado-propuesta';
-      case 'En desarrollo': return 'estado-desarrollo';
-      case 'Concluido': return 'estado-concluido';
-      case 'Desistido': return 'estado-desistido';
-      default: return '';
+  const etiquetaEstado = (valor) => opciones?.estados.find((e) => e.valor === valor)?.etiqueta ?? valor;
+
+  // Función para exportar a Excel: recorre todas las páginas con los filtros actuales
+  const handleExportarExcel = async () => {
+    setExportando(true);
+    try {
+      const todos = await cargarTodosLosTrabajos({ ...filtros, q: busquedaRetardada });
+      if (todos.length === 0) {
+        mostrar({ tipo: 'aviso', titulo: 'Sin datos', mensaje: 'No hay trabajos para exportar con los filtros actuales.' });
+        return;
+      }
+
+      const datosExcel = todos.map((item) => ({
+        "CÓDIGO": item.codigo,
+        "TÍTULO": item.titulo,
+        "LÍNEA": item.linea?.nombre ?? '',
+        "CARRERA": item.carrera,
+        "EQUIPO": item.equipo.join(', '),
+        "ASESOR": item.asesor?.nombre ?? 'Sin asesor',
+        "AVANCE (%)": `${item.avance}%`,
+        "ESTADO": etiquetaEstado(item.estado),
+        "PERIODO": item.periodo?.semestre ?? '',
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(datosExcel);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Trabajos");
+
+      const archivo = nombreArchivoExcel();
+      XLSX.writeFile(workbook, archivo);
+
+      // activa la banderita de exportado
+      setExportado({ archivo, cantidad: todos.length });
+    } catch (error) {
+      mostrar({ tipo: 'error', titulo: 'No se pudo exportar', mensaje: error.message });
+    } finally {
+      setExportando(false);
     }
   };
+
+  const abrirConTeclado = (id) => (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setTrabajoAbierto(id);
+    }
+  };
+
+  const primeraFila = paginacion.total ? (paginacion.pagina - 1) * TRABAJOS_POR_PAGINA + 1 : 0;
+  const ultimaFila = primeraFila ? primeraFila + trabajos.length - 1 : 0;
+  const textoTodos = filtrosListos ? 'Todos' : 'Cargando…';
+  const textoTodas = filtrosListos ? 'Todas' : 'Cargando…';
 
   return (
     <PageLayout>
@@ -196,16 +136,19 @@ export default function TrabajosAdmin() {
             <h6 className="hu7-subtitulo-pantalla">Inicio · Trabajos</h6>
             <h1 className="hu7-titulo-pantalla">Trabajos del periodo</h1>
             <h6 className="hu7-subtitulo-pantalla2">
-              {trabajosData.length} trabajos · 9 activos · 2 sin asesor
+              {conteos
+                ? `${conteos.total} trabajos · ${conteos.activos} activos · ${conteos.sinAsesor} sin asesor`
+                : peticionConteos.cargando ? 'Cargando…' : ''}
             </h6>
           </div>
 
           <div className="hu7-barra-controles">
-            <button 
-              type="button" 
+            <button
+              type="button"
               className="hu7-boton-exportar"
+              disabled={exportando || !peticionLista.datos}
               onClick={handleExportarExcel} >
-              Exportar a Excel
+              {exportando ? 'Exportando…' : 'Exportar a Excel'}
             </button>
 
             {/* banner de confirmación tras exportar a excel */}
@@ -215,13 +158,13 @@ export default function TrabajosAdmin() {
                 <div className="hu7-textito-info">
                   <div className="hu7-textito-titulo">Reporte exportado</div>
                   <div className="hu7-textito-exportar">
-                    {periodo}-TrabajosdePeriodo.xlsx · {trabajosFiltrados.length} trabajos mostrados
+                    {exportado.archivo} · {exportado.cantidad} {exportado.cantidad === 1 ? 'trabajo exportado' : 'trabajos exportados'}
                   </div>
                 </div>
-                <button 
-                  type="button" 
-                  className="hu7-textito-cerrar" 
-                  onClick={() => setExportado(false)}
+                <button
+                  type="button"
+                  className="hu7-textito-cerrar"
+                  onClick={() => setExportado(null)}
                   title="Cerrar aviso" >
                   ×
                 </button>
@@ -240,80 +183,84 @@ export default function TrabajosAdmin() {
                 type="text"
                 placeholder="Título, código o integrante..."
                 className="hu7-input-buscar"
+                maxLength={100}
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.target.value)} />
             </div>
 
             <div className="hu7-filtro-seleccionar">
               <label htmlFor="select-estado">ESTADO</label>
-              <select 
-                id="select-estado" 
-                value={filtroEstado} 
-                onChange={(e) => setFiltroEstado(e.target.value)}
+              <select
+                id="select-estado"
+                value={filtros.estado}
+                disabled={!filtrosListos}
+                onChange={cambiarFiltro('estado')}
                 className="hu7-seleccionar-filtro"  >
-                <option value="Todos">Todos</option>
-                <option value="Propuesta">Propuesta</option>
-                <option value="En desarrollo">En desarrollo</option>
-                <option value="Concluido">Concluido</option>
-                <option value="Desistido">Desistido</option>
+                <option value="">{textoTodos}</option>
+                {opciones?.estados.map((e) => (
+                  <option key={e.valor} value={e.valor}>{e.etiqueta}</option>
+                ))}
               </select>
             </div>
 
             <div className="hu7-filtro-seleccionar">
               <label htmlFor="seleccionar-linea">LÍNEA</label>
-              <select 
-                id="seleccionar-linea" 
-                value={filtroLinea} 
-                onChange={(e) => setFiltroLinea(e.target.value)}
+              <select
+                id="seleccionar-linea"
+                value={filtros.lineaId}
+                disabled={!filtrosListos}
+                onChange={cambiarFiltro('lineaId')}
                 className="hu7-seleccionar-filtro">
-
-                <option value="Todas">Todas</option>
-                <option value="Ciencia de datos">Ciencia de datos</option>
-                <option value="Gestión de operaciones">Gestión de operaciones</option>
-                <option value="Automatización y control">Automatización y control</option>
-                <option value="Innovación educativa">Innovación educativa</option>
-                <option value="Sostenibilidad urbana">Sostenibilidad urbana</option>
+                <option value="">{textoTodas}</option>
+                {opciones?.lineas.map((l) => (
+                  <option key={l.id} value={l.id}>{l.nombre}</option>
+                ))}
               </select>
             </div>
 
             <div className="hu7-filtro-seleccionar">
               <label htmlFor="seleccionar-asesor">ASESOR</label>
-              <select 
-                id="seleccionar-asesor" 
-                value={filtroAsesor} 
-                onChange={(e) => setFiltroAsesor(e.target.value)}
+              <select
+                id="seleccionar-asesor"
+                value={filtros.asesorId}
+                disabled={!filtrosListos}
+                onChange={cambiarFiltro('asesorId')}
                 className="hu7-seleccionar-filtro"  >
-
-
-                <option value="Todos">Todos</option>
-                <option value="Quispe Ramos">Quispe Ramos</option>
-                <option value="Vargas Aliaga">Vargas Aliaga</option>
-                <option value="Salazar Huamán">Salazar Huamán</option>
-                <option value="Torres Anchante">Torres Anchante</option>
-                <option value="Ocampo Salas">Ocampo Salas</option>
-                <option value="Bustamante Ríos">Bustamante Ríos</option>
-                <option value="Sin asesor">Sin asesor</option>
+                <option value="">{textoTodos}</option>
+                {opciones?.asesores.map((a) => (
+                  <option key={a.id} value={a.id}>{a.apellidos}</option>
+                ))}
+                {filtrosListos && <option value={SIN_ASESOR}>Sin asesor</option>}
               </select>
             </div>
 
             <div className="hu7-filtro-seleccionar">
               <label htmlFor="seleccionar-carrera">CARRERA</label>
-              <select 
-                id="seleccionar-carrera" 
-                value={filtroCarrera} 
-                onChange={(e) => setFiltroCarrera(e.target.value)}
+              <select
+                id="seleccionar-carrera"
+                value={filtros.carrera}
+                disabled={!filtrosListos}
+                onChange={cambiarFiltro('carrera')}
                 className="hu7-seleccionar-filtro">
-                  
-                <option value="Todas">Todas</option>
-                <option value="Ingeniería de Sistemas">Ingeniería de Sistemas</option>
-                <option value="Ingeniería Industrial">Ingeniería Industrial</option>
-                <option value="Ingeniería Civil">Ingeniería Civil</option>
+                <option value="">{textoTodas}</option>
+                {opciones?.carreras.map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
               </select>
             </div>
           </div>
 
+          {/* Si no cargan las opciones de los filtros, se avisa y se puede reintentar */}
+          {peticionFiltros.error && (
+            <EstadoVista error={peticionFiltros.error} alReintentar={peticionFiltros.reintentar} />
+          )}
+
           <div className="hu7-tarjeta-tabla-trabajos">
-            <table className="hu7-tabla-trabajos">
+            <EstadoVista
+              cargando={peticionLista.cargando && !peticionLista.datos}
+              error={peticionLista.error}
+              alReintentar={peticionLista.reintentar}>
+            <table className="hu7-tabla-trabajos" aria-busy={peticionLista.cargando}>
               <thead>
                 <tr>
                   <th>TÍTULO</th>
@@ -325,31 +272,39 @@ export default function TrabajosAdmin() {
                 </tr>
               </thead>
               <tbody>
-                {trabajosFiltrados.length > 0 ? (
-                  trabajosFiltrados.map((item) => (
-                    <tr key={item.codigo}>
+                {trabajos.length > 0 ? (
+                  trabajos.map((item) => (
+                    <tr key={item.id}>
                       <td className="hu7-col-titulo">
-                        <div className="hu7-titulo-trabajo">{item.titulo}</div>
+                        <div
+                          className="hu7-titulo-trabajo"
+                          role="button"
+                          tabIndex={0}
+                          title="Ver ficha del trabajo"
+                          onClick={() => setTrabajoAbierto(item.id)}
+                          onKeyDown={abrirConTeclado(item.id)}>
+                          {item.titulo}
+                        </div>
                         <div className="hu7-codigo-trabajo">{item.codigo}</div>
                       </td>
 
-                      <td>{item.linea}</td>
-                      <td>{item.equipo}</td>
+                      <td>{item.linea?.nombre ?? '—'}</td>
+                      <td>{item.equipo.length ? item.equipo.join(', ') : '—'}</td>
 
                       <td>
-                        <span className={item.asesor === 'Sin asesor' ? 'hu7-sin-asesor' : ''}>
-                          {item.asesor}
+                        <span className={item.asesor ? '' : 'hu7-sin-asesor'}>
+                          {item.asesor?.apellidos ?? 'Sin asesor'}
                         </span>
                       </td>
 
                       <td className="hu7-col-avance">
                         <div className="hu7-contenedor-avance-fila">
                           <div className="hu7-barra-progreso-bg">
-                            <div 
-                              className="hu7-barra-progreso-fill" 
-                              style={{ 
-                                width: `${item.avance}%`, 
-                                backgroundColor: item.avance === 100 ? '#1E7F4D' : '#1E4534' 
+                            <div
+                              className="hu7-barra-progreso-fill"
+                              style={{
+                                width: `${item.avance}%`,
+                                backgroundColor: item.avance === 100 ? '#1E7F4D' : '#1E4534'
                               }}
                             />
                           </div>
@@ -358,8 +313,8 @@ export default function TrabajosAdmin() {
                       </td>
 
                       <td>
-                        <span className={`hu7-estado ${getClaseEstado(item.estado)}`}>
-                          {item.estado}
+                        <span className={`hu7-estado ${CLASE_ESTADO_TRABAJO[item.estado] ?? ''}`}>
+                          {etiquetaEstado(item.estado)}
                         </span>
                       </td>
                     </tr>
@@ -367,28 +322,59 @@ export default function TrabajosAdmin() {
                 ) : (
                   <tr>
                     <td colSpan="6" className="hu7-tabla-vacia">
-                      No se encontraron trabajos con los filtros seleccionados.
+                      {busquedaRetardada || Object.values(filtros).some(Boolean)
+                        ? 'No se encontraron trabajos con los filtros seleccionados.'
+                        : 'Aún no hay trabajos registrados.'}
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
 
-            {/* Paginacion calculada de forma dinamica */}
+            {/* Paginación del servidor */}
             <div className="hu7-paginacion-trabajos">
               <span>
-                Mostrando {trabajosFiltrados.length > 0 ? `1-${trabajosFiltrados.length}` : '0'} de {trabajosData.length}
+                Mostrando {primeraFila ? `${primeraFila}-${ultimaFila}` : '0'} de {paginacion.total}
               </span>
               <div className="hu7-botones-paginacion">
-                <button type="button" className="hu7-boton-pag" disabled>Anterior</button>
-                <button type="button" className="hu7-boton-pag active">1</button>
-                <button type="button" className="hu7-boton-pag" disabled>Siguiente</button>
+                <button
+                  type="button"
+                  className="hu7-boton-pag"
+                  disabled={pagina <= 1 || peticionLista.cargando}
+                  onClick={() => irAPagina(pagina - 1)}>
+                  Anterior
+                </button>
+                {Array.from({ length: paginacion.totalPaginas }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    type="button"
+                    className={`hu7-boton-pag ${pagina === i + 1 ? 'active' : ''}`}
+                    disabled={peticionLista.cargando}
+                    onClick={() => irAPagina(i + 1)}>
+                    {i + 1}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  className="hu7-boton-pag"
+                  disabled={pagina >= paginacion.totalPaginas || peticionLista.cargando}
+                  onClick={() => irAPagina(pagina + 1)}>
+                  Siguiente
+                </button>
               </div>
             </div>
-
+            </EstadoVista>
           </div>
 
         </div>
+
+        {/* Ficha de detalle del trabajo */}
+        {trabajoAbierto && (
+          <ModalFichaTrabajo
+            trabajoId={trabajoAbierto}
+            etiquetaEstado={etiquetaEstado}
+            alCerrar={() => setTrabajoAbierto(null)} />
+        )}
       </main>
     </PageLayout>
   );

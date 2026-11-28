@@ -1,4 +1,4 @@
-import { ESTADOS } from './EstadoEntregable.jsx';
+import { ESTADOS } from '../utils/estados.js';
 import { formatearFecha } from '../utils/fechas.js';
 
 /**

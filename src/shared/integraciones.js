@@ -6,8 +6,8 @@ import { resumenTrabajoVigente } from '../hu2-trabajo/services/trabajoService.js
 import { obtenerDestacados } from '../hu3-asesores/services/asesoriasService.js';
 
 /** HU-2 · Trabajo vigente del estudiante: { codigo, titulo, avance } | null */
-export function obtenerTrabajoVigente(usuarioId) {
-  return usuarioId ? resumenTrabajoVigente(usuarioId) : null;
+export function obtenerTrabajoVigente() {
+  return resumenTrabajoVigente();
 }
 
 /**

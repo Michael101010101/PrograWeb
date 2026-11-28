@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Modal from '../../../shared/components/Modal.jsx';
 import Alert from '../../../shared/components/Alert.jsx';
-import { HOY, diasEntre, formatearFecha, textoDias } from '../../utils/fechas.js';
+import { formatearFecha, textoDias } from '../../utils/fechas.js';
 
 const MAXIMO = 600;
 
@@ -9,24 +9,27 @@ const MAXIMO = 600;
  * Modal 4.3 "Registrar avance". Tiene dos variantes según la fecha:
  *  a tiempo     -> aviso verde y botón "Registrar avance"
  *  con retraso  -> aviso ámbar, chip con los días y botón "Registrar con retraso"
- * `onConfirmar` recibe { enlace, descripcion }; si el servicio lanza un Error, se muestra aquí.
+ * `onConfirmar` recibe { enlace, descripcion } y espera la respuesta del servidor; si es un error, se muestra aquí.
  */
 export default function ModalRegistrarAvance({ entregable, trato, onConfirmar, onCerrar }) {
   const [enlace, setEnlace] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [error, setError] = useState('');
+  const [enviando, setEnviando] = useState(false); // evita enviar dos veces mientras responde el servidor
 
   const version = entregable.avances.length + 1; // se calcula sola, el estudiante no la escribe
-  const dias = diasEntre(HOY, entregable.fechaLimite); // negativo = días de retraso
+  const dias = entregable.diasParaVencer; // lo calcula el servidor; negativo = días de retraso
   const conRetraso = dias < 0;
   const limite = formatearFecha(entregable.fechaLimite);
 
-  const enviar = (evento) => {
+  const enviar = async (evento) => {
     evento.preventDefault();
+    setEnviando(true);
     try {
-      onConfirmar({ enlace, descripcion });
+      await onConfirmar({ enlace, descripcion });
     } catch (err) {
-      setError(err.message);
+      setError(err.message); // mensaje que mandó el servidor
+      setEnviando(false);
     }
   };
 
@@ -102,8 +105,8 @@ export default function ModalRegistrarAvance({ entregable, trato, onConfirmar, o
 
         <div className="modal__actions">
           <button type="button" className="btn btn--ghost" onClick={onCerrar}>Cancelar</button>
-          <button type="submit" className={`btn ${conRetraso ? 'btn--warning' : 'btn--primary'}`}>
-            {conRetraso ? 'Registrar con retraso' : 'Registrar avance'}
+          <button type="submit" className={`btn ${conRetraso ? 'btn--warning' : 'btn--primary'}`} disabled={enviando}>
+            {enviando ? 'Registrando…' : conRetraso ? 'Registrar con retraso' : 'Registrar avance'}
           </button>
         </div>
       </form>

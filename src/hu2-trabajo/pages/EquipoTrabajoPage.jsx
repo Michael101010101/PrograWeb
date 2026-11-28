@@ -7,7 +7,7 @@ import Alert from '../../shared/components/Alert.jsx';
 import ConfirmDialog from '../../shared/components/ConfirmDialog.jsx';
 import { useToast } from '../../shared/components/ToastProvider.jsx';
 import { useAuth } from '../../hu1-cuenta/context/AuthContext.jsx';
-import { PERIODO } from '../../shared/config/periodo.js';
+import { useDatos } from '../../shared/context/DatosContext.jsx';
 import TrabajoChip from '../components/TrabajoChip.jsx';
 import ErrorIntegranteModal from '../components/ErrorIntegranteModal.jsx';
 import * as trabajoService from '../services/trabajoService.js';
@@ -19,6 +19,7 @@ const mismoEquipo = (a, b) =>
 export default function EquipoTrabajoPage() {
   const { usuario } = useAuth();
   const { mostrar } = useToast();
+  const { periodo, textoNav } = useDatos();
   const navigate = useNavigate();
 
   const [trabajo, setTrabajo] = useState(null);
@@ -32,7 +33,7 @@ export default function EquipoTrabajoPage() {
 
   useEffect(() => {
     let activo = true;
-    trabajoService.obtenerMiTrabajo(usuario.id).then(({ trabajo: actual }) => {
+    trabajoService.obtenerMiTrabajo().then(({ trabajo: actual }) => {
       if (!activo) return;
       if (!actual) {
         navigate('/estudiante/mi-trabajo', { replace: true });
@@ -40,22 +41,33 @@ export default function EquipoTrabajoPage() {
       }
       setTrabajo(actual);
       setIntegrantes(actual.integrantes);
+    }).catch((err) => {
+      if (!activo) return;
+      mostrar({ tipo: 'error', titulo: 'No pudimos cargar tu trabajo', mensaje: err.message });
+      navigate('/estudiante/mi-trabajo', { replace: true });
     });
     return () => {
       activo = false;
     };
-  }, [usuario.id, navigate]);
+  }, [usuario.id, navigate, mostrar]);
 
   const textoValido = busqueda.trim().length >= LIMITES.busquedaMin;
   useEffect(() => {
     if (!trabajo || !textoValido) return undefined;
     let activo = true;
     const id = setTimeout(() => {
-      trabajoService.buscarEstudiantes(busqueda, trabajo.id).then((lista) => {
-        if (!activo) return;
-        setResultados(lista);
-        setBuscando(false);
-      });
+      trabajoService
+        .buscarEstudiantes(busqueda, trabajo.id)
+        .then((lista) => {
+          if (!activo) return;
+          setResultados(lista);
+          setBuscando(false);
+        })
+        .catch(() => {
+          if (!activo) return;
+          setResultados([]);
+          setBuscando(false);
+        });
     }, 250);
     return () => {
       activo = false;
@@ -65,7 +77,7 @@ export default function EquipoTrabajoPage() {
 
   if (!trabajo) {
     return (
-      <PageLayout headerSlot={<TrabajoChip />} navInfo={PERIODO.etapaActual}>
+      <PageLayout headerSlot={<TrabajoChip />} navInfo={textoNav}>
         <div className="equipo-contenedor" aria-busy="true" />
       </PageLayout>
     );
@@ -133,7 +145,7 @@ export default function EquipoTrabajoPage() {
   return (
     <PageLayout
       headerSlot={<TrabajoChip />}
-      navInfo={PERIODO.etapaActual.split(' · ')[0]}
+      navInfo={textoNav.split(' · ')[0]}
       footerDetalle={`${rolFooter} del trabajo ${trabajo.codigo}`}
     >
       <div className="equipo-contenedor">
@@ -239,7 +251,7 @@ export default function EquipoTrabajoPage() {
             )}
 
             <p className="nota-estudiantes">
-              Solo aparecen estudiantes matriculados en {PERIODO.semestre} de la
+              Solo aparecen estudiantes matriculados en {periodo.semestre} de la
               Facultad de Ingeniería.
             </p>
           </section>

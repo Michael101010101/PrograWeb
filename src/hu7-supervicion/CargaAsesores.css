@@ -495,3 +495,69 @@
   font-weight: 600;
   cursor: pointer;
 }
+/* ─────────── Etapa 2: datos del API ─────────── */
+
+/* color de la barra de cupo según ocupación */
+.hu7-barra-verde { background-color: #1E7F4D; }
+.hu7-barra-ambar { background-color: #B7791F; }
+.hu7-barra-roja { background-color: #B4322B; }
+
+/* la tabla se desplaza en horizontal en pantallas angostas (va después de overflow: hidden) */
+.hu7-tabla-scroll {
+  overflow-x: auto;
+}
+.hu7-tabla-scroll .hu7-tabla-asesores {
+  min-width: 720px;
+}
+
+.hu7-boton-exportar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ficha del asesor */
+.hu7-detalle-lista {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 8px 16px;
+  margin: 0 0 20px 0;
+  font-size: 14px;
+}
+.hu7-detalle-lista dt {
+  color: #66716B;
+}
+.hu7-detalle-lista dd {
+  margin: 0;
+  color: #1A211D;
+}
+.hu7-detalle-subtitulo {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  color: #66716B;
+}
+
+@media (max-width: 768px) {
+  .hu7-contenedorSUP {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 16px 0 16px;
+  }
+  .hu7-contenedorINF {
+    padding: 0 16px 32px 16px;
+  }
+  .hu7-fila-resumen-asesores {
+    grid-template-columns: 1fr;
+  }
+  .hu7-barra-controles {
+    flex-wrap: wrap;
+  }
+  .hu7-detalle-lista {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+  .hu7-detalle-lista dd {
+    margin-bottom: 8px;
+  }
+}
