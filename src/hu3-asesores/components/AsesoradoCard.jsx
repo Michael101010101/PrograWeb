@@ -5,11 +5,12 @@ const ESTADOS = {
   propuesta: { clase: 'badge--neutral', texto: 'Propuesta' },
   en_desarrollo: { clase: 'badge--info', texto: 'En desarrollo' },
   concluido: { clase: 'badge--success', texto: 'Concluido' },
+  desistido: { clase: 'badge--neutral', texto: 'Desistido' },
 };
 
 /** Tarjeta de un trabajo a cargo del asesor (3.5 Mis asesorados). */
 export default function AsesoradoCard({ trabajo, onTerminar, onVerSustentacion }) {
-  const estado = ESTADOS[trabajo.estado];
+  const estado = ESTADOS[trabajo.estado] ?? { clase: 'badge--neutral', texto: trabajo.estado };
   const concluido = trabajo.estado === 'concluido';
 
   return (
